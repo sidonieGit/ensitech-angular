@@ -1,0 +1,60 @@
+import { Student } from './student';
+
+export const STUDENTS: Student[] = [
+  {
+    id: 1,
+    nom: 'DJUISSI',
+    prenom: 'Sidonie',
+    dateInscription: new Date(2010, 8, 5),
+    email: 'sidonie.djuissi@example.com',
+    telephone: '0612345678',
+  },
+  {
+    id:2,
+    nom: 'MATHO',
+    prenom: 'Adéline',
+    dateInscription: new Date(2010, 8, 11),
+    email: 'adeline.a.com',
+    telephone: '0612345678',
+  },
+  {
+    id:3,
+    nom: 'ANANI',
+    prenom: 'Serge',
+    dateInscription: new Date(2010, 8, 9),
+    email: '	serge.anani@example.com',
+    telephone: '0612345678',
+  },
+  {
+    id:4,
+    nom: 'NEDVED',
+    prenom: 'Jovy',
+    dateInscription: new Date(2010, 8, 12),
+    email: 'jovy.neddev@example.com',
+    telephone: '0612345678',
+  },
+  {
+    id:5,
+    nom: 'DOSSOU',
+    prenom: 'Quirin',
+    dateInscription: new Date(2010, 8, 8),
+    email: 'quirin.dossou@example.com',
+    telephone: '0612345678',
+  },
+  {
+    id:6,
+    nom: 'VODOUNOU',
+    prenom: 'Nicodème',
+    dateInscription: new Date(2010, 8, 4),
+    email: 'nicodeme.vodounou@example.com',
+    telephone: '0612345678',
+  },
+  {
+    id:7,
+    nom: 'BANNAME',
+    prenom: 'Victor',
+    dateInscription: new Date(2010, 8, 13),
+    email: 'victor.banname@example.com',
+    telephone: '0612345678',
+  },
+];

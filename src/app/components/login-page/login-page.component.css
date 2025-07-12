@@ -1,0 +1,65 @@
+/* Global styles */
+body,
+html {
+  margin: 0;
+  font-family: var(--font-base);
+}
+
+/* Login Page Styles */
+main {
+  background-color: var(--color-gray);
+}
+
+.container-fluid {
+  height: 100vh;
+}
+
+.title-login {
+  font-family: "Epilogue", sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+.formulaire .input-group-text {
+  background-color: var(--color-gray);
+}
+
+.formulaire .form-control {
+  background-color: var(--color-gray);
+  border-radius: 4px;
+  font-size: 1rem;
+  padding: 12px;
+}
+
+.submit-btn {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: 4px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.submit-btn:hover {
+  background-color: rgb(0, 36, 71);
+  transition: background-color 0.3s ease;
+}
+
+/* Logo Section Styles */
+.bg-primary {
+  background-color: var(--color-primary) !important;
+}
+
+.bg-primary img {
+  max-width: 80%;
+  height: auto;
+}
+
+/* Responsive Styles */
+@media (max-width: 991.98px) {
+  .bg-primary {
+    display: none; /* Cache le logo à gauche sur les petits écrans */
+  }
+}

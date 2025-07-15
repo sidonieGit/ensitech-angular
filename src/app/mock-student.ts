@@ -57,4 +57,12 @@ export const STUDENTS: Student[] = [
     email: 'victor.banname@example.com',
     telephone: '0612345678',
   },
+    {
+    id:8,
+    nom: 'NSENGIMANA',
+    prenom: 'François',
+    dateInscription: new Date(2010, 8, 13),
+    email: 'francois.imana@example.com',
+    telephone: '0642345678',
+  },
 ];

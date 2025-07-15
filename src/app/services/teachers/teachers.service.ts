@@ -1,55 +1,44 @@
+//src/app/services/teachers.service.ts
+
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Teacher } from 'src/app/interfaces/teachers-interface';
-import { TEACHERS } from 'src/app/mock-teachers';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TeachersService {
-  private readonly STORAGE_KEY = 'teachers';
-  private teachers: Teacher[] = [];
+  // L'URL de base de votre API Spring Boot
+  private apiUrl = 'http://localhost:8084/api/teachers';
 
-  constructor() {
-    const savedTeachers = localStorage.getItem(this.STORAGE_KEY);
-    this.teachers = savedTeachers ? JSON.parse(savedTeachers) : TEACHERS;
+  // 1. Injecter HttpClient
+  constructor(private http: HttpClient) {}
+
+  // 2. Réécrire les méthodes
+
+  // GET: Obtenir tous les enseignants
+  getTeachers(): Observable<Teacher[]> {
+    return this.http.get<Teacher[]>(this.apiUrl);
   }
 
-  // Obtenir tous les enseignants
-  getTeachers(): Teacher[] {
-    return this.teachers;
+  // POST: Ajouter un enseignant
+  // Notez le type : on envoie un objet sans 'id' ni 'createdAt'. Le backend les génère.
+  addTeacher(
+    teacherData: Omit<Teacher, 'id' | 'createdAt'>
+  ): Observable<Teacher> {
+    return this.http.post<Teacher>(this.apiUrl, teacherData);
   }
 
-  // Ajouter un enseignant
-  addTeacher(teacher: Teacher): void {
-    teacher.id =
-      this.teachers.length > 0
-        ? this.teachers[this.teachers.length - 1].id! + 1
-        : 1; // Génère un ID unique
-    teacher.dateDAjout = new Date();
-    this.teachers.push(teacher);
-
-    this.saveToLocalStorage();
+  // DELETE: Supprimer un enseignant par son ID
+  deleteTeacher(id: number): Observable<void> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.delete<void>(url);
   }
 
-  // Supprimer un enseignant
-  deleteTeacher(id: number | undefined): void {
-    this.teachers = this.teachers.filter((teacher) => teacher.id !== id);
-    this.saveToLocalStorage();
-  }
-
-  // Modifier un enseignant
-  updateTeacher(updatedTeacher: Teacher): void {
-    const index = this.teachers.findIndex(
-      (teacher) => teacher.id === updatedTeacher.id
-    );
-    if (index !== -1) {
-      this.teachers[index] = { ...updatedTeacher };
-      this.saveToLocalStorage();
-    }
-  }
-
-  // Sauvegarder les données dans le Local Storage
-  private saveToLocalStorage(): void {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.teachers));
+  // PUT: Modifier un enseignant
+  updateTeacher(teacher: Teacher): Observable<Teacher> {
+    const url = `${this.apiUrl}/${teacher.id}`;
+    return this.http.put<Teacher>(url, teacher);
   }
 }

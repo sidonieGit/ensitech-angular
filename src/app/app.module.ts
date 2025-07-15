@@ -16,6 +16,7 @@ import { FiltercoursePipe } from './filtercourse.pipe';
 import { FilterpipePipe } from './filterpipe.pipe';
 import { AuthService } from './services/auth/auth.service';
 import {NgChartsModule} from "ng2-charts";
+import { GestionEvaluationsComponent } from './components/gestion-evaluations/gestion-evaluations.component';
 
 export function initializeApp(authService: AuthService) {
   return () => {
@@ -37,6 +38,7 @@ export function initializeApp(authService: AuthService) {
     GestionTeachersComponent,
     FilterpipePipe,
     FiltercoursePipe,
+    GestionEvaluationsComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, NgChartsModule],
   providers: [

@@ -38,7 +38,7 @@ export function initializeApp(authService: AuthService) {
     GestionTeachersComponent,
     FilterpipePipe,
     FiltercoursePipe,
-    GestionEvaluationsComponent,
+     GestionEvaluationsComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, NgChartsModule],
   providers: [

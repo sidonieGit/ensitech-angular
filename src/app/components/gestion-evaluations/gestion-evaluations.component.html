@@ -55,7 +55,7 @@
             </select>
           </div>
           <div class="col-md-6 d-flex align-items-end justify-content-end">
-            <button type="submit" class="btn btn-primary me-2">Ajouter</button>
+            <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">Ajouter</button>
           </div>
         </div>
       </form>
@@ -93,10 +93,17 @@
               </td>
               <td>{{ getStudentName(eval.studentId) }}</td>
               <td>{{ getCourseTitle(eval.coursId) }}</td>
-              <td>
-                <button class="btn btn-sm btn-warning me-1" (click)="startEdit(eval)">Modifier</button>
-                <button class="btn btn-sm btn-danger" (click)="deleteEvaluation(eval.id)">Supprimer</button>
-              </td>
+<td class="d-flex gap-2 align-items-center">
+  <!-- Bouton Modifier -->
+  <button class="btn btn-sm btn-primary border-0" data-bs-dismiss="modal" (click)="startEdit(eval)">
+    <i class="hgi-stroke hgi-edit-02"></i>
+  </button>
+
+  <!-- Bouton Supprimer -->
+  <button class="btn btn-sm btn-danger" (click)="deleteEvaluation(eval.id)">
+    <i class="hgi-stroke hgi-delete-02"></i>
+  </button>
+</td>
             </ng-container>
             <ng-template #editRow>
               <td><input type="text" class="form-control" [(ngModel)]="editingEvaluation!.code"></td>
@@ -126,9 +133,13 @@
                   <option *ngFor="let c of courses" [value]="c.id">{{ c.title }}</option>
                 </select>
               </td>
-              <td>
-                <button class="btn btn-sm btn-success me-1" (click)="saveEditEvaluation()">Enregistrer</button>
-                <button class="btn btn-sm btn-secondary" (click)="cancelEdit()">Annuler</button>
+              <td class="d-flex gap-2 align-items-center">
+                <button class="btn btn-sm btn-success" (click)="saveEditEvaluation()" style="font-size: 1.1rem;">
+                  <!-- Enregistrer -->
+                  <i class="hgi-stroke hgi-floppy-disk"></i></button>
+                   <!-- Annuler -->
+                <button class="btn btn-sm btn-secondary" (click)="cancelEdit()">
+                   <i class="hgi-stroke hgi-cancel-01"></i></button>
               </td>
             </ng-template>
           </tr>

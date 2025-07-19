@@ -15,7 +15,7 @@ import { TopbarComponent } from './components/topbar/topbar.component';
 import { FiltercoursePipe } from './filtercourse.pipe';
 import { FilterpipePipe } from './filterpipe.pipe';
 import { AuthService } from './services/auth/auth.service';
-import {NgChartsModule} from "ng2-charts";
+import { NgChartsModule } from "ng2-charts";
 import { GestionEvaluationsComponent } from './components/gestion-evaluations/gestion-evaluations.component';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -59,4 +59,4 @@ export function initializeApp(authService: AuthService) {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

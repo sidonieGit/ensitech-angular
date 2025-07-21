@@ -9,6 +9,8 @@ import { LoginPageComponent } from './components/login-page/login-page.component
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 import { GestionSpecialityComponent } from './components/gestion-speciality/gestion-speciality.component';
+import { GestionEvaluationsComponent } from './components/gestion-evaluations/gestion-evaluations.component';
+
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent },
@@ -33,6 +35,13 @@ const routes: Routes = [
   {
     path: 'teachers',
     component: GestionTeachersComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: ['directeur', 'responsable'] },
+  },
+ // ... autres routes ...
+  {
+    path: 'evaluations',
+    component: GestionEvaluationsComponent,
     canActivate: [authGuard, roleGuard],
     data: { role: ['directeur', 'responsable'] },
   },

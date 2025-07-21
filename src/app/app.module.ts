@@ -15,8 +15,11 @@ import { TopbarComponent } from './components/topbar/topbar.component';
 import { FiltercoursePipe } from './filtercourse.pipe';
 import { FilterpipePipe } from './filterpipe.pipe';
 import { AuthService } from './services/auth/auth.service';
-import {NgChartsModule} from "ng2-charts";
 import { GestionSpecialityComponent } from './components/gestion-speciality/gestion-speciality.component';
+import { NgChartsModule } from "ng2-charts";
+import { GestionEvaluationsComponent } from './components/gestion-evaluations/gestion-evaluations.component';
+import { HttpClientModule } from '@angular/common/http';
+
 
 export function initializeApp(authService: AuthService) {
   return () => {
@@ -39,8 +42,15 @@ export function initializeApp(authService: AuthService) {
     FilterpipePipe,
     FiltercoursePipe,
     GestionSpecialityComponent,
+    GestionEvaluationsComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, NgChartsModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    NgChartsModule,
+    HttpClientModule,
+  ],
   providers: [
     {
       provide: APP_INITIALIZER,
@@ -51,4 +61,4 @@ export function initializeApp(authService: AuthService) {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

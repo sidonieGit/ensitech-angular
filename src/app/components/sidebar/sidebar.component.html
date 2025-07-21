@@ -27,6 +27,11 @@
 					<i class="hgi-stroke hgi-course"></i> Gestion Cours
 				</a>
 			</li>
+      <li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/speciality" routerLinkActive="actived">
+					<i class="hgi hgi-stroke hgi-task-01"></i> Gestion Specialités
+				</a>
+			</li>
 		</ul>
 		<div class="mt-auto deconnexion w-100">
 			<button (click)="logout()" class="btn btn-outline-primary w-100">Déconnexion</button>

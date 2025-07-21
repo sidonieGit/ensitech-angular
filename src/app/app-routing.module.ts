@@ -8,6 +8,7 @@ import { GestionTeachersComponent } from './components/gestion-teachers/gestion-
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
+import { GestionSpecialityComponent } from './components/gestion-speciality/gestion-speciality.component';
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent },
@@ -36,6 +37,12 @@ const routes: Routes = [
     data: { role: ['directeur', 'responsable'] },
   },
   { path: 'login-page', component: LoginPageComponent },
+
+  { path: 'speciality',
+    component: GestionSpecialityComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: ['directeur', 'responsable'] }
+  },
 ];
 
 @NgModule({

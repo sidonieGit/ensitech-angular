@@ -1,0 +1,143 @@
+<section class="d-flex">
+
+<app-sidebar></app-sidebar>
+<main class="flex-grow-1">
+  <app-topbar></app-topbar>
+
+	<!-- Barre de recherche et bouton Ajouter -->
+  <div class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4">
+			<div class="col-6 col-md-9" style="height: 44px;">
+				<div class="input-group">
+					<span class="input-group-text" id="basic-addon1">
+						<i class="hgi-stroke hgi-search-01"></i>
+					</span>
+					<input type="search" placeholder="Rechercher une specialité ..." class="form-control" [(ngModel)]="filtername"
+						(ngModelChange)="updateFilteredSpecialities()" />
+				</div>
+			</div>
+			<button class="primary-btn border-0" data-bs-toggle="modal" data-bs-target="#addSpecialityModal">
+				Ajouter une Specialité<i class="hgi-stroke hgi-add-circle"></i>
+			</button>
+		</div>
+  <!-- Liste des specialities -->
+  <div class="students-list mt-5 px-4">
+    <table class="table border table-hover">
+      <thead class="table-primary">
+        <tr>
+          <th><input type="checkbox" class="form-check-input" /></th>
+          <th>Id</th>
+          <th>Titre</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let speciality of filteredSpecialities">
+          <td><input type="checkbox" class="form-check-input" /></td>
+          <td>{{ speciality.id }}</td>
+          <td>{{ speciality.label }}</td>
+          <td>{{ speciality.description }}</td>
+          <td>
+            <div class="dropdown">
+              <a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <i class="hgi-stroke hgi-more-vertical"></i>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="javascript:void(0);" (click)="editSpeciality(speciality)"
+                    data-bs-toggle="modal" data-bs-target="#editSpecialityModal">Modifier</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0);" (click)="viewSpeciality(speciality)"
+                    data-bs-toggle="modal" data-bs-target="#viewSpecialityModal">Voir les informations</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0);"
+                    (click)="deleteSpeciality(speciality.id)">Supprimer</a></li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Modal pour ajouter un cours -->
+	<div class="modal fade" id="addSpecialityModal" tabindex="-1" aria-labelledby="addSpecialityModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Ajouter une specialité</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<form (ngSubmit)=" addSpeciality(newSpeciality)">
+	
+            <div class="mb-3">
+							<label for="label" class="form-label">Titre</label>
+							<input ype="text" [(ngModel)]="newSpeciality.label" name="label " placeholder="Title" required
+								class="form-control" />
+						</div>
+						<div class="mb-3">
+							<label for="description" class="form-label">Description </label>
+							<textarea [(ngModel)]="newSpeciality.description" name="description" placeholder="description" required
+								class="form-control"> </textarea>
+						</div>
+
+						<div class="modal-footer">
+							<button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">Ajouter</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+  <!-- Modal pour visualiser les informations d'un cours -->
+	<div class="modal fade" id="viewSpecialityModal" tabindex="-1" aria-labelledby="viewSpecialityModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Détails du cours</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<p><strong>Id :</strong> {{ selectedSpeciality?.id }}</p>
+					<p><strong>Titre :</strong> {{ selectedSpeciality?.label }}</p>
+					<p><strong>Description :</strong> {{ selectedSpeciality?.description }}</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+  <!-- Modal pour modifier un cours -->
+	<div class="modal fade" id="editSpecialityModal" tabindex="-1" aria-labelledby="editSpecialityModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Modifier les informations du cours</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body" *ngIf="editingSpeciality">
+					<form (ngSubmit)="saveEditSpeciality()">
+						<div class="mb-3">
+							<label for="label" class="form-label">Titre</label>
+							<input type="text" [(ngModel)]="editingSpeciality.label" name="label" placeholder="Titre" required
+								class="form-control" />
+						</div>
+						<div class="mb-3">
+							<label for="description" class="form-label">Description</label>
+							<input type="text" [(ngModel)]="editingSpeciality.description" name="description" placeholder="Description" required
+								class="form-control" />
+						</div>
+
+						<button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">Enregistrer</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</section>

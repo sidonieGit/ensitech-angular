@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { EvaluationsService } from '../../services/evaluations/evaluations.service';
-// import { EvaluationsService } from '../../services/evaluations/evaluations.service';
 import { Evaluation } from '../../evaluation';
 import { Student } from '../../student';
 import { COURSES } from '../../mock-cours';
-import {STUDENTS } from '../../mock-student'
-
+import { STUDENTS } from '../../mock-student';
 
 @Component({
   selector: 'app-gestion-evaluations',
@@ -16,14 +14,8 @@ export class GestionEvaluationsComponent implements OnInit {
   evaluations: Evaluation[] = [];
   students: Student[] = [];
   courses = COURSES;
-  newEvaluation: Evaluation = {
-    titre: '',
-    description: '',
-    date: new Date(),
-    studentId: 0,
-    note: 0,
-    coursId: undefined,
-  };
+  newEvaluation: Evaluation = this.getEmptyEvaluation();
+  editingEvaluation: Evaluation | null = null;
 
   constructor(private evaluationsService: EvaluationsService) {}
 
@@ -32,12 +24,42 @@ export class GestionEvaluationsComponent implements OnInit {
     this.students = STUDENTS;
   }
 
+  getEmptyEvaluation(): Evaluation {
+    return {
+      code: '',
+      date: new Date(),
+      note: 0,
+      description: '',
+      type: 'EXAMEN',
+      statut: 'NON VALIDEE',
+      studentId: 0,
+      coursId: undefined,
+    };
+  }
+
   addEvaluation(): void {
-    if (this.newEvaluation.titre && this.newEvaluation.studentId) {
-      this.evaluationsService.addEvaluation({...this.newEvaluation});
+    if (this.newEvaluation.code && this.newEvaluation.studentId) {
+      this.evaluationsService.addEvaluation({ ...this.newEvaluation });
       this.evaluations = this.evaluationsService.getEvaluations();
-      this.resetForm();
+      this.newEvaluation = this.getEmptyEvaluation();
     }
+  }
+
+  startEdit(evaluation: Evaluation): void {
+    // Copie complète pour edition
+    this.editingEvaluation = { ...evaluation };
+  }
+
+  saveEditEvaluation(): void {
+    if (this.editingEvaluation) {
+      this.evaluationsService.updateEvaluation(this.editingEvaluation);
+      this.evaluations = this.evaluationsService.getEvaluations();
+      this.editingEvaluation = null;
+    }
+  }
+
+  cancelEdit(): void {
+    this.editingEvaluation = null;
   }
 
   deleteEvaluation(id: number | undefined): void {
@@ -45,17 +67,6 @@ export class GestionEvaluationsComponent implements OnInit {
       this.evaluationsService.deleteEvaluation(id);
       this.evaluations = this.evaluationsService.getEvaluations();
     }
-  }
-
-  resetForm(): void {
-    this.newEvaluation = {
-      titre: '',
-      description: '',
-      date: new Date(),
-      studentId: 0,
-      note: 0,
-      coursId: undefined,
-    };
   }
 
   getStudentName(id: number): string {

@@ -1,9 +1,11 @@
 export interface Evaluation {
-  id?: number;
-  titre: string;
-  description: string;
+  id?: number; // identifiant interne
+  code: string; // matricule de l'évaluation
   date: Date;
-  studentId: number; // ID de l'étudiant évalué
-  note: number; // Note sur 20
-  coursId?: number; // Optionnel, relier à un cours
+  note: number;
+  description: string;
+  type: 'CONTRÔLE CONTINUE' | 'EXAMEN' | 'TP';
+  statut: 'VALIDÉE' | 'NON VALIDEE';
+  studentId: number;
+  coursId?: number;
 }

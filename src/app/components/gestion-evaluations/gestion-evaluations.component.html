@@ -4,64 +4,143 @@
     <app-topbar></app-topbar>
     <div class="container mt-4">
       <h2>Gestion des Évaluations</h2>
-      <form (ngSubmit)="addEvaluation()" class="mb-4">
+      <!-- Formulaire d'ajout -->
+      <form (ngSubmit)="addEvaluation()" class="mb-4 border rounded p-4 shadow-sm bg-light">
         <div class="row">
-          <div class="col-md-3 mb-3">
-            <label for="titre" class="form-label">Titre</label>
-            <input type="text" id="titre" class="form-control" [(ngModel)]="newEvaluation.titre" name="titre" required>
+          <div class="col-md-2 mb-3">
+            <label for="code" class="form-label">Code/Matricule</label>
+            <input type="text" id="code" class="form-control" [(ngModel)]="newEvaluation.code" name="code" required>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" id="date" class="form-control" [(ngModel)]="newEvaluation.date" name="date" required>
+          </div>
+          <div class="col-md-1 mb-3">
+            <label for="note" class="form-label">Note</label>
+            <input type="number" id="note" class="form-control" [(ngModel)]="newEvaluation.note" name="note" min="0" max="20" required>
           </div>
           <div class="col-md-3 mb-3">
             <label for="description" class="form-label">Description</label>
             <input type="text" id="description" class="form-control" [(ngModel)]="newEvaluation.description" name="description">
           </div>
           <div class="col-md-2 mb-3">
-            <label for="date" class="form-label">Date</label>
-            <input type="date" id="date" class="form-control" [(ngModel)]="newEvaluation.date" name="date" required>
+            <label for="type" class="form-label">Type</label>
+            <select class="form-select" [(ngModel)]="newEvaluation.type" name="type" required>
+              <option value="CONTRÔLE CONTINUE">CONTRÔLE CONTINUE</option>
+              <option value="EXAMEN">EXAMEN</option>
+              <option value="TP">TP</option>
+            </select>
           </div>
           <div class="col-md-2 mb-3">
+            <label for="statut" class="form-label">Statut</label>
+            <select class="form-select" [(ngModel)]="newEvaluation.statut" name="statut" required>
+              <option value="VALIDÉE">VALIDÉE</option>
+              <option value="NON VALIDEE">NON VALIDEE</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 mb-3">
             <label for="studentId" class="form-label">Étudiant</label>
             <select class="form-select" [(ngModel)]="newEvaluation.studentId" name="studentId" required>
               <option [value]="0" disabled>Choisir...</option>
               <option *ngFor="let s of students" [value]="s.id">{{ s.prenom }} {{ s.nom }}</option>
             </select>
           </div>
-          <div class="col-md-1 mb-3">
-            <label for="note" class="form-label">Note</label>
-            <input type="number" id="note" class="form-control" [(ngModel)]="newEvaluation.note" name="note" min="0" max="20" required>
-          </div>
-          <div class="col-md-1 mb-3">
+          <div class="col-md-3 mb-3">
             <label for="coursId" class="form-label">Cours</label>
             <select class="form-select" [(ngModel)]="newEvaluation.coursId" name="coursId">
               <option [value]="undefined" disabled>...</option>
               <option *ngFor="let c of courses" [value]="c.id">{{ c.title }}</option>
             </select>
           </div>
+          <div class="col-md-6 d-flex align-items-end justify-content-end">
+            <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">Ajouter</button>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary">Ajouter</button>
       </form>
-      <table class="table table-bordered">
-        <thead>
+
+      <!-- Tableau des évaluations -->
+      <table class="table table-bordered table-hover">
+        <thead class="table-secondary">
           <tr>
-            <th>Titre</th>
+            <th>Code</th>
             <th>Date</th>
-            <th>Étudiant</th>
             <th>Note</th>
-            <th>Cours</th>
             <th>Description</th>
+            <th>Type</th>
+            <th>Statut</th>
+            <th>Étudiant</th>
+            <th>Cours</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let eval of evaluations">
-            <td>{{ eval.titre }}</td>
-            <td>{{ eval.date | date: 'dd/MM/yyyy' }}</td>
-            <td>{{ getStudentName(eval.studentId) }}</td>
-            <td>{{ eval.note }}</td>
-            <td>{{ getCourseTitle(eval.coursId) }}</td>
-            <td>{{ eval.description }}</td>
-            <td>
-              <button class="btn btn-danger btn-sm" (click)="deleteEvaluation(eval.id)">Supprimer</button>
-            </td>
+            <ng-container *ngIf="!(editingEvaluation && editingEvaluation.id === eval.id); else editRow">
+              <td>{{ eval.code }}</td>
+              <td>{{ eval.date | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ eval.note }}</td>
+              <td>{{ eval.description }}</td>
+              <td>{{ eval.type }}</td>
+              <td>
+                <span [ngClass]="{
+                  'badge bg-success': eval.statut === 'VALIDÉE',
+                  'badge bg-danger': eval.statut === 'NON VALIDEE'
+                }">
+                  {{ eval.statut }}
+                </span>
+              </td>
+              <td>{{ getStudentName(eval.studentId) }}</td>
+              <td>{{ getCourseTitle(eval.coursId) }}</td>
+<td class="d-flex gap-2 align-items-center">
+  <!-- Bouton Modifier -->
+  <button class="btn btn-sm btn-primary border-0" data-bs-dismiss="modal" (click)="startEdit(eval)">
+    <i class="hgi-stroke hgi-edit-02"></i>
+  </button>
+  <!-- Bouton Supprimer -->
+  <button class="btn btn-sm btn-danger" (click)="deleteEvaluation(eval.id)">
+    <i class="hgi-stroke hgi-delete-02"></i>
+  </button>
+</td>
+            </ng-container>
+            <ng-template #editRow>
+              <td><input type="text" class="form-control" [(ngModel)]="editingEvaluation!.code"></td>
+              <td><input type="date" class="form-control" [(ngModel)]="editingEvaluation!.date"></td>
+              <td><input type="number" class="form-control" [(ngModel)]="editingEvaluation!.note" min="0" max="20"></td>
+              <td><input type="text" class="form-control" [(ngModel)]="editingEvaluation!.description"></td>
+              <td>
+                <select class="form-select" [(ngModel)]="editingEvaluation!.type" class="primary-btn">
+                  <option value="CONTRÔLE CONTINUE">CONTRÔLE CONTINUE</option>
+                  <option value="EXAMEN">EXAMEN</option>
+                  <option value="TP">TP</option>
+                </select>
+              </td>
+              <td>
+                <select class="form-select" [(ngModel)]="editingEvaluation!.statut">
+                  <option value="VALIDÉE">VALIDÉE</option>
+                  <option value="NON VALIDEE">NON VALIDEE</option>
+                </select>
+              </td>
+              <td>
+                <select class="form-select" [(ngModel)]="editingEvaluation!.studentId">
+                  <option *ngFor="let s of students" [value]="s.id">{{ s.prenom }} {{ s.nom }}</option>
+                </select>
+              </td>
+              <td>
+                <select class="form-select" [(ngModel)]="editingEvaluation!.coursId">
+                  <option *ngFor="let c of courses" [value]="c.id">{{ c.title }}</option>
+                </select>
+              </td>
+              <td class="d-flex gap-2 align-items-center">
+                <button class="btn btn-sm btn-success" (click)="saveEditEvaluation()" style="font-size: 1.1rem;">
+                  <!-- Enregistrer -->
+                  <i class="hgi-stroke hgi-floppy-disk"></i></button>
+                   <!-- Annuler -->
+                <button class="btn btn-sm btn-secondary" (click)="cancelEdit()">
+                   <i class="hgi-stroke hgi-cancel-01"></i></button>
+              </td>
+            </ng-template>
           </tr>
         </tbody>
       </table>

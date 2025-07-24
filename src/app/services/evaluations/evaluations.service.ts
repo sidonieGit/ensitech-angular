@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Evaluation } from '../../evaluation';
-import{ EVALUATIONS } from '../../mock-evaluations'
-
+import { EVALUATIONS } from '../../mock-evaluations';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +22,7 @@ export class EvaluationsService {
     evaluation.id = this.evaluations.length > 0
       ? this.evaluations[this.evaluations.length - 1].id! + 1
       : 1;
-    this.evaluations.push(evaluation);
+    this.evaluations.push({ ...evaluation });
     this.saveToLocalStorage();
   }
 
@@ -35,7 +34,7 @@ export class EvaluationsService {
   updateEvaluation(updated: Evaluation): void {
     const idx = this.evaluations.findIndex(e => e.id === updated.id);
     if (idx !== -1) {
-      this.evaluations[idx] = updated;
+      this.evaluations[idx] = { ...updated };
       this.saveToLocalStorage();
     }
   }

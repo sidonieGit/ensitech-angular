@@ -1,65 +1,55 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Cours } from 'src/app/cours';
-import { STUDENTS } from 'src/app/mock-student';
-import { Student } from 'src/app/student';
+import { Observable } from 'rxjs';
+import { Student } from 'src/app/interfaces/students.model'; // Importez le DTO
 
 @Injectable({
   providedIn: 'root',
 })
 export class StudentsService {
-  private readonly STORAGE_KEY = 'students';
-  private students: Student[] = [];
+  // L'URL de votre user-service
+  private apiUrl = 'http://localhost:8084/api/students';
 
-  constructor() {
-    const savedStudents = localStorage.getItem(this.STORAGE_KEY);
-    this.students = savedStudents ? JSON.parse(savedStudents) : STUDENTS;
+  constructor(private http: HttpClient) {}
+
+  // GET: Obtenir tous les étudiants
+  getStudents(): Observable<Student[]> {
+    return this.http.get<Student[]>(this.apiUrl);
   }
 
-  // Obtenir tous les étudiants
-  getStudents(): Student[] {
-    return this.students;
+  // GET: Obtenir un étudiant par son ID
+  getStudent(id: number): Observable<Student> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.get<Student>(url);
   }
 
-  // Ajouter un étudiant
-  addStudent(student: Student): void {
-    student.id =
-      this.students.length > 0
-        ? this.students[this.students.length - 1].id! + 1
-        : 1; // Génère un ID unique
-    student.dateNaissance = new Date();
-    this.students.push(student);
-
-    this.saveToLocalStorage();
+  // POST: Ajouter un étudiant
+  // On envoie un objet qui correspond au DTO de création
+  addStudent(
+    studentData: Omit<Student, 'id' | 'matricule' | 'courses'>
+  ): Observable<Student> {
+    return this.http.post<Student>(this.apiUrl, studentData);
   }
 
-  // Supprimer un étudiant
-  deleteStudent(id: number | undefined): void {
-    this.students = this.students.filter((student) => student.id !== id);
-    this.saveToLocalStorage();
+  // PUT: Mettre à jour un étudiant
+  updateStudent(id: number, studentData: Student): Observable<Student> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.put<Student>(url, studentData);
   }
 
-  // Modifier un étudiant
-  updateStudent(updatedStudent: Student): void {
-    const index = this.students.findIndex(
-      (student) => student.id === updatedStudent.id
-    );
-    if (index !== -1) {
-      this.students[index] = { ...updatedStudent };
-      this.saveToLocalStorage();
-    }
+  // DELETE: Supprimer un étudiant
+  deleteStudent(id: number): Observable<void> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.delete<void>(url);
   }
 
-  //
-  associateCoursesToStudent(studentId: number, courses: Cours[]): void {
-    const student = this.students.find((s) => s.id === studentId);
-    if (student) {
-      student.courses = courses; // Associe les objets Cours
-      this.saveToLocalStorage();
-    }
-  }
-
-  // Sauvegarder les données dans le Local Storage
-  private saveToLocalStorage(): void {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.students));
+  // PUT: Associer des cours à un étudiant
+  associateCoursesToStudent(
+    studentId: number,
+    courseIds: number[]
+  ): Observable<Student> {
+    const url = `${this.apiUrl}/${studentId}/courses`;
+    // Le backend attend une liste d'IDs, pas les objets de cours complets
+    return this.http.put<Student>(url, courseIds);
   }
 }

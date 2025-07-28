@@ -17,11 +17,13 @@
           </div>
           <div class="col-md-1 mb-3">
             <label for="note" class="form-label">Note</label>
-            <input type="number" id="note" class="form-control" [(ngModel)]="newEvaluation.note" name="note" min="0" max="20" required>
+            <input type="number" id="note" class="form-control" [(ngModel)]="newEvaluation.note" name="note" min="0"
+              max="20" required>
           </div>
           <div class="col-md-3 mb-3">
             <label for="description" class="form-label">Description</label>
-            <input type="text" id="description" class="form-control" [(ngModel)]="newEvaluation.description" name="description">
+            <input type="text" id="description" class="form-control" [(ngModel)]="newEvaluation.description"
+              name="description">
           </div>
           <div class="col-md-2 mb-3">
             <label for="type" class="form-label">Type</label>
@@ -44,7 +46,7 @@
             <label for="studentId" class="form-label">Étudiant</label>
             <select class="form-select" [(ngModel)]="newEvaluation.studentId" name="studentId" required>
               <option [value]="0" disabled>Choisir...</option>
-              <option *ngFor="let s of students" [value]="s.id">{{ s.prenom }} {{ s.nom }}</option>
+              <option *ngFor="let s of students" [value]="s.id">{{ s.firstName }} {{ s.lastName }}</option>
             </select>
           </div>
           <div class="col-md-3 mb-3">
@@ -93,16 +95,16 @@
               </td>
               <td>{{ getStudentName(eval.studentId) }}</td>
               <td>{{ getCourseTitle(eval.coursId) }}</td>
-<td class="d-flex gap-2 align-items-center">
-  <!-- Bouton Modifier -->
-  <button class="btn btn-sm btn-primary border-0" data-bs-dismiss="modal" (click)="startEdit(eval)">
-    <i class="hgi-stroke hgi-edit-02"></i>
-  </button>
-  <!-- Bouton Supprimer -->
-  <button class="btn btn-sm btn-danger" (click)="deleteEvaluation(eval.id)">
-    <i class="hgi-stroke hgi-delete-02"></i>
-  </button>
-</td>
+              <td class="d-flex gap-2 align-items-center">
+                <!-- Bouton Modifier -->
+                <button class="btn btn-sm btn-primary border-0" data-bs-dismiss="modal" (click)="startEdit(eval)">
+                  <i class="hgi-stroke hgi-edit-02"></i>
+                </button>
+                <!-- Bouton Supprimer -->
+                <button class="btn btn-sm btn-danger" (click)="deleteEvaluation(eval.id)">
+                  <i class="hgi-stroke hgi-delete-02"></i>
+                </button>
+              </td>
             </ng-container>
             <ng-template #editRow>
               <td><input type="text" class="form-control" [(ngModel)]="editingEvaluation!.code"></td>
@@ -124,7 +126,7 @@
               </td>
               <td>
                 <select class="form-select" [(ngModel)]="editingEvaluation!.studentId">
-                  <option *ngFor="let s of students" [value]="s.id">{{ s.prenom }} {{ s.nom }}</option>
+                  <option *ngFor="let s of students" [value]="s.id">{{ s.firstName }} {{ s.lastName }}</option>
                 </select>
               </td>
               <td>
@@ -136,9 +138,9 @@
                 <button class="btn btn-sm btn-success" (click)="saveEditEvaluation()" style="font-size: 1.1rem;">
                   <!-- Enregistrer -->
                   <i class="hgi-stroke hgi-floppy-disk"></i></button>
-                   <!-- Annuler -->
+                <!-- Annuler -->
                 <button class="btn btn-sm btn-secondary" (click)="cancelEdit()">
-                   <i class="hgi-stroke hgi-cancel-01"></i></button>
+                  <i class="hgi-stroke hgi-cancel-01"></i></button>
               </td>
             </ng-template>
           </tr>

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { EvaluationsService } from '../../services/evaluations/evaluations.service';
+import { Student } from 'src/app/interfaces/students.model';
 import { Evaluation } from '../../evaluation';
-import { Student } from '../../student';
 import { COURSES } from '../../mock-cours';
 import { STUDENTS } from '../../mock-student';
+import { EvaluationsService } from '../../services/evaluations/evaluations.service';
 
 @Component({
   selector: 'app-gestion-evaluations',
@@ -70,12 +70,12 @@ export class GestionEvaluationsComponent implements OnInit {
   }
 
   getStudentName(id: number): string {
-    const student = this.students.find(s => s.id === id);
-    return student ? `${student.prenom} ${student.nom}` : 'Non trouvé';
+    const student = this.students.find((s) => s.id === id);
+    return student ? `${student.firstName} ${student.lastName}` : 'Non trouvé';
   }
 
   getCourseTitle(id: number | undefined): string {
-    const course = this.courses.find(c => c.id === id);
+    const course = this.courses.find((c) => c.id === id);
     return course ? course.title : 'Non trouvé';
   }
 }

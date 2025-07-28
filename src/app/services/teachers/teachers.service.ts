@@ -1,9 +1,9 @@
 //src/app/services/teachers.service.ts
 
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Teacher } from 'src/app/interfaces/teachers-interface';
+import { Teacher } from 'src/app/interfaces/teachers.model';
 
 @Injectable({
   providedIn: 'root',

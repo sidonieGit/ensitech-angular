@@ -1,68 +1,94 @@
-import { Student } from './student';
+import { Student } from 'src/app/interfaces/students.model';
 
 export const STUDENTS: Student[] = [
   {
     id: 1,
-    nom: 'DJUISSI',
-    prenom: 'Sidonie',
-    dateInscription: new Date(2010, 8, 5),
-    email: 'sidonie.djuissi@example.com',
+    firstName: 'Jean',
+    lastName: 'Dupont',
+    email: 'jean.dupont@example.com',
+    address: "12 rue de la Légion d'Honneur",
     telephone: '0612345678',
+    birthday: new Date(1990, 8, 5),
+    gender: 'MALE',
+    matricule: '123456789',
+    courses: [
+      {
+        id: 1,
+        title: 'Réseaux et Télécom',
+        description:
+          'Introduction aux concepts de réseaux et télécommunications.',
+      },
+      {
+        id: 2,
+        title: 'Analyse 1',
+        duration: '12h30min',
+        description: 'Étude des fonctions et des limites en mathématiques.',
+      },
+      {
+        id: 3,
+        title: 'Algèbre 1',
+        duration: '15h45min',
+        description: "Fondements de l'algèbre linéaire et des équations.",
+      },
+      {
+        id: 4,
+        title: "Introduction à l'informatique",
+        duration: '8h',
+        description:
+          "Présentation des bases de l'informatique et de la programmation.",
+      },
+      {
+        id: 5,
+        title: 'Algorithmique 1',
+        duration: '25h30min',
+        description:
+          'Concepts de base des algorithmes et structures de données.',
+      },
+    ],
   },
   {
-    id:2,
-    nom: 'MATHO',
-    prenom: 'Adéline',
-    dateInscription: new Date(2010, 8, 11),
-    email: 'adeline.a.com',
+    id: 2,
+    firstName: 'Jean',
+    lastName: 'Dupont',
+    email: 'jean.dupont@example.com',
+    address: "12 rue de la Légion d'Honneur",
     telephone: '0612345678',
-  },
-  {
-    id:3,
-    nom: 'ANANI',
-    prenom: 'Serge',
-    dateInscription: new Date(2010, 8, 9),
-    email: '	serge.anani@example.com',
-    telephone: '0612345678',
-  },
-  {
-    id:4,
-    nom: 'NEDVED',
-    prenom: 'Jovy',
-    dateInscription: new Date(2010, 8, 12),
-    email: 'jovy.neddev@example.com',
-    telephone: '0612345678',
-  },
-  {
-    id:5,
-    nom: 'DOSSOU',
-    prenom: 'Quirin',
-    dateInscription: new Date(2010, 8, 8),
-    email: 'quirin.dossou@example.com',
-    telephone: '0612345678',
-  },
-  {
-    id:6,
-    nom: 'VODOUNOU',
-    prenom: 'Nicodème',
-    dateInscription: new Date(2010, 8, 4),
-    email: 'nicodeme.vodounou@example.com',
-    telephone: '0612345678',
-  },
-  {
-    id:7,
-    nom: 'BANNAME',
-    prenom: 'Victor',
-    dateInscription: new Date(2010, 8, 13),
-    email: 'victor.banname@example.com',
-    telephone: '0612345678',
-  },
-    {
-    id:8,
-    nom: 'NSENGIMANA',
-    prenom: 'François',
-    dateInscription: new Date(2010, 8, 13),
-    email: 'francois.imana@example.com',
-    telephone: '0642345678',
+    birthday: new Date(1990, 8, 5),
+    gender: 'MALE',
+    matricule: '123456789',
+    courses: [
+      {
+        id: 1,
+        title: 'Réseaux et Télécom',
+        description:
+          'Introduction aux concepts de réseaux et télécommunications.',
+      },
+      {
+        id: 2,
+        title: 'Analyse 1',
+        duration: '12h30min',
+        description: 'Étude des fonctions et des limites en mathématiques.',
+      },
+      {
+        id: 3,
+        title: 'Algèbre 1',
+        duration: '15h45min',
+        description: "Fondements de l'algèbre linéaire et des équations.",
+      },
+      {
+        id: 4,
+        title: "Introduction à l'informatique",
+        duration: '8h',
+        description:
+          "Présentation des bases de l'informatique et de la programmation.",
+      },
+      {
+        id: 5,
+        title: 'Algorithmique 1',
+        duration: '25h30min',
+        description:
+          'Concepts de base des algorithmes et structures de données.',
+      },
+    ],
   },
 ];

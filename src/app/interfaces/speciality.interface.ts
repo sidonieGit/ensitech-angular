@@ -1,4 +1,4 @@
-import { Cours } from "../cours";
+import { Course } from 'src/app/interfaces/course.model';
 
 export interface Speciality {
   id?: number;

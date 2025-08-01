@@ -5,7 +5,8 @@ export interface Teacher {
   email: string;
   address: string;
   telephone: string;
-  birthday: Date; // ou string si vous préférez le manipuler ainsi
+
+  birthday?: Date | string | null; // ou string si vous préférez le manipuler ainsi
   gender: 'MALE' | 'FEMALE';
   createdAt: Date; // ou string
 }

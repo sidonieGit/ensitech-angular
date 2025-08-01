@@ -27,13 +27,20 @@
 					<i class="hgi-stroke hgi-course"></i> Gestion Cours
 				</a>
 			</li>
-      <li>
-  <a routerLink="/evaluations" class="primary-btn border-0 d-flex align-items-center">
-    <i class="hgi-stroke hgi-add-circle"></i>
-    <span class="ms-2">Gestion des évaluations</span>
-  </a>
 
-</li>
+      <li class="nav-item"  *ngIf="hasAccess(['directeur', 'responsable'])">
+        <a routerLink="/evaluations" class="nav-link scrollto" routerLinkActive="actived" >
+          <i class="hgi-stroke hgi-add-circle"></i>Gestion des évaluations
+        </a>
+      </li>
+
+      <li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/speciality" routerLinkActive="actived">
+					<i class="hgi hgi-stroke hgi-task-01"></i> Gestion Specialités
+				</a>
+			</li>
+     
+
 		</ul>
 		<div class="mt-auto deconnexion w-100">
 			<button (click)="logout()" class="btn btn-outline-primary w-100">Déconnexion</button>

@@ -2,8 +2,14 @@
   background: #fff;
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
 }
 h2 {
   margin-bottom: 2rem;
+}
+.table th, .table td {
+  vertical-align: middle;
+}
+.badge {
+  font-size: 1em;
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CoursModel } from 'src/app/components/gestion-cours/cours.model';
-import { CoursesService } from 'src/app/services/courses/courses2.service';
+// import { CoursModel } from 'src/app/components/gestion-cours/cours.model';
+import { Course } from 'src/app/interfaces/course.model'; // Utiliser notre interface standard
+import { CoursesService } from 'src/app/services/courses/courses.service';
 
 @Component({
   selector: 'app-gestion-courses',
@@ -8,18 +9,18 @@ import { CoursesService } from 'src/app/services/courses/courses2.service';
   styleUrls: ['./gestion-cours.component.css'],
 })
 export class GestionCoursComponent implements OnInit {
-  courses: CoursModel[] = [];
+  courses: Course[] = [];
   filtername: string = '';
-  selectedCourse: CoursModel | null = null;
-  editingCourse: CoursModel | null = null;
-  filteredCourses: CoursModel[] = [];
-  newCourse: CoursModel = {
-    intitule: '',
+  selectedCourse: Course | null = null;
+  editingCourse: Course | null = null;
+  filteredCourses: Course[] = [];
+  newCourse: Course = {
+    title: '',
     coefficient: 0,
-    nombreHeures: 0,
+    hours: 0,
   };
 
-  constructor(private coursesService: CoursesService) { }
+  constructor(private coursesService: CoursesService) {}
 
   ngOnInit(): void {
     this.loadCourses();
@@ -28,14 +29,14 @@ export class GestionCoursComponent implements OnInit {
   loadCourses(): void {
     //  this.courses = this.coursesService.getCourses();
     //this.updateFilteredCourses();
-    this.coursesService.getAllCourses().subscribe((data) => {
+    this.coursesService.getCourses().subscribe((data) => {
       this.courses = data;
       this.updateFilteredCourses();
     });
   }
 
   addCourse(): void {
-    if (this.newCourse.intitule) {
+    if (this.newCourse.title) {
       // Vérifiez que le titre est présent
       /*this.coursesService.addCourse(this.newCourse);
       this.loadCourses();
@@ -45,22 +46,23 @@ export class GestionCoursComponent implements OnInit {
           console.log('Cours saved:', resp);
           this.loadCourses();
           this.resetForm();
-        }, error: (err) => console.error('Error saving course:', err)
+        },
+        error: (err) => console.error('Error saving course:', err),
       });
     }
   }
 
   updateFilteredCourses(): void {
     this.filteredCourses = this.courses.filter((course) =>
-      course.intitule.toLowerCase().includes(this.filtername.toLowerCase())
+      course.title.toLowerCase().includes(this.filtername.toLowerCase())
     );
   }
 
   resetForm(): void {
     this.newCourse = {
-      intitule: '',
+      title: '',
       coefficient: 0,
-      nombreHeures: 0,
+      hours: 0,
     };
   }
 
@@ -76,11 +78,11 @@ export class GestionCoursComponent implements OnInit {
     }
   }
 
-  viewCourse(course: CoursModel): void {
+  viewCourse(course: Course): void {
     this.selectedCourse = course;
   }
 
-  editCourse(course: CoursModel): void {
+  editCourse(course: Course): void {
     this.editingCourse = { ...course };
   }
 
@@ -92,7 +94,7 @@ export class GestionCoursComponent implements OnInit {
           this.loadCourses();
           this.editingCourse = null;
         },
-        error: (err) => console.error('Error editing cours:', err)
+        error: (err) => console.error('Error editing cours:', err),
       });
     }
   }

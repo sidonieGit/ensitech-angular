@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Teacher } from 'src/app/interfaces/teachers-interface';
+import { Teacher } from 'src/app/interfaces/teachers.model';
 import { TeachersService } from 'src/app/services/teachers/teachers.service';
 
 @Component({

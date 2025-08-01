@@ -6,28 +6,17 @@
     <app-topbar></app-topbar>
 
     <!-- Barre de recherche et bouton Ajouter -->
-    <div
-      class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4"
-    >
+    <div class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4">
       <div class="col-6 col-md-9" style="height: 44px">
         <div class="input-group">
           <span class="input-group-text" id="basic-addon1">
             <i class="hgi-stroke hgi-search-01"></i>
           </span>
-          <input
-            type="search"
-            placeholder="Rechercher un cours..."
-            class="form-control"
-            [(ngModel)]="filtername"
-            (ngModelChange)="updateFilteredCourses()"
-          />
+          <input type="search" placeholder="Rechercher un cours..." class="form-control" [(ngModel)]="filtername"
+            (ngModelChange)="updateFilteredCourses()" />
         </div>
       </div>
-      <button
-        class="primary-btn border-0"
-        data-bs-toggle="modal"
-        data-bs-target="#addTeacherModal"
-      >
+      <button class="primary-btn border-0" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
         Ajouter un cours<i class="hgi-stroke hgi-add-circle"></i>
       </button>
     </div>
@@ -49,48 +38,26 @@
           <tr *ngFor="let course of filteredCourses">
             <td><input type="checkbox" class="form-check-input" /></td>
             <td>{{ course.id }}</td>
-            <td>{{ course.intitule }}</td>
+            <td>{{ course.title}}</td>
             <td>{{ course.coefficient }}</td>
-            <td>{{ course.nombreHeures }}</td>
+            <td>{{ course.hours }}</td>
             <td>
               <div class="dropdown">
-                <a
-                  href="#"
-                  class="text-decoration-none text-black"
-                  id="dropdownMenuButton"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
+                <a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                  aria-expanded="false">
                   <i class="hgi-stroke hgi-more-vertical"></i>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li>
-                    <a
-                      class="dropdown-item"
-                      href="javascript:void(0);"
-                      (click)="editCourse(course)"
-                      data-bs-toggle="modal"
-                      data-bs-target="#editTeacherModal"
-                      >Modifier</a
-                    >
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="editCourse(course)"
+                      data-bs-toggle="modal" data-bs-target="#editTeacherModal">Modifier</a>
                   </li>
                   <li>
-                    <a
-                      class="dropdown-item"
-                      href="javascript:void(0);"
-                      (click)="viewCourse(course)"
-                      data-bs-toggle="modal"
-                      data-bs-target="#viewTeacherModal"
-                      >Voir les informations</a
-                    >
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="viewCourse(course)"
+                      data-bs-toggle="modal" data-bs-target="#viewTeacherModal">Voir les informations</a>
                   </li>
                   <li>
-                    <a
-                      class="dropdown-item"
-                      href="javascript:void(0);"
-                      (click)="deleteCourse(course.id)"
-                      >Supprimer</a
-                    >
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="deleteCourse(course.id)">Supprimer</a>
                   </li>
                 </ul>
               </div>
@@ -98,9 +65,7 @@
           </tr>
         </tbody>
       </table>
-      <div
-        class="d-flex flex-column flex-md-row justify-content-between align-items-center"
-      >
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
         <p>{{ filteredCourses.length }} résultats</p>
         <nav aria-label="Page navigation">
           <ul class="pagination">
@@ -117,65 +82,33 @@
   </main>
 
   <!-- Modal pour ajouter un cours -->
-  <div
-    class="modal fade"
-    id="addTeacherModal"
-    tabindex="-1"
-    aria-labelledby="addTeacherModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="addTeacherModal" tabindex="-1" aria-labelledby="addTeacherModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-intitule">Ajouter un cours</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <form (ngSubmit)="addCourse()">
             <div class="mb-3">
               <label for="intitule" class="form-label">Intitule du cours</label>
-              <input
-                ype="text"
-                [(ngModel)]="newCourse.intitule"
-                name="Thème du cours"
-                placeholder="intitule"
-                required
-                class="form-control"
-              />
+              <input ype="text" [(ngModel)]="newCourse.title" name="Thème du cours" placeholder="intitule" required
+                class="form-control" />
             </div>
             <div class="mb-3">
               <label for="coefficient" class="form-label">coefficient </label>
-              <textarea
-                [(ngModel)]="newCourse.coefficient"
-                name="coefficient"
-                placeholder="coefficient"
-                required
-                class="form-control"
-              >
+              <textarea [(ngModel)]="newCourse.coefficient" name="coefficient" placeholder="coefficient" required
+                class="form-control">
               </textarea>
             </div>
             <div class="mb-3">
-              <label for="nombreHeures" class="form-label"
-                >Nombre D'heures</label
-              >
-              <input
-                class="form-control"
-                type="text"
-                [(ngModel)]="newCourse.nombreHeures"
-                name="nombreHeures"
-                placeholder="Nombre d'heures"
-              />
+              <label for="nombreHeures" class="form-label">Nombre D'heures</label>
+              <input class="form-control" type="text" [(ngModel)]="newCourse.hours" name="nombreHeures"
+                placeholder="Nombre d'heures" />
             </div>
             <div class="modal-footer">
-              <button
-                type="submit"
-                class="primary-btn border-0"
-                data-bs-dismiss="modal"
-              >
+              <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
                 Ajouter
               </button>
             </div>
@@ -186,40 +119,27 @@
   </div>
 
   <!-- Modal pour visualiser les informations d'un cours -->
-  <div
-    class="modal fade"
-    id="viewTeacherModal"
-    tabindex="-1"
-    aria-labelledby="viewTeacherModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="viewTeacherModal" tabindex="-1" aria-labelledby="viewTeacherModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-intitule">Détails du cours</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <p><strong>Id :</strong> {{ selectedCourse?.id }}</p>
-          <p><strong>Thème :</strong> {{ selectedCourse?.intitule }}</p>
+          <p><strong>Thème :</strong> {{ selectedCourse?.title }}</p>
           <p>
             <strong>coefficient :</strong> {{ selectedCourse?.coefficient }}
           </p>
           <p>
             <strong>Nombre d'heures :</strong>
-            {{ selectedCourse?.nombreHeures }}
+            {{ selectedCourse?.hours }}
           </p>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Fermer
           </button>
         </div>
@@ -228,64 +148,32 @@
   </div>
 
   <!-- Modal pour modifier un cours -->
-  <div
-    class="modal fade"
-    id="editTeacherModal"
-    tabindex="-1"
-    aria-labelledby="editTeacherModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="editTeacherModal" tabindex="-1" aria-labelledby="editTeacherModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-intitule">Modifier les informations du cours</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body" *ngIf="editingCourse">
           <form (ngSubmit)="saveEditCourse()">
             <div class="mb-3">
               <label for="nom" class="form-label">Titre</label>
-              <input
-                type="text"
-                [(ngModel)]="editingCourse.intitule"
-                name="nom"
-                placeholder="Nom"
-                required
-                class="form-control"
-              />
+              <input type="text" [(ngModel)]="editingCourse.title" name="nom" placeholder="Nom" required
+                class="form-control" />
             </div>
             <div class="mb-3">
               <label for="prenom" class="form-label">coefficient</label>
-              <input
-                type="text"
-                [(ngModel)]="editingCourse.coefficient"
-                name="prenom"
-                placeholder="Prénom"
-                required
-                class="form-control"
-              />
+              <input type="text" [(ngModel)]="editingCourse.coefficient" name="prenom" placeholder="Prénom" required
+                class="form-control" />
             </div>
             <div class="mb-3">
-              <label for="nombreHeures" class="form-label"
-                >Nombre d'heure</label
-              >
-              <input
-                type="number"
-                [(ngModel)]="editingCourse.nombreHeures"
-                name="nombreHeures"
-                placeholder="Nombre d'heures"
-                class="form-control"
-              />
+              <label for="nombreHeures" class="form-label">Nombre d'heure</label>
+              <input type="number" [(ngModel)]="editingCourse.hours" name="nombreHeures" placeholder="Nombre d'heures"
+                class="form-control" />
             </div>
-            <button
-              type="submit"
-              class="primary-btn border-0"
-              data-bs-dismiss="modal"
-            >
+            <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
               Enregistrer
             </button>
           </form>

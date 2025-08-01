@@ -16,7 +16,7 @@
 						(ngModelChange)="updateFilteredStudents()" />
 				</div>
 			</div>
-			<button class="primary-btn border-0" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
+			<button class="primary-btn border-0" data-bs-toggle="modal" data-bs-target="#addStudentModal">
 				Ajouter un étudiant <i class="hgi-stroke hgi-add-circle"></i>
 			</button>
 		</div>
@@ -27,9 +27,9 @@
 				<thead class="table-primary">
 					<tr>
 						<th><input type="checkbox" class="form-check-input" /></th>
-						<th>Nom</th>
+						<th>Nom de Famille</th>
 						<th>Prénom</th>
-						<th>Date d'inscription</th>
+						<th>Date de Naissance</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -37,9 +37,9 @@
 					<tr *ngFor="let student of filteredStudents">
 						<td><input type="checkbox" class="form-check-input" /></td>
 
-						<td>{{ student.nom | titlecase }}</td>
-						<td>{{ student.prenom | titlecase }}</td>
-						<td>{{ student.dateInscription | date: 'dd/MM/yyyy' }}</td>
+						<td>{{ student.lastName | titlecase }}</td>
+						<td>{{ student.firstName | titlecase }}</td>
+						<td>{{ student.birthday| date : 'dd/MM/yyyy' }}</td>
 
 						<td>
 							<div class="dropdown">
@@ -49,10 +49,10 @@
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 									<li><a class="dropdown-item" href="javascript:void(0);" (click)="editStudent(student)"
-											data-bs-toggle="modal" data-bs-target="#editTeacherModal">Modifier</a>
+											data-bs-toggle="modal" data-bs-target="#editStudentModal">Modifier</a>
 									</li>
 									<li><a class="dropdown-item" href="javascript:void(0);" (click)="viewStudent(student)"
-											data-bs-toggle="modal" data-bs-target="#viewTeacherModal">Voir les
+											data-bs-toggle="modal" data-bs-target="#viewStudentModal">Voir les
 											informations</a></li>
 									<li><a class="dropdown-item" href="javascript:void(0);" (click)="openAssociateCoursesModal(student)"
 											data-bs-toggle="modal" data-bs-target="#associateCoursesModal">Associer un
@@ -83,7 +83,8 @@
 	</main>
 
 	<!-- Modal pour ajouter un étudiant -->
-	<div class="modal fade" id="addTeacherModal" tabindex="-1" aria-labelledby="addTeacherModalLabel" aria-hidden="true">
+	<div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+		<!-- CHANGÉ : ID -->
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -93,25 +94,26 @@
 				<div class="modal-body">
 					<form (ngSubmit)="addStudent()">
 						<div class="mb-3">
-							<label for="nom" class="form-label">Nom</label>
-							<input ype="text" [(ngModel)]="newStudent.nom" name="nom" placeholder="Nom" required
+							<label for="lastName" class="form-label">Nom de famille</label> <!-- CHANGÉ -->
+							<input type="text" [(ngModel)]="newStudent.lastName" name="lastName" placeholder="Nom de famille" required
 								class="form-control" />
 						</div>
 						<div class="mb-3">
-							<label for="prenom" class="form-label">Prénom</label>
-							<input type="text" [(ngModel)]="newStudent.prenom" name="prenom" placeholder="Prénom" required
+							<label for="firstName" class="form-label">Prénom</label> <!-- CHANGÉ -->
+							<input type="text" [(ngModel)]="newStudent.firstName" name="firstName" placeholder="Prénom" required
 								class="form-control" />
 						</div>
 						<div class="mb-3">
 							<label for="email" class="form-label">Email</label>
-							<input class="form-control" type="email" [(ngModel)]="newStudent.email" name="email"
-								placeholder="Email" />
+							<input class="form-control" type="email" [(ngModel)]="newStudent.email" name="email" placeholder="Email"
+								required />
 						</div>
 						<div class="mb-3">
-							<label for="email" class="form-label">Téléphone</label>
+							<label for="telephone" class="form-label">Téléphone</label>
 							<input class="form-control" type="text" [(ngModel)]="newStudent.telephone" name="telephone"
 								placeholder="Téléphone" />
 						</div>
+						<!-- Vous pouvez ajouter les autres champs ici : address, birthday, gender -->
 						<div class="modal-footer">
 							<button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">Ajouter</button>
 						</div>
@@ -122,22 +124,24 @@
 	</div>
 
 	<!-- Modal pour visualiser les informations d'un étudiant -->
-	<div class="modal fade" id="viewTeacherModal" tabindex="-1" aria-labelledby="viewTeacherModalLabel"
-		aria-hidden="true">
+	<div class="modal fade" id="viewStudentModal" tabindex="-1" aria-labelledby="viewStudentModalLabel"
+		aria-hidden="true"> <!-- CHANGÉ : ID -->
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Détails de l'étudiant</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
-				<div class="modal-body">
-					<p><strong>Nom :</strong> {{ selectedStudent?.nom }}</p>
-					<p><strong>Prénom :</strong> {{ selectedStudent?.prenom }}</p>
-					<p><strong>Email :</strong> {{ selectedStudent?.email }}</p>
-					<p><strong>Téléphone :</strong> {{ selectedStudent?.telephone }}</p>
-					<p><strong>Date d'inscription :</strong> {{ selectedStudent?.dateInscription | date: 'dd/MM/yyyy' }}</p>
-					<p><strong>Cours associés :</strong> {{ getCourseTitles(selectedStudent?.courses) }}</p>
-
+				<div class="modal-body" *ngIf="selectedStudent"> <!-- Ajout de *ngIf pour éviter les erreurs -->
+					<p><strong>Nom de famille :</strong> {{ selectedStudent.lastName }}</p> <!-- CHANGÉ -->
+					<p><strong>Prénom :</strong> {{ selectedStudent.firstName }}</p> <!-- CHANGÉ -->
+					<p><strong>Matricule :</strong> {{ selectedStudent.matricule }}</p> <!-- Ajout du matricule -->
+					<p><strong>Email :</strong> {{ selectedStudent.email }}</p>
+					<p><strong>Téléphone :</strong> {{ selectedStudent.telephone }}</p>
+					<p><strong>Date de naissance :</strong> {{ selectedStudent.birthday | date: 'dd/MM/yyyy' }}</p>
+					<!-- CHANGÉ -->
+					<p><strong>Genre :</strong> {{ selectedStudent.gender }}</p> <!-- Ajout du genre -->
+					<p><strong>Cours associés :</strong> {{ getCourseTitles(selectedStudent.courses) }}</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -147,8 +151,8 @@
 	</div>
 
 	<!-- Modal pour modifier un étudiant -->
-	<div class="modal fade" id="editTeacherModal" tabindex="-1" aria-labelledby="editTeacherModalLabel"
-		aria-hidden="true">
+	<div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel"
+		aria-hidden="true"> <!-- CHANGÉ : ID -->
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -158,23 +162,23 @@
 				<div class="modal-body" *ngIf="editingStudent">
 					<form (ngSubmit)="saveEditStudent()">
 						<div class="mb-3">
-							<label for="nom" class="form-label">Nom</label>
-							<input type="text" [(ngModel)]="editingStudent.nom" name="nom" placeholder="Nom" required
+							<label for="editLastName" class="form-label">Nom de famille</label> <!-- CHANGÉ -->
+							<input type="text" [(ngModel)]="editingStudent.lastName" name="editLastName" placeholder="Nom de famille"
+								required class="form-control" />
+						</div>
+						<div class="mb-3">
+							<label for="editFirstName" class="form-label">Prénom</label> <!-- CHANGÉ -->
+							<input type="text" [(ngModel)]="editingStudent.firstName" name="editFirstName" placeholder="Prénom"
+								required class="form-control" />
+						</div>
+						<div class="mb-3">
+							<label for="editEmail" class="form-label">Email</label>
+							<input type="email" [(ngModel)]="editingStudent.email" name="editEmail" placeholder="Email" required
 								class="form-control" />
 						</div>
 						<div class="mb-3">
-							<label for="prenom" class="form-label">Prénom</label>
-							<input type="text" [(ngModel)]="editingStudent.prenom" name="prenom" placeholder="Prénom" required
-								class="form-control" />
-						</div>
-						<div class="mb-3">
-							<label for="email" class="form-label">Email</label>
-							<input type="email" [(ngModel)]="editingStudent.email" name="email" placeholder="Email"
-								class="form-control" />
-						</div>
-						<div class="mb-3">
-							<label for="telephone" class="form-label">Téléphone</label>
-							<input type="text" [(ngModel)]="editingStudent.telephone" name="telephone" placeholder="Téléphone"
+							<label for="editTelephone" class="form-label">Téléphone</label>
+							<input type="text" [(ngModel)]="editingStudent.telephone" name="editTelephone" placeholder="Téléphone"
 								class="form-control" />
 						</div>
 						<button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">Enregistrer</button>
@@ -189,13 +193,14 @@
 		aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Associer des cours à {{ selectedStudent?.nom }} {{ selectedStudent?.prenom }}</h5>
+				<div class="modal-header" *ngIf="selectedStudent"> <!-- Ajout de *ngIf -->
+					<h5 class="modal-title">Associer des cours à {{ selectedStudent.firstName }} {{ selectedStudent.lastName }}
+					</h5> <!-- CHANGÉ -->
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body">
 					<form>
-						<div *ngFor="let course of allCourses">
+						<div *ngFor="let course of coursesForModal">
 							<input type="checkbox" [(ngModel)]="course.selected" [name]="'course_' + course.id" />
 							<label>{{ course.title }}</label>
 						</div>

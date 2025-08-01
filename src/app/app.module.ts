@@ -1,24 +1,25 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { NgChartsModule } from 'ng2-charts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardMainComponent } from './components/dashboard-main/dashboard-main.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { GestionCoursComponent } from './components/gestion-cours/gestion-cours.component';
+import { GestionEvaluationsComponent } from './components/gestion-evaluations/gestion-evaluations.component';
+import { GestionSpecialityComponent } from './components/gestion-speciality/gestion-speciality.component';
 import { GestionStudentsComponent } from './components/gestion-students/gestion-students.component';
 import { GestionTeachersComponent } from './components/gestion-teachers/gestion-teachers.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+
 import { TopbarComponent } from './components/topbar/topbar.component';
 import { FiltercoursePipe } from './filtercourse.pipe';
 import { FilterpipePipe } from './filterpipe.pipe';
 import { AuthService } from './services/auth/auth.service';
-import { NgChartsModule } from "ng2-charts";
-import { GestionEvaluationsComponent } from './components/gestion-evaluations/gestion-evaluations.component';
-import { HttpClientModule } from '@angular/common/http';
-
 
 export function initializeApp(authService: AuthService) {
   return () => {
@@ -40,6 +41,7 @@ export function initializeApp(authService: AuthService) {
     GestionTeachersComponent,
     FilterpipePipe,
     FiltercoursePipe,
+    GestionSpecialityComponent,
     GestionEvaluationsComponent,
   ],
   imports: [
@@ -59,4 +61,4 @@ export function initializeApp(authService: AuthService) {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

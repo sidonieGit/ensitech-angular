@@ -8,7 +8,7 @@ export class AuthService {
   private authenticated = false;
   private users = [
     { username: 'Patrick', password: 'AE!rkN$ba3y6zoS!', role: 'directeur' },
-    { username: 'Sophie', password: 'Q&is4FmEGedAFmek', role: 'responsable' },
+    { username: 'Sophie', password: '123456', role: 'responsable' },
   ];
 
   constructor(private router: Router) {}

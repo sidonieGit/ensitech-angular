@@ -15,9 +15,10 @@ import { GestionStudentsComponent } from './components/gestion-students/gestion-
 import { GestionTeachersComponent } from './components/gestion-teachers/gestion-teachers.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+
+import { TopbarComponent } from './components/topbar/topbar.component';
 import { FiltercoursePipe } from './filtercourse.pipe';
 import { FilterpipePipe } from './filterpipe.pipe';
-import { TopbarComponent } from './guards/topbar/topbar.component';
 import { AuthService } from './services/auth/auth.service';
 
 export function initializeApp(authService: AuthService) {

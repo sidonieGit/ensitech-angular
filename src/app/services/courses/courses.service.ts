@@ -1,7 +1,7 @@
 // src/app/services/courses/courses.service.ts
 
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs'; // Importer throwError
 import { catchError, map } from 'rxjs/operators';
 import { Course } from 'src/app/interfaces/course.model'; // Utiliser notre interface standard
@@ -56,9 +56,20 @@ export class CoursesService {
    * @param id L'ID du cours à supprimer.
    * @returns Un Observable<void> pour indiquer que l'opération est terminée.
    */
-  deleteCourse(id: number): Observable<void> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.delete<void>(url).pipe(catchError(this.handleError));
+  deleteCourse(id: number): Observable<boolean> {
+    // Assurez-vous que le type de retour est Observable<boolean>
+    return this.http.delete(`${this.apiUrl}/${id}`).pipe(
+      // Si la requête réussit (même avec un corps vide), map la transforme en 'true'
+      map(() => {
+        console.log(`Course with id ${id} deleted successfully.`);
+        return true;
+      }),
+      // Si la requête échoue, catchError intercepte l'erreur et retourne un Observable de 'false'
+      catchError((error) => {
+        console.error('Error deleting course', error);
+        return of(false); // of() crée un Observable qui émet la valeur 'false'
+      })
+    );
   }
 
   /**

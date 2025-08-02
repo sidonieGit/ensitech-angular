@@ -8,7 +8,7 @@ import { Student } from 'src/app/interfaces/students.model'; // Importez le DTO
 })
 export class StudentsService {
   // L'URL de votre user-service
-  private apiUrl = 'http://localhost:8888/user-service/api/students';
+  private apiUrl = 'http://localhost:8888/api/students';
 
   constructor(private http: HttpClient) {}
 

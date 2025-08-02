@@ -20,17 +20,19 @@ export interface LoginResponse {
 })
 export class AuthService {
 
+
     /*private authenticated = false;
     private users = [
       { username: 'Patrick', password: 'AE!rkN$ba3y6zoS!', role: 'directeur' },
       { username: 'Sophie', password: '123456', role: 'responsable' },
     ];*/
 
+
     private authenticated = false;
     private baseUrl = 'http://localhost:8081/api/auth';
 
-
     constructor(private router: Router, private http: HttpClient) { }
+
 
     login(data: LoginRequest): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(`${this.baseUrl}/login`, data);

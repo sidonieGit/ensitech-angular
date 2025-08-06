@@ -11,7 +11,7 @@ import { Course } from 'src/app/interfaces/course.model'; // Utiliser notre inte
 })
 export class CoursesService {
   // URL de votre course-service. Assurez-vous que le port est le bon.
-  private apiUrl = 'http://localhost:8084/api/cours'; // J'ai mis 8082, à adapter.
+  private apiUrl = 'http://localhost:8888/api/courses';
 
   constructor(private http: HttpClient) {}
 
@@ -72,6 +72,29 @@ export class CoursesService {
     );
   }
 
+  /**
+   * Inscrit un étudiant à un cours spécifique.
+   * @param courseId L'ID du cours.
+   * @param studentId L'ID de l'étudiant à inscrire.
+   * @returns Un Observable avec le cours mis à jour.
+   */
+  enrollStudentToCourse(
+    courseId: number,
+    studentId: number
+  ): Observable<Course> {
+    const url = `${this.apiUrl}/${courseId}/students/${studentId}`;
+    // Le corps de la requête est vide car les IDs sont dans l'URL.
+    return this.http.put<Course>(url, {});
+  }
+
+  // Vous pourriez aussi ajouter une méthode pour désinscrire
+  removeStudentFromCourse(
+    courseId: number,
+    studentId: number
+  ): Observable<Course> {
+    const url = `${this.apiUrl}/${courseId}/students/${studentId}`;
+    return this.http.delete<Course>(url);
+  }
   /**
    * Gère les erreurs HTTP de manière centralisée pour ce service.
    * @param error L'objet d'erreur HTTP.

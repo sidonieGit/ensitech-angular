@@ -74,9 +74,17 @@ export class LoginPageComponent {
         // redirection ou autre action
       },
       error: (err) => {
-        console.error('Login failed:', err);
-        this.errorMessage = err.error.error || 'Echec de connexion.';
-        this.error = err.error.error || 'Echec de connexion.';
+        console.error('Login failedss:', err);
+        // console.error('Login failed:', err?.error?.errors?.email);
+        this.errorMessage = err?.error?.error || err?.error?.errors?.email || 'Echec de connexion.';
+        this.error =
+          err?.error?.errors?.email ||
+          err?.error?.errors?.password ||
+          err?.error?.error ||
+          'Echec de connexion.';
+        if (this.error.includes('Bad credentials')) {
+          this.error = 'Identifiant ou mot de passe incorrect.';
+        }
         this.loading = false;
       }
     });

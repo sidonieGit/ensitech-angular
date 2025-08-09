@@ -19,8 +19,10 @@ export class GestionCoursComponent implements OnInit {
     coefficient: 0,
     hours: 0,
   };
+  loading: boolean = false;
+  errorMsg: string = '';
 
-  constructor(private coursesService: CoursesService) {}
+  constructor(private coursesService: CoursesService) { }
 
   ngOnInit(): void {
     this.loadCourses();
@@ -41,13 +43,22 @@ export class GestionCoursComponent implements OnInit {
       /*this.coursesService.addCourse(this.newCourse);
       this.loadCourses();
       this.resetForm();*/
+      this.loading = true;
+      this.errorMsg = '';
       this.coursesService.createCourse(this.newCourse).subscribe({
         next: (resp) => {
           console.log('Cours saved:', resp);
+          this.loading = false;
           this.loadCourses();
           this.resetForm();
-        },
-        error: (err) => console.error('Error saving course:', err),
+
+        }, error: (err) => {
+          console.error('Error saving course:', err)
+          this.loading = false
+          this.errorMsg = 'Erreur lors de l\'ajout du cours.';
+
+        }
+
       });
     }
   }

@@ -19,6 +19,10 @@ export class AuthInterceptor implements HttpInterceptor {
         req: HttpRequest<any>,
         next: HttpHandler
     ): Observable<HttpEvent<any>> {
+        // Example: skip auth for login endpoint
+        if (req.url.includes('/login')) {
+            return next.handle(req); // just forward the request without modification
+        }
         const user = this.authService.getUser();
         const token = user?.token;
 
@@ -35,6 +39,7 @@ export class AuthInterceptor implements HttpInterceptor {
             catchError((error: HttpErrorResponse) => {
                 if (error.status === 401 || error.status === 403) {
                     alert('Session expirée ou non autorisée. Veuillez vous reconnecter.');
+                    this.authService.logout();
                 }
                 return throwError(() => error);
             })

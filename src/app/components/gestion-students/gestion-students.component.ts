@@ -3,6 +3,7 @@ import { Course } from 'src/app/interfaces/course.model';
 import { Student } from 'src/app/interfaces/students.model'; // Assurez-vous que le chemin est correct
 import { CoursesService } from 'src/app/services/courses/courses.service'; // Assurez-vous que le chemin est correct
 import { StudentsService } from 'src/app/services/students/students.service';
+import { ToastrService } from 'ngx-toastr'; // Importer ToastrService
 
 @Component({
   selector: 'app-gestion-students',
@@ -38,7 +39,8 @@ export class GestionStudentsComponent implements OnInit {
   constructor(
     private studentsService: StudentsService,
     //  Ajout de 'private' pour que coursesService soit une propriété de la classe
-    private coursesService: CoursesService
+    private coursesService: CoursesService,
+    private toastr: ToastrService // Injecter ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -89,7 +91,11 @@ export class GestionStudentsComponent implements OnInit {
 
   addStudent(): void {
     this.studentsService.addStudent(this.newStudent).subscribe({
-      next: () => {
+      next: (createdStudent) => {
+        this.toastr.success(
+          `L'étudiant ${createdStudent.firstName} ${createdStudent.lastName} a été ajouté.`,
+          'Succès !'
+        );
         this.loadStudents(); // Recharger la liste
         this.resetForm();
       },
@@ -114,7 +120,10 @@ export class GestionStudentsComponent implements OnInit {
     if (id === undefined) return;
     if (confirm('Êtes-vous sûr de vouloir supprimer cet étudiant ?')) {
       this.studentsService.deleteStudent(id).subscribe({
-        next: () => this.loadStudents(),
+        next: () => {
+          this.toastr.info("L'étudiant a été supprimé.", 'Information');
+          this.loadStudents();
+        },
         error: (error) => console.error('Erreur lors de la suppression', error),
       });
     }
@@ -130,6 +139,11 @@ export class GestionStudentsComponent implements OnInit {
       .updateStudent(this.editingStudent.id, this.editingStudent)
       .subscribe({
         next: () => {
+          this.toastr.success(
+            "Les informations de l'étudiant ont été mises à jour.",
+            'Succès !'
+          );
+
           this.loadStudents();
           this.editingStudent = null; // Important pour fermer la modale
         },

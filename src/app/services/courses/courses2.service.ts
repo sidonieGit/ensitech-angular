@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators'
 import { CoursModel } from 'src/app/components/gestion-cours/cours.model';
@@ -8,10 +8,15 @@ import { CoursModel } from 'src/app/components/gestion-cours/cours.model';
   providedIn: 'root'
 })
 export class CoursesService {
-  private baseUrl = 'http://localhost:8084/api/cours';
+  private baseUrl = 'http://localhost:8082/api/course';
+  private connectedUser = localStorage.getItem('user');
+  private token = this.connectedUser ? JSON.parse(this.connectedUser).tokenUser : '';
+  private headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+
   constructor(private http: HttpClient) { }
   getAllCourses(): Observable<any> {
-    return this.http.get(`${this.baseUrl}`);
+    console.log("token", this.token);
+    return this.http.get(`${this.baseUrl}`, { headers: this.headers });
   }
 
   createCourse(course: CoursModel): Observable<any> {

@@ -1,151 +1,175 @@
+<!-- SECTION D’ÉVALUATIONS -->
 <section class="d-flex">
+  <!-- SIDEBAR -->
   <app-sidebar></app-sidebar>
+
+  <!-- MAIN CONTENT -->
   <main class="flex-grow-1">
     <app-topbar></app-topbar>
-    <div class="container mt-4">
-      <h2>Gestion des Évaluations</h2>
-      <!-- Formulaire d'ajout -->
-      <form (ngSubmit)="addEvaluation()" class="mb-4 border rounded p-4 shadow-sm bg-light">
-        <div class="row">
-          <div class="col-md-2 mb-3">
-            <label for="code" class="form-label">Code/Matricule</label>
-            <input type="text" id="code" class="form-control" [(ngModel)]="newEvaluation.code" name="code" required>
-          </div>
-          <div class="col-md-2 mb-3">
-            <label for="date" class="form-label">Date</label>
-            <input type="date" id="date" class="form-control" [(ngModel)]="newEvaluation.date" name="date" required>
-          </div>
-          <div class="col-md-1 mb-3">
-            <label for="note" class="form-label">Note</label>
-            <input type="number" id="note" class="form-control" [(ngModel)]="newEvaluation.note" name="note" min="0"
-              max="20" required>
-          </div>
-          <div class="col-md-3 mb-3">
-            <label for="description" class="form-label">Description</label>
-            <input type="text" id="description" class="form-control" [(ngModel)]="newEvaluation.description"
-              name="description">
-          </div>
-          <div class="col-md-2 mb-3">
-            <label for="type" class="form-label">Type</label>
-            <select class="form-select" [(ngModel)]="newEvaluation.type" name="type" required>
-              <option value="CONTRÔLE CONTINUE">CONTRÔLE CONTINUE</option>
-              <option value="EXAMEN">EXAMEN</option>
-              <option value="TP">TP</option>
-            </select>
-          </div>
-          <div class="col-md-2 mb-3">
-            <label for="statut" class="form-label">Statut</label>
-            <select class="form-select" [(ngModel)]="newEvaluation.statut" name="statut" required>
-              <option value="VALIDÉE">VALIDÉE</option>
-              <option value="NON VALIDEE">NON VALIDEE</option>
-            </select>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-3 mb-3">
-            <label for="studentId" class="form-label">Étudiant</label>
-            <select class="form-select" [(ngModel)]="newEvaluation.studentId" name="studentId" required>
-              <option [value]="0" disabled>Choisir...</option>
-              <option *ngFor="let s of students" [value]="s.id">{{ s.firstName }} {{ s.lastName }}</option>
-            </select>
-          </div>
-          <div class="col-md-3 mb-3">
-            <label for="coursId" class="form-label">Cours</label>
-            <select class="form-select" [(ngModel)]="newEvaluation.coursId" name="coursId">
-              <option [value]="undefined" disabled>...</option>
-              <option *ngFor="let c of courses" [value]="c.id">{{ c.title }}</option>
-            </select>
-          </div>
-          <div class="col-md-6 d-flex align-items-end justify-content-end">
-            <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">Ajouter</button>
-          </div>
-        </div>
-      </form>
 
-      <!-- Tableau des évaluations -->
-      <table class="table table-bordered table-hover">
-        <thead class="table-secondary">
+    <!-- Barre de recherche et bouton Ajouter -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4">
+      <div class="col-6 col-md-9" style="height: 44px;">
+        <div class="input-group">
+          <span class="input-group-text"><i class="hgi-stroke hgi-search-01"></i></span>
+          <input type="search" placeholder="Rechercher une évaluation..." class="form-control" [(ngModel)]="filterEvaluation" (ngModelChange)="updateFilteredEvaluations()" />
+        </div>
+      </div>
+      <button class="primary-btn border-0" data-bs-toggle="modal" data-bs-target="#addEvaluationModal">
+        Ajouter une évaluation <i class="hgi-stroke hgi-add-circle"></i>
+      </button>
+    </div>
+
+    <!-- Liste des évaluations -->
+    <div class="evaluations-list mt-5 px-4">
+      <table class="table border table-hover">
+        <thead class="table-primary">
           <tr>
             <th>Code</th>
             <th>Date</th>
-            <th>Note</th>
             <th>Description</th>
-            <th>Type</th>
-            <th>Statut</th>
-            <th>Étudiant</th>
-            <th>Cours</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let eval of evaluations">
-            <ng-container *ngIf="!(editingEvaluation && editingEvaluation.id === eval.id); else editRow">
-              <td>{{ eval.code }}</td>
-              <td>{{ eval.date | date: 'dd/MM/yyyy' }}</td>
-              <td>{{ eval.note }}</td>
-              <td>{{ eval.description }}</td>
-              <td>{{ eval.type }}</td>
-              <td>
-                <span [ngClass]="{
-                  'badge bg-success': eval.statut === 'VALIDÉE',
-                  'badge bg-danger': eval.statut === 'NON VALIDEE'
-                }">
-                  {{ eval.statut }}
-                </span>
-              </td>
-              <td>{{ getStudentName(eval.studentId) }}</td>
-              <td>{{ getCourseTitle(eval.coursId) }}</td>
-              <td class="d-flex gap-2 align-items-center">
-                <!-- Bouton Modifier -->
-                <button class="btn btn-sm btn-primary border-0" data-bs-dismiss="modal" (click)="startEdit(eval)">
-                  <i class="hgi-stroke hgi-edit-02"></i>
-                </button>
-                <!-- Bouton Supprimer -->
-                <button class="btn btn-sm btn-danger" (click)="deleteEvaluation(eval.id)">
-                  <i class="hgi-stroke hgi-delete-02"></i>
-                </button>
-              </td>
-            </ng-container>
-            <ng-template #editRow>
-              <td><input type="text" class="form-control" [(ngModel)]="editingEvaluation!.code"></td>
-              <td><input type="date" class="form-control" [(ngModel)]="editingEvaluation!.date"></td>
-              <td><input type="number" class="form-control" [(ngModel)]="editingEvaluation!.note" min="0" max="20"></td>
-              <td><input type="text" class="form-control" [(ngModel)]="editingEvaluation!.description"></td>
-              <td>
-                <select class="form-select" [(ngModel)]="editingEvaluation!.type" class="primary-btn">
-                  <option value="CONTRÔLE CONTINUE">CONTRÔLE CONTINUE</option>
-                  <option value="EXAMEN">EXAMEN</option>
-                  <option value="TP">TP</option>
-                </select>
-              </td>
-              <td>
-                <select class="form-select" [(ngModel)]="editingEvaluation!.statut">
-                  <option value="VALIDÉE">VALIDÉE</option>
-                  <option value="NON VALIDEE">NON VALIDEE</option>
-                </select>
-              </td>
-              <td>
-                <select class="form-select" [(ngModel)]="editingEvaluation!.studentId">
-                  <option *ngFor="let s of students" [value]="s.id">{{ s.firstName }} {{ s.lastName }}</option>
-                </select>
-              </td>
-              <td>
-                <select class="form-select" [(ngModel)]="editingEvaluation!.coursId">
-                  <option *ngFor="let c of courses" [value]="c.id">{{ c.title }}</option>
-                </select>
-              </td>
-              <td class="d-flex gap-2 align-items-center">
-                <button class="btn btn-sm btn-success" (click)="saveEditEvaluation()" style="font-size: 1.1rem;">
-                  <!-- Enregistrer -->
-                  <i class="hgi-stroke hgi-floppy-disk"></i></button>
-                <!-- Annuler -->
-                <button class="btn btn-sm btn-secondary" (click)="cancelEdit()">
-                  <i class="hgi-stroke hgi-cancel-01"></i></button>
-              </td>
-            </ng-template>
+          <tr *ngFor="let eval of filteredEvaluations">
+            <td>{{ eval.code }}</td>
+            <td>{{ eval.date | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ eval.description }}</td>
+            <td>
+              <div class="dropdown">
+                <a href="#" class="text-decoration-none text-black" data-bs-toggle="dropdown">
+                  <i class="hgi-stroke hgi-more-vertical"></i>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#" (click)="editEvaluation(eval)" data-bs-toggle="modal" data-bs-target="#editEvaluationModal">Modifier</a></li>
+                  <li><a class="dropdown-item" href="#" (click)="viewEvaluation(eval)" data-bs-toggle="modal" data-bs-target="#viewEvaluationModal">Voir les informations</a></li>
+                  <li><a class="dropdown-item text-danger" href="#" (click)="deleteEvaluation(eval.id)">Supprimer</a></li>
+                </ul>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
   </main>
+
+  <!-- MODAL : Ajouter une évaluation -->
+  <div class="modal fade" id="addEvaluationModal" tabindex="-1" aria-labelledby="addEvaluationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" (ngSubmit)="addEvaluation()">
+        <div class="modal-header">
+          <h5 class="modal-title">Ajouter une évaluation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Code</label>
+            <input type="text" class="form-control" [(ngModel)]="newEvaluation.code" name="code" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input type="text" class="form-control" [(ngModel)]="newEvaluation.description" name="description" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control" [(ngModel)]="newEvaluation.date" name="date" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Note</label>
+            <input type="number" class="form-control" [(ngModel)]="newEvaluation.note" name="note" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Type</label>
+            <select class="form-select" [(ngModel)]="newEvaluation.type" name="type">
+              <option value="CONTRÔLE CONTINU">Contrôle Continu</option>
+              <option value="EXAMEN">Examen</option>
+              <option value="TP">TP</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Statut</label>
+            <select class="form-select" [(ngModel)]="newEvaluation.statut" name="status">
+              <option value="VALIDÉE">Validée</option>
+              <option value="NON VALIDÉE">Non Validée</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">Ajouter</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL : Voir les détails -->
+  <div class="modal fade" id="viewEvaluationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" *ngIf="selectedEvaluation">
+        <div class="modal-header">
+          <h5 class="modal-title">Détails de l’évaluation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Code :</strong> {{ selectedEvaluation.code }}</p>
+          <p><strong>Description :</strong> {{ selectedEvaluation.description }}</p>
+          <p><strong>Date :</strong> {{ selectedEvaluation.date | date: 'dd/MM/yyyy' }}</p>
+          <p><strong>Note :</strong> {{ selectedEvaluation.note }}</p>
+          <p><strong>Type :</strong> {{ selectedEvaluation.type }}</p>
+          <p><strong>Statut :</strong> {{ selectedEvaluation.statut }}</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL : Modifier -->
+  <div class="modal fade" id="editEvaluationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" *ngIf="editingEvaluation" (ngSubmit)="saveEditEvaluation()">
+        <div class="modal-header">
+          <h5 class="modal-title">Modifier l’évaluation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Code</label>
+            <input type="text" class="form-control" [(ngModel)]="editingEvaluation.code" name="editCode" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input type="text" class="form-control" [(ngModel)]="editingEvaluation.description" name="editDescription" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control" [(ngModel)]="editingEvaluation.date" name="editDate" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Note</label>
+            <input type="number" class="form-control" [(ngModel)]="editingEvaluation.note" name="editNote" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Type</label>
+            <select class="form-select" [(ngModel)]="editingEvaluation.type" name="editType">
+              <option value="CONTRÔLE CONTINU">Contrôle Continu</option>
+              <option value="EXAMEN">Examen</option>
+              <option value="TP">TP</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Statut</label>
+            <select class="form-select" [(ngModel)]="editingEvaluation.statut" name="editStatus">
+              <option value="VALIDÉE">Validée</option>
+              <option value="NON VALIDÉE">Non Validée</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </section>

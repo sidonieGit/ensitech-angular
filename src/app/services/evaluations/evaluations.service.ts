@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Evaluation } from '../../evaluation';
 import { EVALUATIONS } from '../../mock-evaluations';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,29 +15,33 @@ export class EvaluationsService {
     this.evaluations = savedEvaluations ? JSON.parse(savedEvaluations) : EVALUATIONS;
   }
 
-  getEvaluations(): Evaluation[] {
-    return this.evaluations;
+  getEvaluations(): Observable<Evaluation[]> {
+    return of(this.evaluations);
   }
 
-  addEvaluation(evaluation: Evaluation): void {
+  addEvaluation(evaluation: Evaluation): Observable<Evaluation> {
     evaluation.id = this.evaluations.length > 0
-      ? this.evaluations[this.evaluations.length - 1].id! + 1
+      ? (this.evaluations[this.evaluations.length - 1].id ?? 0) + 1
       : 1;
     this.evaluations.push({ ...evaluation });
     this.saveToLocalStorage();
+    return of(evaluation);
   }
 
-  deleteEvaluation(id: number | undefined): void {
+  deleteEvaluation(id: number | undefined): Observable<void> {
+    if (id === undefined) return of();
     this.evaluations = this.evaluations.filter(e => e.id !== id);
     this.saveToLocalStorage();
+    return of();
   }
 
-  updateEvaluation(updated: Evaluation): void {
+  updateEvaluation(updated: Evaluation): Observable<Evaluation> {
     const idx = this.evaluations.findIndex(e => e.id === updated.id);
     if (idx !== -1) {
       this.evaluations[idx] = { ...updated };
       this.saveToLocalStorage();
     }
+    return of(updated);
   }
 
   private saveToLocalStorage(): void {

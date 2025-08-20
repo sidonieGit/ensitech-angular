@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Student } from 'src/app/interfaces/students.model';
 import { Evaluation } from '../../evaluation';
-import { COURSES } from '../../mock-cours';
-import { STUDENTS } from '../../mock-student';
-import { EvaluationsService } from '../../services/evaluations/evaluations.service';
+import { EvaluationsService } from 'src/app/services/evaluations/evaluations.service';
 
 @Component({
   selector: 'app-gestion-evaluations',
@@ -12,70 +9,98 @@ import { EvaluationsService } from '../../services/evaluations/evaluations.servi
 })
 export class GestionEvaluationsComponent implements OnInit {
   evaluations: Evaluation[] = [];
-  students: Student[] = [];
-  courses = COURSES;
-  newEvaluation: Evaluation = this.getEmptyEvaluation();
+  filteredEvaluations: Evaluation[] = [];
+
+  newEvaluation: Evaluation = {
+    id: 0, // optionnel, ou peut être undefined si généré côté serveur
+    code: '',
+    date: new Date(),
+    description: '',
+    note: 0,
+    type: 'CONTRÔLE CONTINUE',
+    statut: 'VALIDÉE',
+    studentId: 0,
+  };
+
   editingEvaluation: Evaluation | null = null;
+  selectedEvaluation: Evaluation | null = null;
+  filterEvaluation: string = '';
 
   constructor(private evaluationsService: EvaluationsService) {}
 
   ngOnInit(): void {
-    this.evaluations = this.evaluationsService.getEvaluations();
-    this.students = STUDENTS;
+    this.loadEvaluations();
   }
 
-  getEmptyEvaluation(): Evaluation {
-    return {
-      code: '',
-      date: new Date(),
-      note: 0,
-      description: '',
-      type: 'EXAMEN',
-      statut: 'NON VALIDEE',
-      studentId: 0,
-      coursId: undefined,
-    };
+  loadEvaluations(): void {
+    this.evaluationsService.getEvaluations().subscribe({
+      next: (data) => {
+        this.evaluations = data;
+        this.updateFilteredEvaluations();
+      },
+      error: (error) => console.error('Erreur chargement évaluations', error),
+    });
   }
 
   addEvaluation(): void {
-    if (this.newEvaluation.code && this.newEvaluation.studentId) {
-      this.evaluationsService.addEvaluation({ ...this.newEvaluation });
-      this.evaluations = this.evaluationsService.getEvaluations();
-      this.newEvaluation = this.getEmptyEvaluation();
-    }
+    // Ici, si tu as une API backend, il faut appeler le service pour ajouter et recharger la liste
+    this.evaluationsService.addEvaluation(this.newEvaluation).subscribe({
+      next: () => {
+        this.loadEvaluations();
+        this.resetNewEvaluation();
+      },
+      error: (error) => console.error('Erreur ajout évaluation', error),
+    });
   }
 
-  startEdit(evaluation: Evaluation): void {
-    // Copie complète pour edition
+  resetNewEvaluation(): void {
+    this.newEvaluation = {
+      id: 0,
+      code: '',
+      date: new Date(),
+      description: '',
+      note: 0,
+      type: 'CONTRÔLE CONTINUE',
+      statut: 'VALIDÉE',
+      studentId: 0,
+    };
+  }
+
+  editEvaluation(evaluation: Evaluation): void {
     this.editingEvaluation = { ...evaluation };
   }
 
   saveEditEvaluation(): void {
-    if (this.editingEvaluation) {
-      this.evaluationsService.updateEvaluation(this.editingEvaluation);
-      this.evaluations = this.evaluationsService.getEvaluations();
-      this.editingEvaluation = null;
+    if (!this.editingEvaluation) return;
+    this.evaluationsService.updateEvaluation(this.editingEvaluation).subscribe({
+      next: () => {
+        this.loadEvaluations();
+        this.editingEvaluation = null;
+      },
+      error: (error) => console.error('Erreur mise à jour évaluation', error),
+    });
+  }
+
+  viewEvaluation(evaluation: Evaluation): void {
+    this.selectedEvaluation = evaluation;
+  }
+
+  deleteEvaluation(id?: number): void {
+    if (id === undefined) return;
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette évaluation ?')) {
+      this.evaluationsService.deleteEvaluation(id).subscribe({
+        next: () => this.loadEvaluations(),
+        error: (error) => console.error('Erreur lors de la suppression', error),
+      });
     }
   }
 
-  cancelEdit(): void {
-    this.editingEvaluation = null;
-  }
-
-  deleteEvaluation(id: number | undefined): void {
-    if (id) {
-      this.evaluationsService.deleteEvaluation(id);
-      this.evaluations = this.evaluationsService.getEvaluations();
-    }
-  }
-
-  getStudentName(id: number): string {
-    const student = this.students.find((s) => s.id === id);
-    return student ? `${student.firstName} ${student.lastName}` : 'Non trouvé';
-  }
-
-  getCourseTitle(id: number | undefined): string {
-    const course = this.courses.find((c) => c.id === id);
-    return course ? course.title : 'Non trouvé';
+  updateFilteredEvaluations(): void {
+    const filter = this.filterEvaluation.toLowerCase();
+    this.filteredEvaluations = this.evaluations.filter(
+      (e) =>
+        e.description.toLowerCase().includes(filter) ||
+        e.code.toLowerCase().includes(filter)
+    );
   }
 }

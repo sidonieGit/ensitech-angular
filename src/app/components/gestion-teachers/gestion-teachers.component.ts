@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { Course } from 'src/app/interfaces/course.model';
 import { Teacher } from 'src/app/interfaces/teachers.model';
+import { CoursesService } from 'src/app/services/courses/courses.service';
 import { TeachersService } from 'src/app/services/teachers/teachers.service';
 
 @Component({
@@ -22,6 +25,11 @@ export class GestionTeachersComponent implements OnInit {
     birthday: new Date(), // ou null
     gender: 'MALE', // valeur par défaut
   };
+  // 1. On garde une liste "source" de tous les cours
+  private allCoursesSource: Course[] = [];
+
+  // 2. On crée une liste spécifique pour l'affichage dans la modale- // On ajoute une propriété 'selected' pour les checkboxes
+  coursesForModal: (Course & { selected?: boolean })[] = [];
 
   // Pour les modals de vue et de modification
   selectedTeacher: Teacher | null = null;
@@ -29,10 +37,15 @@ export class GestionTeachersComponent implements OnInit {
 
   filtername = '';
 
-  constructor(private teachersService: TeachersService) {}
+  constructor(
+    private teachersService: TeachersService,
+    private toastr: ToastrService,
+    private coursesService: CoursesService // Injecter CourseService
+  ) {}
 
   ngOnInit(): void {
     this.loadTeachers();
+    this.loadCourses();
   }
 
   loadTeachers(): void {
@@ -44,6 +57,19 @@ export class GestionTeachersComponent implements OnInit {
       },
       (error) => {
         console.error('Erreur lors du chargement des enseignants', error);
+      }
+    );
+  }
+
+  loadCourses(): void {
+    // La méthode de service retourne un Observable, il faut s'y abonner
+    this.coursesService.getCourses().subscribe(
+      (courses) => {
+        this.allCoursesSource = courses;
+        console.log("Cours chargés depuis l'API", this.allCoursesSource);
+      },
+      (error) => {
+        console.error('Erreur lors du chargement des cours', error);
       }
     );
   }
@@ -68,8 +94,12 @@ export class GestionTeachersComponent implements OnInit {
       return;
     }
 
-    this.teachersService.addTeacher(this.newTeacher).subscribe(
-      () => {
+    this.teachersService.addTeacher(this.newTeacher).subscribe({
+      next: () => {
+        this.toastr.success(
+          `L'enseignant ${this.newTeacher.firstName} ${this.newTeacher.lastName} a été ajouté.`,
+          'Succès !'
+        );
         this.loadTeachers(); // Recharger la liste pour voir le nouvel ajout
         // Réinitialiser le formulaire
         this.newTeacher = {
@@ -83,20 +113,20 @@ export class GestionTeachersComponent implements OnInit {
         };
         // Fermer la modal (manuellement si besoin, Bootstrap devrait le faire avec data-bs-dismiss)
       },
-      (error) => console.error("Erreur lors de l'ajout", error)
-    );
+      error: (error) => console.error("Erreur lors de l'ajout", error),
+    });
   }
 
   deleteTeacher(id: number | undefined): void {
     if (id === undefined) return;
-
     if (confirm('Êtes-vous sûr de vouloir supprimer cet enseignant ?')) {
-      this.teachersService.deleteTeacher(id).subscribe(
-        () => {
+      this.teachersService.deleteTeacher(id).subscribe({
+        next: () => {
+          this.toastr.info("L'enseignant a été supprimé.", 'Information');
           this.loadTeachers(); // Recharger la liste
         },
-        (error) => console.error('Erreur lors de la suppression', error)
-      );
+        error: (error) => console.error('Erreur lors de la suppression', error),
+      });
     }
   }
 
@@ -111,6 +141,10 @@ export class GestionTeachersComponent implements OnInit {
 
     this.teachersService.updateTeacher(this.editingTeacher).subscribe(
       () => {
+        this.toastr.success(
+          "Les informations de l'enseignant ont été mises à jour.",
+          'Succès !'
+        );
         this.loadTeachers();
         this.editingTeacher = null; // Cacher le formulaire de la modal
       },

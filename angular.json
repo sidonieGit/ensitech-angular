@@ -25,7 +25,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
           },
@@ -88,6 +89,7 @@
             ],
             "styles": [
               "src/styles.css"
+              //  l'ajouter ici sivous en avez besoin pour les tests
             ],
             "scripts": []
           }

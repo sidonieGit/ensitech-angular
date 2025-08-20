@@ -1,15 +1,15 @@
 // src/app/interceptors/http-error.interceptor.ts
-import { Injectable } from '@angular/core';
 import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
   HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
 } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { ToastrService } from 'ngx-toastr'; // Importer le service Toastr
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ToastrService } from 'ngx-toastr'; // Importer le service Toastr
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
@@ -21,25 +21,46 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        let errorMessage = 'Une erreur inconnue est survenue !';
+        let userFriendlyMessage = 'Une erreur inconnue est survenue.';
 
         if (error.error instanceof ErrorEvent) {
-          // Erreur côté client (ex: problème de réseau)
-          errorMessage = `Erreur client : ${error.error.message}`;
+          // Erreur côté client (réseau, etc.)
+          userFriendlyMessage =
+            'Erreur de réseau. Veuillez vérifier votre connexion.';
         } else {
-          // Erreur renvoyée par le backend
-          // On essaie de récupérer le message métier de notre API
-          if (error.error && error.error.message) {
-            errorMessage = error.error.message;
-          } else {
-            errorMessage = `Erreur serveur : ${error.status} - ${error.statusText}`;
+          // Erreur renvoyée par le backend (4xx ou 5xx)
+          console.error('Erreur du backend reçue:', error);
+
+          // On vérifie si le corps de l'erreur a la structure de notre 'ErrorDetails'
+          const errorBody = error.error;
+          if (errorBody && typeof errorBody === 'object') {
+            if (error.status === 400 && errorBody.details) {
+              // Cas spécifique des erreurs de validation (Bad Request)
+              // On affiche chaque erreur de validation sur une nouvelle ligne.
+              userFriendlyMessage = `Erreurs de validation :\n- ${errorBody.details.join(
+                '\n- '
+              )}`;
+            } else if (errorBody.message) {
+              // Cas des autres erreurs gérées (404, 409, 500...)
+              userFriendlyMessage = errorBody.message;
+            } else {
+              // Si le corps de l'erreur est un objet mais n'a pas notre structure attendue
+              userFriendlyMessage = `Erreur ${error.status}: ${error.statusText}`;
+            }
+          } else if (typeof error.error === 'string') {
+            // Parfois, le corps de l'erreur est juste une chaîne de caractères
+            userFriendlyMessage = error.error;
           }
         }
 
-        // On affiche la notification d'erreur
-        this.toastr.error(errorMessage, 'Erreur !');
+        // Afficher le toast d'erreur
+        this.toastr.error(userFriendlyMessage, 'Opération Échouée', {
+          // Options pour afficher les retours à la ligne dans les toasts
+          enableHtml: true,
+          closeButton: true,
+          timeOut: 10000, // Laisser plus de temps pour lire les erreurs de validation
+        });
 
-        // On propage l'erreur pour que le .subscribe() du composant puisse aussi la traiter si besoin
         return throwError(() => error);
       })
     );

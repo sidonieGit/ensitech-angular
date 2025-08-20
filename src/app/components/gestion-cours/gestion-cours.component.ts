@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 // import { CoursModel } from 'src/app/components/gestion-cours/cours.model';
 import { Course } from 'src/app/interfaces/course.model'; // Utiliser notre interface standard
 import { CoursesService } from 'src/app/services/courses/courses.service';
@@ -22,7 +23,10 @@ export class GestionCoursComponent implements OnInit {
   loading: boolean = false;
   errorMsg: string = '';
 
-  constructor(private coursesService: CoursesService) { }
+  constructor(
+    private coursesService: CoursesService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.loadCourses();
@@ -47,18 +51,17 @@ export class GestionCoursComponent implements OnInit {
       this.errorMsg = '';
       this.coursesService.createCourse(this.newCourse).subscribe({
         next: (resp) => {
+          this.toastr.success('Cours créé', 'Succès !');
           console.log('Cours saved:', resp);
           this.loading = false;
           this.loadCourses();
           this.resetForm();
-
-        }, error: (err) => {
-          console.error('Error saving course:', err)
-          this.loading = false
-          this.errorMsg = 'Erreur lors de l\'ajout du cours.';
-
-        }
-
+        },
+        error: (err) => {
+          console.error('Error saving course:', err);
+          this.loading = false;
+          this.errorMsg = "Erreur lors de l'ajout du cours.";
+        },
       });
     }
   }
@@ -81,6 +84,7 @@ export class GestionCoursComponent implements OnInit {
     if (id) {
       this.coursesService.deleteCourse(id).subscribe((isDeleted) => {
         if (isDeleted) {
+          this.toastr.success('Cours supprimé', 'Succès !');
           this.loadCourses();
         } else {
           console.error(`Failed to delete course with id ${id}`);
@@ -102,6 +106,7 @@ export class GestionCoursComponent implements OnInit {
       this.coursesService.updateCourse(this.editingCourse).subscribe({
         next: (resp) => {
           console.log('Cours edit:', resp);
+          this.toastr.success('Cours mis à jour', 'Succès !');
           this.loadCourses();
           this.editingCourse = null;
         },

@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
 import { NgChartsModule } from 'ng2-charts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -67,8 +66,7 @@ export function initializeApp(authService: AuthService) {
     FormsModule,
     NgChartsModule,
     HttpClientModule,
-    ReactiveFormsModule
-
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       // Configurer Toastr

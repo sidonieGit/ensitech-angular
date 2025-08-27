@@ -1,58 +1,96 @@
 <main class="d-flex align-items-center justify-content-center vh-100">
-	<div class="container-fluid">
-		<div class="row h-100">
-			<!-- Logo Section -->
-			<div class="col-lg-6 d-none d-lg-flex bg-primary align-items-center justify-content-center">
-				<img src="assets/images/logo-white.svg" alt="Logo Ensitech" class="w-75">
-			</div>
+  <div class="container-fluid">
+    <div class="row h-100">
+      <!-- Logo Section -->
+      <div
+        class="col-lg-6 d-none d-lg-flex bg-primary align-items-center justify-content-center"
+      >
+        <img
+          src="assets/images/logo-white.svg"
+          alt="Logo Ensitech"
+          class="w-75"
+        />
+      </div>
 
-			<!-- Login Section -->
-			<div class="col-lg-6 col-12 d-flex align-items-center justify-content-center">
-				<div class="w-75">
-					<h1 class="title-login mb-4 text-center">Connexion</h1>
-					<form class="formulaire" (ngSubmit)="onLogin()">
-						<!-- Champ Identifiant -->
-						<div class="input-group mb-4">
-							<span class="input-group-text" id="addon-wrapping">
-								<i class="hgi-stroke hgi-user"></i>
-							</span>
-							<input [(ngModel)]="username" [ngClass]="{'is-invalid': errorField === 'username'}"
-								(input)="onInputChange('username')" type="text" class="form-control" aria-label="Identifiant"
-								aria-describedby="addon-wrapping" placeholder="Votre identifiant" required name="username" />
-						</div>
-						<!-- Message d'erreur pour Identifiant -->
-						<div *ngIf="errorField === 'username'" class="text-danger mb-3">
-							{{ errorMessage }}
-						</div>
+      <!-- Login Section -->
+      <div
+        class="col-lg-6 col-12 d-flex align-items-center justify-content-center"
+      >
+        <div class="w-75">
+          <h1 class="title-login mb-4 text-center">Connexion</h1>
+          <form class="formulaire" (ngSubmit)="onLogin()">
+            <!-- Champ Identifiant -->
+            <div class="input-group mb-4">
+              <span class="input-group-text" id="addon-wrapping">
+                <i class="hgi-stroke hgi-user"></i>
+              </span>
+              <input
+                [(ngModel)]="username"
+                [ngClass]="{ 'is-invalid': errorField === 'username' }"
+                (input)="onInputChange('username')"
+                type="text"
+                class="form-control"
+                aria-label="Identifiant"
+                aria-describedby="addon-wrapping"
+                placeholder="Votre email"
+                required
+                name="username"
+              />
+            </div>
+            <!-- Message d'erreur pour Identifiant -->
+            <div *ngIf="errorField === 'username'" class="text-danger mb-3">
+              {{ errorMessage }}
+            </div>
 
-						<!-- Champ Mot de passe -->
-						<div class="input-group mb-4">
-							<span class="input-group-text" id="addon-wrapping">
-								<i class="hgi-stroke hgi-lock-password"></i>
-							</span>
-							<input type="password" class="form-control" aria-label="Mot de passe" [(ngModel)]="password"
-								(input)="onInputChange('password')" [ngClass]="{'is-invalid': errorField === 'password'}"
-								aria-describedby="addon-wrapping" placeholder="Votre mot de passe" required name="password" />
-						</div>
-						<!-- Message d'erreur pour Mot de passe -->
-						<div *ngIf="errorField === 'password'" class="text-danger mb-3">
-							{{ errorMessage }}
-						</div>
+            <!-- Champ Mot de passe -->
+            <div class="input-group mb-4">
+              <span class="input-group-text" id="addon-wrapping">
+                <i class="hgi-stroke hgi-lock-password"></i>
+              </span>
+              <input
+                type="password"
+                class="form-control"
+                aria-label="Mot de passe"
+                [(ngModel)]="password"
+                (input)="onInputChange('password')"
+                [ngClass]="{ 'is-invalid': errorField === 'password' }"
+                aria-describedby="addon-wrapping"
+                placeholder="Votre mot de passe"
+                required
+                name="password"
+              />
+            </div>
+            <!-- Message d'erreur pour Mot de passe -->
+            <div *ngIf="errorField === 'password'" class="text-danger mb-3">
+              {{ errorMessage }}
+            </div>
 
-
-						<!-- Message d'erreur global -->
-						<div *ngIf="errorField === 'global'" class="text-danger mb-3 text-center">
-							{{ errorMessage }}
-						</div>
-
-						<!-- Bouton de soumission -->
-						<button type="submit" aria-label="Connexion"
-							class="submit-btn d-flex justify-content-center align-items-center w-100">
-							Connexion
-						</button>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+            <!-- Message d'erreur global -->
+            <div
+              *ngIf="errorField === 'global'"
+              class="text-danger mb-3 text-center"
+            >
+              {{ errorMessage }}
+            </div>
+            <div *ngIf="error" style="color: red">{{ error }}</div>
+            <!-- Bouton de soumission -->
+            <button
+              type="submit"
+              aria-label="Connexion"
+              class="submit-btn d-flex justify-content-center align-items-center w-100"
+              [disabled]="loading"
+            >
+              <span
+                *ngIf="loading"
+                class="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              {{ loading ? "Connexion en cours..." : " Connexion" }}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>

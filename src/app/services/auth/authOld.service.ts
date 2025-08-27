@@ -1,41 +1,38 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
 
-export interface LoginResponse {
-  id: number;
-  role: string;
-  email: string;
-  token: string;
-  username?: string;
-}
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  /*private authenticated = false;
-    private users = [
-      { username: 'Patrick', password: 'AE!rkN$ba3y6zoS!', role: 'directeur' },
-      { username: 'Sophie', password: '123456', role: 'responsable' },
-    ];*/
-
   private authenticated = false;
-  private baseUrl =
-    'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/auth';
+  private users = [
+    { username: 'Patrick', password: 'AE!rkN$ba3y6zoS!', role: 'directeur' },
+    { username: 'Sophie', password: 'Q&is4FmEGedAFmek', role: 'responsable' },
+  ];
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router) {}
 
-  login(data: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, data);
+  /**
+   * Authentifie l'utilisateur
+   * @param username
+   * @param password
+   * @returns true si l'utilisateur est authentifié, false sinon
+   */
+  login(username: string, password: string): boolean {
+    const user = this.users.find(
+      (u) => u.username === username && u.password === password
+    );
+
+    if (user) {
+      // Enregistrer l'utilisateur authentifié dans le localStorage
+      localStorage.setItem('user', JSON.stringify(user));
+      return true;
+    }
+
+    return false;
   }
-  saveConnectedUser(user: LoginResponse): void {
-    localStorage.setItem('user', JSON.stringify(user));
-  }
+
   // Vérifie si un utilisateur est authentifié
   checkAuthentication() {
     const user = localStorage.getItem('user');

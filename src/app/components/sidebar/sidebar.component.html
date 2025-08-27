@@ -7,6 +7,11 @@
 	</div>
 	<div class="d-flex flex-column align-items-center justify-content-between flex-grow-1">
 		<ul class="navbar-nav w-100 flex-column">
+      <li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/registration" routerLinkActive="actived">
+					<i class="hgi hgi-stroke hgi-eraser-add"></i>Inscriptions
+				</a>
+			</li>
 			<li class="nav-item" *ngIf="hasAccess(['directeur'])">
 				<a class="nav-link" routerLink="/dashboard" routerLinkActive="actived">
 					<i class="hgi-stroke hgi-dashboard-square-01"></i> Dashboard
@@ -39,11 +44,22 @@
 					<i class="hgi hgi-stroke hgi-task-01"></i> Gestion Specialités
 				</a>
 			</li>
-     
+      <li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/academic-year" routerLinkActive="actived">
+					<i class="hgi hgi-stroke hgi-calendar-01"></i> Année academiques
+				</a>
+			</li>
+
+      <!--li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/period" routerLinkActive="actived">
+					<i class="hgi hgi-stroke hgi-calendar-01"></i> Periodes
+				</a>
+			</li-->
+
 
 		</ul>
 		<div class="mt-auto deconnexion w-100">
-			<button (click)="logout()" class="btn btn-outline-primary w-100">Déconnexion</button>
+			<button (click)="logout()" class="btn btn-logout w-100">Déconnexion</button>
 		</div>
 	</div>
 </nav>

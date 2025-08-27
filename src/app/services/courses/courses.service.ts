@@ -11,7 +11,8 @@ import { Course } from 'src/app/interfaces/course.model'; // Utiliser notre inte
 })
 export class CoursesService {
   // URL de votre course-service. Assurez-vous que le port est le bon.
-  private apiUrl = 'http://localhost:8888/api/courses';
+  private apiUrl =
+    'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/courses';
 
   constructor(private http: HttpClient) {}
 

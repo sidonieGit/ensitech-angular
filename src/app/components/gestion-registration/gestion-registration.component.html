@@ -1,0 +1,197 @@
+<section class="d-flex">
+  <!-- SIDEBAR -->
+  <app-sidebar></app-sidebar>
+  <!-- MAIN -->
+  <main class="flex-grow-1">
+    <app-topbar></app-topbar>
+
+    <!-- Barre de recherche et bouton Ajouter -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4">
+      <div class="col-6 col-md-9" style="height: 44px">
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">
+            <i class="hgi-stroke hgi-search-01"></i>
+          </span>
+          <input type="search" placeholder="Rechercher un registration..." class="form-control" [(ngModel)]="filtername"
+            (ngModelChange)="updateFilteredRegistrations()" />
+        </div>
+      </div>
+      <button class="primary-btn border-0" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
+        Nouvelle Inscription<i class="hgi-stroke hgi-add-circle"></i>
+      </button>
+    </div>
+
+    <!-- Liste des inscrits -->
+    <div class="students-list mt-5 px-4">
+      <table class="table border table-hover">
+        <thead class="table-primary">
+          <tr>
+            <th><input type="checkbox" class="form-check-input" /></th>
+            <th>N°</th>
+            <th>Niveau</th>
+            <th>Specialité</th>
+            <th>Etudiant</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let registration of filteredRegistrations">
+            <td><input type="checkbox" class="form-check-input" /></td>
+            <td>{{ registration.registrationNumber}}</td>
+            <td>{{ registration.level }}</td>
+            <td>{{ registration.speciality }}</td>
+            <td>{{ registration.student }}</td>
+            <td>
+              <div class="dropdown">
+                <a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  <i class="hgi-stroke hgi-more-vertical"></i>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="editRegistration(registration)"
+                      data-bs-toggle="modal" data-bs-target="#editTeacherModal">Modifier</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="viewRegistration(registration)"
+                      data-bs-toggle="modal" data-bs-target="#viewTeacherModal">Voir les informations</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="deleteRegistration()">Supprimer</a>
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <p>{{ filteredRegistrations.length }} résultats</p>
+        <nav aria-label="Page navigation">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous">&lt;</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next">&gt;</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal pour ajouter un registration -->
+  <div class="modal fade" id="addTeacherModal" tabindex="-1" aria-labelledby="addTeacherModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-intitule">Nouvelle Inscription</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="addRegistration()">
+            <!--div class="mb-3">
+              <label for="registrationNumber" class="form-label">Numero d'inscription</label>
+              <input ype="text" [(ngModel)]="newRegistration.registrationNumber" name="registrationNumber" placeholder="Registration Number" required
+                class="form-control" />
+            </div-->
+            <div class="mb-3">
+              <label for="level" class="form-label">Niveau</label>
+              <select name="level" id="level" class="form-select" [(ngModel)]="newRegistration.level" required>
+                <option value="" disabled selected>Choisir le niveau</option>
+                <option value="L1">Licence 1</option>
+                <option value="L2">Licence 2</option>
+                <option value="L3">Licence 3</option>
+                <option value="M1">Master 1</option>
+                <option value="M2">Master 2</option>
+              </select>
+              <!--input [(ngModel)]="newRegistration.level" name="level" placeholder="niveau" required
+                class="form-control"/-->
+
+            </div>
+            <div class="mb-3">
+              <label for="speciality" class="form-label">Specialité</label>
+              <input class="form-control" type="text" [(ngModel)]="newRegistration.speciality" name="speciality" required
+                placeholder="specialité" />
+            </div>
+            <div class="mb-3">
+              <label for="student" class="form-label">Matricule</label>
+              <input class="form-control" type="text" [(ngModel)]="newRegistration.student" name="student" required
+                placeholder="Matricule de l'etudiant" />
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
+                Ajouter
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal pour visualiser les informations d'un registration -->
+  <div class="modal fade" id="viewTeacherModal" tabindex="-1" aria-labelledby="viewTeacherModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-intitule">Détails du registration</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>N° Inscription :</strong> {{ selectedRegistration?.registrationNumber }}</p>
+          <p><strong>Niveau :</strong> {{ selectedRegistration?.level }}</p>
+          <p>
+            <strong>Specialité :</strong> {{ selectedRegistration?.speciality }}
+          </p>
+          <p>
+            <strong>Etudiant :</strong>
+            {{ selectedRegistration?.student }}
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Fermer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal pour modifier une inscription -->
+  <div class="modal fade" id="editTeacherModal" tabindex="-1" aria-labelledby="editTeacherModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-intitule">Modifier les informations du registration</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" *ngIf="editingRegistration">
+          <form (ngSubmit)="saveEditRegistration()">
+            <div class="mb-3">
+              <label for="level" class="form-label">Niveau</label>
+              <input type="text" [(ngModel)]="editingRegistration.level" name="level" placeholder="Nom" required
+                class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label for="prenom" class="form-label">Specialité</label>
+              <input type="text" [(ngModel)]="editingRegistration.speciality" name="speciality" placeholder="specialité" required
+                class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label for="student" class="form-label">Etudiant</label>
+              <input type="number" [(ngModel)]="editingRegistration.student" name="student" placeholder="Etudiant" required
+                class="form-control" />
+            </div>
+            <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
+              Enregistrer
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

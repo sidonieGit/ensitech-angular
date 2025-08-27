@@ -1,6 +1,8 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgChartsModule } from 'ng2-charts';
@@ -24,7 +26,12 @@ import { TopbarComponent } from './components/topbar/topbar.component';
 import { FiltercoursePipe } from './filtercourse.pipe';
 import { FilterpipePipe } from './filterpipe.pipe';
 import { AuthService } from './services/auth/auth.service';
+import { GestionAcademicYearComponent } from './components/gestion-academic-year/gestion-academic-year.component';
+import { GestionPeriodComponent } from './components/gestion-period/gestion-period.component';
+import { GestionRegistrationComponent } from './components/gestion-registration/gestion-registration.component';
+
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+
 
 export function initializeApp(authService: AuthService) {
   return () => {
@@ -48,6 +55,11 @@ export function initializeApp(authService: AuthService) {
     FiltercoursePipe,
     GestionSpecialityComponent,
     GestionEvaluationsComponent,
+    GestionAcademicYearComponent,
+    GestionPeriodComponent,
+    GestionRegistrationComponent,
+
+
   ],
   imports: [
     BrowserModule,
@@ -55,6 +67,8 @@ export function initializeApp(authService: AuthService) {
     FormsModule,
     NgChartsModule,
     HttpClientModule,
+    ReactiveFormsModule
+
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       // Configurer Toastr
@@ -62,6 +76,7 @@ export function initializeApp(authService: AuthService) {
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
     }),
+
   ],
   providers: [
     // Provider pour initialiser l'application

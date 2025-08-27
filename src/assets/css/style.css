@@ -52,6 +52,13 @@ button.primary-btn {
   background-color: var(--color-primary);
   color: var(--color-white);
 }
+button.primary-btn:hover {
+  background-color: var(--color-white) ;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary) !important;
+  transition: 0.5s ease-out;
+
+}
 
 button.outline-btn {
   background-color: transparent;
@@ -360,3 +367,46 @@ label {
   background-color: var(--color-gray) !important;
 }
 /* create new student */
+
+.bg-orange {
+  background-color: #ffc300 !important;
+  border-radius: 5px !important;
+  padding: 2px !important;
+}
+.bg-green {
+  background-color: #519259 !important;
+  border-radius: 5px !important;
+  padding: 2px !important;
+  /* color: white ; */
+
+}
+.bg-red {
+  background-color: #c13131 !important;
+  border-radius: 5px !important;
+  padding: 2px !important;
+  color: #f3f4f6 ;
+}
+
+.btn-logout {
+  background-color: var(--color-gray) !important;
+  color: var(--color-primary) !important;
+  border-radius: 4px !important;
+  width: 100% !important;
+  height: 44px !important;
+  border: 1px solid var(--color-primary) !important;
+}
+.btn-logout:hover{
+  background-color: var(--color-primary) !important;
+  color: var(--color-white) !important;
+  border-radius: 4px !important;
+  border: none !important;
+  transition: 0.5s ease-out;
+
+}
+.nav-link:hover {
+  background-color: var(--color-primary) !important;
+  color: var(--color-white) !important;
+  border-radius: 4px !important;
+  opacity: .7;
+
+}

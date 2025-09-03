@@ -21,6 +21,8 @@
       </button>
     </div>
 
+
+
     <!-- Liste des années academiques -->
     <div class="students-list mt-5 px-4">
 
@@ -28,7 +30,7 @@
         <thead class="table-primary">
           <tr>
             <th><input type="checkbox" class="form-check-input" /></th>
-            <th>Id</th>
+            <!--th>Id</th-->
             <th>Intitulé</th>
             <th>Date de debut</th>
             <th>Date de fin</th>
@@ -40,16 +42,16 @@
         <tbody>
           <tr *ngFor="let academicYear of filteredAcademicYear">
             <td><input type="checkbox" class="form-check-input" /></td>
-            <td>{{ academicYear.id }}</td>
+            <!--td>{{ academicYear.id }}</td-->
             <td>{{ academicYear.label}}</td>
-            <td>{{ academicYear.startDate | date:'short'}}</td>
-            <td>{{ academicYear.endDate | date:'short'}}</td>
+            <td>{{ academicYear.startDate | date:'dd/MM/yyyy'}}</td>
+            <td>{{ academicYear.endDate | date:'dd/MM/yyyy'}}</td>
             <td><em [ngClass]="{
                 'bg-orange': academicYear.status === 'EN_PREPARATION',
                 'bg-green': academicYear.status === 'EN_COURS',
                 'bg-red': academicYear.status === 'TERMINÉE'
               }">{{ academicYear.status | lowercase}}</em></td>
-            <td >{{getCurrentPeriod(academicYear) || ""}}</td>
+            <td >{{getCurrentPeriod(academicYear)}}</td>
             <td>
               <div class="dropdown">
                 <a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
@@ -199,14 +201,29 @@
           </p>
           <p>
             <strong>Status:</strong>
-            {{ selectedAcademicYear?.status }}
+            {{ selectedAcademicYear?.status | lowercase }}
           </p>
           <p>
             <strong>Periodes:</strong>
-            {{ selectedAcademicYear?.periods }}
+            <span *ngFor="let period of selectedAcademicYear?.periods">
+              <p>
+                  {{ period.entitled}}
+              </p>
+            </span>
           </p>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer d-flex justify-content-between">
+          <ng-container *ngIf="selectedAcademicYear?.status === 'EN_PREPARATION'">
+            <button [disabled]="!selectedAcademicYear?.id" class="btn btn-success btn-sm ms-2" (click)="startAcademicYear(selectedAcademicYear?.id)">
+              Démarrer l'année
+            </button>
+          </ng-container>
+          <ng-container *ngIf="selectedAcademicYear?.status === 'EN_COURS'">
+            <button  class="btn btn-danger btn-sm ms-2" (click)="finishAcademicYear(selectedAcademicYear?.id)">
+              Terminer l'année
+            </button>
+          </ng-container>
+
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Fermer
           </button>
@@ -216,44 +233,7 @@
   </div>
 
   <!-- Modal pour modifier une année academique -->
-  <!--div class="modal fade" id="editTeacherModal" tabindex="-1" aria-labelledby="editTeacherModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-intitule">Modifier les informations de l'année</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body" *ngIf="editingAcademicYear">
-          <form (ngSubmit)="saveEditAcademicYear()">
-            <div class="mb-3">
-              <label for="label" class="form-label">Intitulé</label>
-              <input type="text" [(ngModel)]="editingAcademicYear.label" name="label" placeholder="label" required
-                class="form-control" />
-            </div>
-            <div class="mb-3">
-              <label for="startDate" class="form-label">Date de debut</label>
-              <input type="date" [(ngModel)]="editingAcademicYear.startDate" name="startDate" placeholder="Date de debut" required
-                class="form-control" />
-            </div>
-            <div class="mb-3">
-              <label for="startDate" class="form-label">Date de fin</label>
-              <input type="date" [(ngModel)]="editingAcademicYear.endDate" name="endDate" placeholder="Date de fin" required
-                class="form-control" />
-            </div>
-            <div class="mb-3">
-              <label for="status" class="form-label">Status</label>
-              <input type="text" [(ngModel)]="editingAcademicYear.status" name="status" placeholder="status">
-            </div>
 
-            <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
-              Enregistrer
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div-->
  <div class="modal fade" id="editTeacherModal" tabindex="-1" aria-labelledby="editTeacherModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

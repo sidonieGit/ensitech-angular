@@ -7,11 +7,13 @@ import { Registration } from 'src/app/interfaces/registration.model';
   providedIn: 'root',
 })
 export class RegistrationService {
-  private apiUrl = 'http://localhost:8888/api/registrations';
+  // private apiUrl = 'http://localhost:8888/api/registrations';
+  private apiUrl =
+    'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/registrations';
 
-  constructor(private http :HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-  getRegistrations():Observable<Registration[]> {
+  getRegistrations(): Observable<Registration[]> {
     return this.http.get<Registration[]>(this.apiUrl);
   }
 
@@ -20,7 +22,9 @@ export class RegistrationService {
     return this.http.get<Registration>(url);
   }
 
-  addRegistration(registration: Omit<Registration, 'id'>): Observable<Registration> {
+  addRegistration(
+    registration: Omit<Registration, 'id'>
+  ): Observable<Registration> {
     return this.http.post<Registration>(this.apiUrl, registration);
   }
 }

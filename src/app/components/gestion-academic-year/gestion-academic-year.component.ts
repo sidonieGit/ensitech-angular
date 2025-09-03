@@ -1,8 +1,10 @@
+
 import { Component } from '@angular/core';
 import { AcademicYear } from 'src/app/interfaces/academic.model';
 import { Period } from 'src/app/interfaces/period.model';
 import { AY } from 'src/app/mocks/mock-academic';
 import { AcademicYearService } from 'src/app/services/academic-year/academic-year.service';
+import toggleSidebar from '../utils/toggle-sidebar';
 
 @Component({
   selector: 'app-gestion-academic-year',
@@ -15,6 +17,7 @@ export class GestionAcademicYearComponent {
   selectedAcademicYear: AcademicYear | null = null;
   editingAcademicYear: AcademicYear | null = null;
   filteredAcademicYear: AcademicYear[] = [];
+
   newAcademicYear: AcademicYear = {
     label: '',
     startDate: new Date(),
@@ -130,6 +133,14 @@ export class GestionAcademicYearComponent {
     this.editingAcademicYear = { ...academicYear }; // Créer une copie pour l'édition
   }
 
+  showAcademicPeriod(academicYear: AcademicYear) {
+    this.selectedAcademicYear = academicYear;
+    return this.selectedAcademicYear?.periods?.forEach(
+      (period) => period.entitled
+    );
+  }
+
+
   // Méthode de création de l'année académique mise à jour
   addAcademicYear() {
     // Appel de la validation avant la soumission
@@ -145,6 +156,7 @@ export class GestionAcademicYearComponent {
       this.academicYearService.addAcademicYear(this.newAcademicYear).subscribe({
         next: () => {
           this.loadAcademicYears();
+          this.getCurrentPeriod(this.newAcademicYear);
           this.resetForm();
         },
         error: (error) =>
@@ -194,6 +206,24 @@ export class GestionAcademicYearComponent {
       this.filterAcademicYears();
     }
   }
+
+  delete(id: number | undefined): void {
+    if (id) {
+      this.academicYearService.deleteAcademicYear(id).subscribe({
+        next: () => {
+          alert('Année académique supprimée avec succès');
+          this.loadAcademicYears(); // Recharger la liste après la suppression
+          this.resetForm();
+        },
+        error: (error) =>
+          console.error(
+            "Erreur lors de la suppression de l'année académique",
+            error
+          ),
+      });
+    }
+  }
+
   resetForm(): void {
     // ... réinitialisation des autres champs
     this.newAcademicYear = {
@@ -232,17 +262,34 @@ export class GestionAcademicYearComponent {
     this.selectedAcademicYear = academicYear;
   }
   saveEditAcademicYear(): void {}
-
   getCurrentPeriod(academicYear: AcademicYear): string {
+    const currentDate = new Date(); // Date actuelle
     if (academicYear.periods && academicYear.periods.length > 0) {
-      const currentDate = new Date();
-      const currentPeriod = academicYear.periods.find(
-        (p) => p.startedAt <= currentDate && p.endedAt >= currentDate
-      );
+      const currentPeriod = academicYear.periods.find((p) => {
+        // Convertir les chaînes en objets Date
+        const startedAt = new Date(p.startedAt);
+        const endedAt = new Date(p.endedAt);
+        // console.log("Start at : "+startedAt);
+
+        // Effectuer la comparaison
+        return startedAt <= currentDate && endedAt >= currentDate;
+      });
+
       if (currentPeriod) {
+        if (
+          currentPeriod.typePeriod === 'INSCRIPTION_PERIOD' ||
+          currentPeriod.typePeriod === 'EXAMENS_PERIOD'
+        ) {
+          academicYear.status = 'EN_COURS';
+        }
         return currentPeriod.entitled.toLowerCase();
       }
+      // Si aucune période en cours n'est trouvée
+      if (academicYear.endDate < currentDate) {
+        academicYear.status = 'TERMINÉE';
+      }
     }
+
     return 'Aucune periode en cours';
   }
 
@@ -255,5 +302,27 @@ export class GestionAcademicYearComponent {
     return true;
   }
 
+  startAcademicYear(id : number | undefined){
+    this.academicYearService.changeAcademicYearStatus(id, "START").subscribe({
+      next: (data) => {
+        console.log("Année académique démarrée avec succès :", data);
+        this.loadAcademicYears(); // Recharger la liste après le démarrage
+      },
+      error: (error) =>
+        console.error("Erreur lors du démarrage de l'année académique", error)
+    })
+  }
+
+  finishAcademicYear(id : number | undefined) {
+
+    this.academicYearService.changeAcademicYearStatus(id, "COMPLETE").subscribe({
+      next: (data) => {
+        console.log('Année académique terminée avec succès :', data);
+        this.loadAcademicYears();
+      },
+      error: (error) =>
+        console.error("Erreur lors de la terminaison de l'année académique", error)
+    })
+  }
 
 }

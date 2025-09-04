@@ -30,6 +30,7 @@ import { GestionPeriodComponent } from './components/gestion-period/gestion-peri
 import { GestionRegistrationComponent } from './components/gestion-registration/gestion-registration.component';
 
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { TrimPipe } from './components/utils/trim.pipe';
 
 
 export function initializeApp(authService: AuthService) {
@@ -57,6 +58,7 @@ export function initializeApp(authService: AuthService) {
     GestionAcademicYearComponent,
     GestionPeriodComponent,
     GestionRegistrationComponent,
+    TrimPipe,
 
 
   ],

@@ -101,21 +101,56 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <form (ngSubmit)="addAcademicYear()">
+        <form (ngSubmit)="addAcademicYear()" #addForm="ngForm">
           <div class="mb-3">
             <label for="label" class="form-label">Intitulé</label>
             <input type="text" [(ngModel)]="newAcademicYear.label" name="label"
-              placeholder="intitulé de l'année académique" required class="form-control" />
+            (ngModelChange)="newAcademicYear.label = $event.trim()"
+            [class.is-invalid]="labelControl.invalid && (labelControl.touched || labelControl.dirty)"
+            placeholder="2025-2026" required pattern="^2\d{3}-2\d{3}$"
+            class="form-control" #labelControl="ngModel"/>
+
+              <small *ngIf="labelControl.invalid && labelControl.touched" class="invalid-feedback">
+                <ng-container *ngIf="labelControl.hasError('required')">
+                  Le champ intitulé est requis.
+                </ng-container>
+                <ng-container *ngIf="labelControl.hasError('pattern')">
+                  L'intitulé doit être de type "2XXX-2XXX" >= à la periode actuelle.
+                </ng-container>
+              </small>
+
           </div>
           <div class="mb-3">
             <label for="startDate" class="form-label">Date de début</label>
             <input type="date" [(ngModel)]="newAcademicYear.startDate" name="startDate" placeholder="Date de début"
-              required class="form-control" />
+              required
+              [min]="currentYearStart"
+              class="form-control"
+              [class.is-Invalid]="startDateControl.invalid && (startDateControl.touched || startDateControl.dirty)"
+              #startDateControl="ngModel"/>
+              <small *ngIf="startDateControl.invalid && startDateControl.touched" class="text-danger">
+                <ng-container *ngIf="startDateControl.hasError('required')">
+                  Le champ date de début est requis.
+                </ng-container>
+                <ng-container *ngIf="startDateControl.hasError('min')">
+                  La date de début doit être aujourd'hui ou une date future.
+                </ng-container>
+              </small>
           </div>
           <div class="mb-3">
             <label for="endDate" class="form-label">Date de fin</label>
             <input type="date" [(ngModel)]="newAcademicYear.endDate" name="endDate" placeholder="Date de fin" required
-              class="form-control" />
+              class="form-control"
+              [min]="currentYearStart"
+               #endDateControl="ngModel"/>
+              <small *ngIf="endDateControl.invalid && endDateControl.touched" class="text-danger">
+                <ng-container *ngIf="endDateControl.hasError('required')">
+                  Le champ date de fin est requis.
+                </ng-container>
+                <ng-container *ngIf="endDateControl.hasError('min')">
+                  La date de fin doit être une date future.
+                </ng-container>
+              </small>
           </div>
           <div class="mb-3">
             <label for="status" class="form-label">Status</label>
@@ -162,7 +197,7 @@
           <div *ngIf="newAcademicYear.periods && newAcademicYear.periods.length > 0">
             <div *ngFor="let period of newAcademicYear.periods; let i = index" class="alert alert-secondary d-flex justify-content-between align-items-center mb-2">
               <div>
-                <strong>{{ period.entitled }}</strong> ({{ period.typePeriod | lowercase }})
+                <strong>{{ period.entitled }}</strong>
                 <br>
                 <small>{{ period.startedAt | date:'shortDate' }} - {{ period.endedAt | date:'shortDate' }}</small>
               </div>
@@ -171,7 +206,7 @@
           </div>
 
           <div class="modal-footer">
-            <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
+            <button type="submit" class="primary-btn border-0" [disabled]="addForm.invalid" data-bs-dismiss="modal">
               Ajouter
             </button>
           </div>

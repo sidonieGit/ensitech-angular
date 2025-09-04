@@ -4,7 +4,7 @@ import { AcademicYear } from 'src/app/interfaces/academic.model';
 import { Period } from 'src/app/interfaces/period.model';
 import { AY } from 'src/app/mocks/mock-academic';
 import { AcademicYearService } from 'src/app/services/academic-year/academic-year.service';
-import toggleSidebar from '../utils/toggle-sidebar';
+
 
 @Component({
   selector: 'app-gestion-academic-year',
@@ -17,6 +17,8 @@ export class GestionAcademicYearComponent {
   selectedAcademicYear: AcademicYear | null = null;
   editingAcademicYear: AcademicYear | null = null;
   filteredAcademicYear: AcademicYear[] = [];
+  currentYearStart: string;
+
 
   newAcademicYear: AcademicYear = {
     label: '',
@@ -43,6 +45,9 @@ export class GestionAcademicYearComponent {
   constructor(private academicYearService: AcademicYearService) {
     // Initialisation ou chargement des années académiques
     this.loadAcademicYears();
+
+     const today = new Date();
+     this.currentYearStart = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
   }
 
   addPeriodToAcademicYear(academicYear?: any): void {

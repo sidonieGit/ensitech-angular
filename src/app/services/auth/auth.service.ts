@@ -25,8 +25,9 @@ export class AuthService {
     ];*/
 
   private authenticated = false;
-  private baseUrl =
-    'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/auth';
+  // private baseUrl =
+  //   'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/auth';
+  private baseUrl = 'http://localhost:8888/api/auth';
 
   constructor(private router: Router, private http: HttpClient) {}
 

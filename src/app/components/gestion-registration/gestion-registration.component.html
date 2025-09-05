@@ -22,7 +22,7 @@
     </div>
 
     <!-- Liste des inscrits -->
-    <div class="students-list mt-5 px-4">
+    <div class="matricules-list mt-5 px-4">
       <table class="table border table-hover">
         <thead class="table-primary">
           <tr>
@@ -30,7 +30,8 @@
             <th>N°</th>
             <th>Niveau</th>
             <th>Specialité</th>
-            <th>Etudiant</th>
+            <th>Etudiant Matricule</th>
+            <th>Etudiant Academique</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -39,8 +40,9 @@
             <td><input type="checkbox" class="form-check-input" /></td>
             <td>{{ registration.registrationNumber}}</td>
             <td>{{ registration.level }}</td>
-            <td>{{ registration.speciality }}</td>
-            <td>{{ registration.student }}</td>
+            <td>{{ registration.specialityLabel }}</td>
+            <td>{{ registration.matricule }}</td>
+            <td>{{ registration.academicYearLabel }}</td>
             <td>
               <div class="dropdown">
                 <a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
@@ -111,32 +113,31 @@
 
             </div>
             <div class="mb-3">
-              <label for="speciality" class="form-label">Specialité</label>
-              <input class="form-control" type="text" [(ngModel)]="newRegistration.speciality" name="speciality" required
-                placeholder="specialité"
-                #specialityControl="ngModel"
-                [class.is-invalid]="specialityControl.invalid && (specialityControl.dirty || specialityControl.touched)"
-                />
-                <small class="text-danger" *ngIf="specialityControl.invalid && (specialityControl.dirty || specialityControl.touched)">
-                  <ng-container *ngIf="specialityControl.hasError('required')">
-                    La spécialité est requise.
-                  </ng-container>
+              <label for="specialityLabel" class="form-label">Specialité</label>
+              <input class="form-control" type="text" [(ngModel)]="newRegistration.specialityLabel"
+                name="specialityLabel" required placeholder="specialité" #specialityLabelControl="ngModel"
+                [class.is-invalid]="specialityLabelControl.invalid && (specialityLabelControl.dirty || specialityLabelControl.touched)" />
+              <small class="text-danger"
+                *ngIf="specialityLabelControl.invalid && (specialityLabelControl.dirty || specialityLabelControl.touched)">
+                <ng-container *ngIf="specialityLabelControl.hasError('required')">
+                  La spécialité est requise.
+                </ng-container>
 
-                </small>
+              </small>
             </div>
             <div class="mb-3">
-              <label for="student" class="form-label">Matricule</label>
-              <input class="form-control" type="text" [(ngModel)]="newRegistration.student" name="student" required
-                placeholder="Matricule de l'etudiant"
-                #studentControl="ngModel"
-                [class.is-invalid]="studentControl.invalid && (studentControl.dirty || studentControl.touched)"
-                 />
-                 <small class="text-danger" *ngIf="studentControl.invalid && (studentControl.dirty || studentControl.touched)">
-                  <ng-container *ngIf="studentControl.hasError('required')">
-                    Le matricule est requis.
-                  </ng-container>
-                </small>
+              <label for="matricule" class="form-label">Matricule</label>
+              <input class="form-control" type="text" [(ngModel)]="newRegistration.matricule" name="matricule" required
+                placeholder="Matricule de l'etudiant" #matriculeControl="ngModel"
+                [class.is-invalid]="matriculeControl.invalid && (matriculeControl.dirty || matriculeControl.touched)" />
+              <small class="text-danger"
+                *ngIf="matriculeControl.invalid && (matriculeControl.dirty || matriculeControl.touched)">
+                <ng-container *ngIf="matriculeControl.hasError('required')">
+                  Le matricule est requis.
+                </ng-container>
+              </small>
             </div>
+
             <div class="modal-footer">
               <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
                 Ajouter
@@ -161,12 +162,15 @@
           <p><strong>N° Inscription :</strong> {{ selectedRegistration?.registrationNumber }}</p>
           <p><strong>Niveau :</strong> {{ selectedRegistration?.level }}</p>
           <p>
-            <strong>Specialité :</strong> {{ selectedRegistration?.speciality }}
+            <strong>Specialité :</strong> {{ selectedRegistration?.specialityLabel }}
           </p>
           <p>
             <strong>Etudiant :</strong>
-            {{ selectedRegistration?.student }}
+            {{ selectedRegistration?.matricule }}
           </p>
+          <p>
+            <strong>Etudiant Academique :</strong>
+            {{ selectedRegistration?.academicYearLabel }}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -195,13 +199,18 @@
             </div>
             <div class="mb-3">
               <label for="prenom" class="form-label">Specialité</label>
-              <input type="text" [(ngModel)]="editingRegistration.speciality" name="speciality" placeholder="specialité" required
-                class="form-control" />
+              <input type="text" [(ngModel)]="editingRegistration.specialityLabel" name="specialityLabel"
+                placeholder="specialité" required class="form-control" />
             </div>
             <div class="mb-3">
-              <label for="student" class="form-label">Etudiant</label>
-              <input type="number" [(ngModel)]="editingRegistration.student" name="student" placeholder="Etudiant" required
-                class="form-control" />
+              <label for="matricule" class="form-label">Etudiant</label>
+              <input type="number" [(ngModel)]="editingRegistration.matricule" name="matricule" placeholder="Etudiant"
+                required class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label for="matricule" class="form-label">Etudiant Academique</label>
+              <input type="number" [(ngModel)]="editingRegistration.academicYearLabel" name="academicYearLabel"
+                placeholder="Etudiant" required class="form-control" />
             </div>
             <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
               Enregistrer

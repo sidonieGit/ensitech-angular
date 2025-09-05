@@ -1,6 +1,7 @@
 export interface Registration {
   registrationNumber?: string;
   level: string;
-  speciality: string;
-  student: string;
+  matricule: string;
+  specialityLabel: string;
+  academicYearLabel: string;
 }

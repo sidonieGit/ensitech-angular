@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { Registration } from 'src/app/interfaces/registration.model';
 import { RegistrationService } from 'src/app/services/registration/registration.service';
 
@@ -15,14 +16,16 @@ export class GestionRegistrationComponent implements OnInit {
   newRegistration = {
     // registrationNumber: '',
     level: '',
-    speciality: '',
-    student: '',
+    specialityLabel: '',
+    matricule: '',
+    academicYearLabel: '',
   };
-  registrations : Registration[] = []
+  registrations: Registration[] = [];
 
   // editingRegistration = { ...this.newRegistration };
 
-  registrationService : RegistrationService = inject(RegistrationService);
+  registrationService: RegistrationService = inject(RegistrationService);
+  toastr: ToastrService = inject(ToastrService);
 
   ngOnInit(): void {
     this.loadRegistrations();
@@ -34,6 +37,7 @@ export class GestionRegistrationComponent implements OnInit {
     this.registrationService.getRegistrations().subscribe({
       next: (data) => {
         // this.registration
+
         this.registrations = data;
         this.filteredRegistrations = data;
         // this.updateFilteredRegistrations;
@@ -48,20 +52,37 @@ export class GestionRegistrationComponent implements OnInit {
   }
   updateFilteredRegistrations() {
     // Logic to filter registrations based on filtername
-    this.filteredRegistrations = this.filteredRegistrations.filter((registration) =>
-      registration.student.toLowerCase().includes(this.filtername.toLowerCase())
+    this.filteredRegistrations = this.filteredRegistrations.filter(
+      (registration) =>
+        registration.matricule
+          .toLowerCase()
+          .includes(this.filtername.toLowerCase())
     );
   }
 
   addRegistration() {
     // Logic to add a new registration
-    if(this.newRegistration.level && this.newRegistration.speciality && this.newRegistration.student){
+    if (
+      this.newRegistration.level &&
+      this.newRegistration.specialityLabel &&
+      this.newRegistration.matricule &&
+      this.newRegistration.academicYearLabel
+    ) {
       this.registrationService.addRegistration(this.newRegistration).subscribe({
         next: (data) => {
+          this.toastr.success(
+            `L'enregistrement ${data.registrationNumber} a été ajouté.`,
+            'Succès !'
+          );
+
           console.log('Enregistrement ajouté avec succès', data);
           this.loadRegistrations(); // Recharger la liste après l'ajout
         },
         error: (err) => {
+          this.toastr.error(
+            `Erreur lors de l'ajout d'un enregistrement : ${err}`,
+            'Erreur !'
+          );
           console.error("Erreur lors de l'ajout d'un enregistrement", err);
         },
       });
@@ -69,14 +90,12 @@ export class GestionRegistrationComponent implements OnInit {
     }
   }
 
-  editRegistration(registration : Registration) {
+  editRegistration(registration: Registration) {
     // Logic to edit an existing registration
     this.editingRegistration = { ...registration };
   }
 
-  deleteRegistration() {
-
-  }
+  deleteRegistration() {}
 
   saveEditRegistration() {}
 
@@ -84,8 +103,9 @@ export class GestionRegistrationComponent implements OnInit {
     this.newRegistration = {
       // registrationNumber: '',
       level: '',
-      speciality: '',
-      student: '',
+      specialityLabel: '',
+      matricule: '',
+      academicYearLabel: '',
     };
   }
 }

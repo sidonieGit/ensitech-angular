@@ -113,12 +113,29 @@
             <div class="mb-3">
               <label for="speciality" class="form-label">Specialité</label>
               <input class="form-control" type="text" [(ngModel)]="newRegistration.speciality" name="speciality" required
-                placeholder="specialité" />
+                placeholder="specialité"
+                #specialityControl="ngModel"
+                [class.is-invalid]="specialityControl.invalid && (specialityControl.dirty || specialityControl.touched)"
+                />
+                <small class="text-danger" *ngIf="specialityControl.invalid && (specialityControl.dirty || specialityControl.touched)">
+                  <ng-container *ngIf="specialityControl.hasError('required')">
+                    La spécialité est requise.
+                  </ng-container>
+
+                </small>
             </div>
             <div class="mb-3">
               <label for="student" class="form-label">Matricule</label>
               <input class="form-control" type="text" [(ngModel)]="newRegistration.student" name="student" required
-                placeholder="Matricule de l'etudiant" />
+                placeholder="Matricule de l'etudiant"
+                #studentControl="ngModel"
+                [class.is-invalid]="studentControl.invalid && (studentControl.dirty || studentControl.touched)"
+                 />
+                 <small class="text-danger" *ngIf="studentControl.invalid && (studentControl.dirty || studentControl.touched)">
+                  <ng-container *ngIf="studentControl.hasError('required')">
+                    Le matricule est requis.
+                  </ng-container>
+                </small>
             </div>
             <div class="modal-footer">
               <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">

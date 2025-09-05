@@ -35,7 +35,8 @@ export class GestionRegistrationComponent implements OnInit {
       next: (data) => {
         // this.registration
         this.registrations = data;
-        this.updateFilteredRegistrations;
+        this.filteredRegistrations = data;
+        // this.updateFilteredRegistrations;
       },
       error: (err) => {
         console.error('Erreur lors du chargement', err);

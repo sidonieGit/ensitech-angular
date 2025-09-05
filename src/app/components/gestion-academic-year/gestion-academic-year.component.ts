@@ -330,4 +330,17 @@ export class GestionAcademicYearComponent {
     })
   }
 
+
+  compareDate(startYear : Date): boolean {
+    let startYearDate = new Date(startYear);
+    return startYearDate.getFullYear() <= new Date().getFullYear();
+  }
+
+  checkInput(label:string){
+    console.log(label);
+    if(label){
+      return true;
+    }
+    return false;
+  }
 }

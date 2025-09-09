@@ -95,7 +95,52 @@ export class GestionRegistrationComponent implements OnInit {
     this.editingRegistration = { ...registration };
   }
 
-  deleteRegistration() {}
+  updateRegistration(){
+    if (this.editingRegistration) {
+      this.registrationService
+        .updateRegistration(this.editingRegistration)
+        .subscribe({
+          next: (data) => {
+            this.toastr.success(
+              `L'enregistrement ${data.registrationNumber} a été mis à jour.`,
+              'Succès !'
+            );
+            this.loadRegistrations(); // Recharger la liste après la mise à jour
+            this.editingRegistration = null; // Réinitialiser l'édition
+          },
+          error: (err) => {
+            this.toastr.error(
+              `Erreur lors de la mise à jour de l'enregistrement : ${err}`,
+              'Erreur !'
+            );
+          },
+        });
+    }
+  }
+
+  deleteRegistration(id: number | undefined) {
+    let query = confirm(
+      'Êtes-vous sûr de vouloir supprimer cette inscription ?'
+    );
+    if (id !== undefined && query) {
+      this.registrationService.deleteRegistration(id).subscribe({
+        next: () => {
+          this.toastr.success(
+            `L'enregistrement a été supprimé.`,
+            'Succès !'
+          );
+          this.loadRegistrations(); // Recharger la liste après la suppression
+        },
+        error: (err) => {
+          this.toastr.error(
+            `Erreur lors de la suppression de l'enregistrement : ${err}`,
+            'Erreur !'
+          );
+        },
+      });
+    }
+
+  }
 
   saveEditRegistration() {}
 

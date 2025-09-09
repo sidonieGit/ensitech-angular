@@ -26,4 +26,14 @@ export class RegistrationService {
   ): Observable<Registration> {
     return this.http.post<Registration>(this.apiUrl, registration);
   }
+
+  updateRegistration(registration: Registration): Observable<Registration> {
+    const url = `${this.apiUrl}/${registration.id}`;
+    return this.http.put<Registration>(url, registration);
+  }
+
+  deleteRegistration(id: number): Observable<void> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.delete<void>(url);
+  }
 }

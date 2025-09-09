@@ -1,5 +1,5 @@
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AcademicYear } from 'src/app/interfaces/academic.model';
 import { Period } from 'src/app/interfaces/period.model';
 import { AY } from 'src/app/mocks/mock-academic';
@@ -11,14 +11,13 @@ import { AcademicYearService } from 'src/app/services/academic-year/academic-yea
   templateUrl: './gestion-academic-year.component.html',
   styleUrls: ['./gestion-academic-year.component.css'],
 })
-export class GestionAcademicYearComponent {
+export class GestionAcademicYearComponent  {
   academicYear: AcademicYear[] = [];
   filtername: string = '';
   selectedAcademicYear: AcademicYear | null = null;
   editingAcademicYear: AcademicYear | null = null;
   filteredAcademicYear: AcademicYear[] = [];
   currentYearStart: string;
-
 
   newAcademicYear: AcademicYear = {
     label: '',
@@ -181,17 +180,12 @@ export class GestionAcademicYearComponent {
       if (!this.validateAcademicYear(this.editingAcademicYear)) {
         return;
       }
-
       // 2. Appel du service pour mettre à jour l'année académique
       this.academicYearService
         .updateAcademicYear(this.editingAcademicYear)
         .subscribe({
           next: (updatedYear) => {
             // 3. Recharger la liste pour refléter les changements
-            console.log(
-              'Année académique mise à jour avec succès :',
-              updatedYear
-            );
             this.loadAcademicYears();
             this.resetForm();
           },
@@ -213,7 +207,8 @@ export class GestionAcademicYearComponent {
   }
 
   delete(id: number | undefined): void {
-    if (id) {
+    let query =confirm("Êtes-vous sûr de vouloir supprimer cette année académique ?");
+    if (id && query) {
       this.academicYearService.deleteAcademicYear(id).subscribe({
         next: () => {
           alert('Année académique supprimée avec succès');
@@ -343,4 +338,5 @@ export class GestionAcademicYearComponent {
     }
     return false;
   }
+
 }

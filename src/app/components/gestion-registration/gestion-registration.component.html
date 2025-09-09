@@ -31,7 +31,7 @@
             <th>Niveau</th>
             <th>Specialité</th>
             <th>Etudiant Matricule</th>
-            <th>Etudiant Academique</th>
+            <th>Année Academique</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -59,7 +59,7 @@
                       data-bs-toggle="modal" data-bs-target="#viewTeacherModal">Voir les informations</a>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="javascript:void(0);" (click)="deleteRegistration()">Supprimer</a>
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="deleteRegistration(registration.id)">Supprimer</a>
                   </li>
                 </ul>
               </div>
@@ -114,16 +114,14 @@
             </div>
             <div class="mb-3">
               <label for="specialityLabel" class="form-label">Specialité</label>
-              <input class="form-control" type="text" [(ngModel)]="newRegistration.specialityLabel"
-                name="specialityLabel" required placeholder="specialité" #specialityLabelControl="ngModel"
-                [class.is-invalid]="specialityLabelControl.invalid && (specialityLabelControl.dirty || specialityLabelControl.touched)" />
-              <small class="text-danger"
-                *ngIf="specialityLabelControl.invalid && (specialityLabelControl.dirty || specialityLabelControl.touched)">
-                <ng-container *ngIf="specialityLabelControl.hasError('required')">
-                  La spécialité est requise.
-                </ng-container>
-
-              </small>
+              <select name="specialityLabel" id="specialityLabel" class="form-select" [(ngModel)]="newRegistration.specialityLabel" required>
+                <option value="">Choisir une specialité</option>
+                <option value="Génie logiciel">Génie logiciel</option>
+                <option value="Sécurité Informatique">Sécurité Informatique</option>
+                <option value="MIAGE">MIAGE</option>
+                <option value="Devops">Devops</option>
+                <option value="Intelligence Artificielle">Intelligence Artificielle</option>
+              </select>
             </div>
             <div class="mb-3">
               <label for="matricule" class="form-label">Matricule</label>
@@ -137,7 +135,13 @@
                 </ng-container>
               </small>
             </div>
-
+            <div class="mb-3">
+              <label for="academicYearLabel" class="form-label">Specialité</label>
+              <select name="academicYearLabel" id="academicYearLabel" class="form-select" [(ngModel)]="newRegistration.academicYearLabel" required>
+                <option value="">Choisir l'année academique</option>
+                <option value="2025-2026">2025-2026</option>
+              </select>
+            </div>
             <div class="modal-footer">
               <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
                 Ajouter
@@ -191,7 +195,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body" *ngIf="editingRegistration">
-          <form (ngSubmit)="saveEditRegistration()">
+          <form (ngSubmit)="updateRegistration()">
             <div class="mb-3">
               <label for="level" class="form-label">Niveau</label>
               <input type="text" [(ngModel)]="editingRegistration.level" name="level" placeholder="Nom" required
@@ -203,12 +207,12 @@
                 placeholder="specialité" required class="form-control" />
             </div>
             <div class="mb-3">
-              <label for="matricule" class="form-label">Etudiant</label>
+              <label for="matricule" class="form-label">Matricule Etudiant</label>
               <input type="number" [(ngModel)]="editingRegistration.matricule" name="matricule" placeholder="Etudiant"
                 required class="form-control" />
             </div>
             <div class="mb-3">
-              <label for="matricule" class="form-label">Etudiant Academique</label>
+              <label for="matricule" class="form-label">Année Academique</label>
               <input type="number" [(ngModel)]="editingRegistration.academicYearLabel" name="academicYearLabel"
                 placeholder="Etudiant" required class="form-control" />
             </div>

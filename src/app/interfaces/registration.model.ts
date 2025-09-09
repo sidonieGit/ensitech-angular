@@ -1,4 +1,5 @@
 export interface Registration {
+  id?: number;
   registrationNumber?: string;
   level: string;
   matricule: string;

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr'; // Importer ToastrService
 import { Course } from 'src/app/interfaces/course.model';
 import { Student } from 'src/app/interfaces/students.model'; // Assurez-vous que le chemin est correct
 import { CoursesService } from 'src/app/services/courses/courses.service'; // Assurez-vous que le chemin est correct
 import { StudentsService } from 'src/app/services/students/students.service';
-import { ToastrService } from 'ngx-toastr'; // Importer ToastrService
 
 @Component({
   selector: 'app-gestion-students',
@@ -157,24 +157,24 @@ export class GestionStudentsComponent implements OnInit {
 
   // --- Méthodes pour l'association des cours ---
 
-  openAssociateCoursesModal(student: Student): void {
-    this.selectedStudent = student;
-    // Récupère les IDs des cours déjà associés à cet étudiant
-    const associatedCourseIds = new Set(
-      student.courses?.map((course) => course.id)
-    );
-    // On construit la liste pour la modale à partir de la liste source
-    // C'est plus sûr et ça garantit que les données sont à jour
-    this.coursesForModal = this.allCoursesSource.map((course) => ({
-      ...course,
-      // La case est cochée si l'ID du cours est dans la liste des cours de l'étudiant
-      selected: associatedCourseIds.has(course.id!),
-    }));
-    console.log(
-      'Préparation de la modale avec les cours :',
-      this.coursesForModal
-    ); // Pour déboguer
-  }
+  // openAssociateCoursesModal(student: Student): void {
+  //   this.selectedStudent = student;
+  //   // Récupère les IDs des cours déjà associés à cet étudiant
+  //   const associatedCourseIds = new Set(
+  //     student.courses?.map((course) => course.id)
+  //   );
+  //   // On construit la liste pour la modale à partir de la liste source
+  //   // C'est plus sûr et ça garantit que les données sont à jour
+  //   this.coursesForModal = this.allCoursesSource.map((course) => ({
+  //     ...course,
+  //     // La case est cochée si l'ID du cours est dans la liste des cours de l'étudiant
+  //     selected: associatedCourseIds.has(course.id!),
+  //   }));
+  //   console.log(
+  //     'Préparation de la modale avec les cours :',
+  //     this.coursesForModal
+  //   ); // Pour déboguer
+  // }
 
   // CORRECTION : Ajout de la méthode manquante pour afficher les titres
   getCourseTitles(courses: Course[] | undefined): string {

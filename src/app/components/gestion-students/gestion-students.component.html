@@ -54,9 +54,9 @@
 									<li><a class="dropdown-item" href="javascript:void(0);" (click)="viewStudent(student)"
 											data-bs-toggle="modal" data-bs-target="#viewStudentModal">Voir les
 											informations</a></li>
-									<li><a class="dropdown-item" href="javascript:void(0);" (click)="openAssociateCoursesModal(student)"
+									<!-- <li><a class="dropdown-item" href="javascript:void(0);" (click)="openAssociateCoursesModal(student)"
 											data-bs-toggle="modal" data-bs-target="#associateCoursesModal">Associer un
-											cours</a></li>
+											cours</a></li> -->
 									<li><a class="dropdown-item" href="javascript:void(0);"
 											(click)="deleteStudent(student.id)">Supprimer</a></li>
 								</ul>
@@ -141,7 +141,7 @@
 					<p><strong>Date de naissance :</strong> {{ selectedStudent.birthday | date: 'dd/MM/yyyy' }}</p>
 					<!-- CHANGÉ -->
 					<p><strong>Genre :</strong> {{ selectedStudent.gender }}</p> <!-- Ajout du genre -->
-					<p><strong>Cours associés :</strong> {{ getCourseTitles(selectedStudent.courses) }}</p>
+					<p><strong>Spécialité :</strong> {{ selectedStudent.speciality }}</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>

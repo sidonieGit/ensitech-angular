@@ -4,7 +4,7 @@ export interface Speciality {
   id?: number;
   label: string;
   description: string;
-  cycles?: string;
+  cycle?: string;
   courses?: Course[];
   // selected?: boolean;
 }

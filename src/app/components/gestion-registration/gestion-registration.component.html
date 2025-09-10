@@ -59,7 +59,8 @@
                       data-bs-toggle="modal" data-bs-target="#viewTeacherModal">Voir les informations</a>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="javascript:void(0);" (click)="deleteRegistration(registration.id)">Supprimer</a>
+                    <a class="dropdown-item" href="javascript:void(0);"
+                      (click)="deleteRegistration(registration.id)">Supprimer</a>
                   </li>
                 </ul>
               </div>
@@ -114,13 +115,14 @@
             </div>
             <div class="mb-3">
               <label for="specialityLabel" class="form-label">Specialité</label>
-              <select name="specialityLabel" id="specialityLabel" class="form-select" [(ngModel)]="newRegistration.specialityLabel" required>
+              <select name="specialityLabel" id="specialityLabel" class="form-select"
+                [(ngModel)]="newRegistration.specialityLabel" required>
                 <option value="">Choisir une specialité</option>
                 <option value="Génie logiciel">Génie logiciel</option>
                 <option value="Sécurité Informatique">Sécurité Informatique</option>
-                <option value="MIAGE">MIAGE</option>
-                <option value="Devops">Devops</option>
-                <option value="Intelligence Artificielle">Intelligence Artificielle</option>
+                <option value="Developpement Mobile">Developpement Mobile</option>
+                <!-- <option value="Devops">Devops</option>
+                <option value="Intelligence Artificielle">Intelligence Artificielle</option> -->
               </select>
             </div>
             <div class="mb-3">
@@ -136,8 +138,9 @@
               </small>
             </div>
             <div class="mb-3">
-              <label for="academicYearLabel" class="form-label">Specialité</label>
-              <select name="academicYearLabel" id="academicYearLabel" class="form-select" [(ngModel)]="newRegistration.academicYearLabel" required>
+              <label for="academicYearLabel" class="form-label">Année academique</label>
+              <select name="academicYearLabel" id="academicYearLabel" class="form-select"
+                [(ngModel)]="newRegistration.academicYearLabel" required>
                 <option value="">Choisir l'année academique</option>
                 <option value="2025-2026">2025-2026</option>
               </select>

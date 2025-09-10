@@ -29,7 +29,7 @@
 						<th><input type="checkbox" class="form-check-input" /></th>
 						<th>Nom de Famille</th>
 						<th>Prénom</th>
-						<th>Date de Naissance</th>
+						<th>Spécialité</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -39,7 +39,7 @@
 
 						<td>{{ student.lastName | titlecase }}</td>
 						<td>{{ student.firstName | titlecase }}</td>
-						<td>{{ student.birthday| date : 'dd/MM/yyyy' }}</td>
+						<td>{{ student.speciality| titlecase }}</td>
 
 						<td>
 							<div class="dropdown">
@@ -113,7 +113,7 @@
 							<input class="form-control" type="text" [(ngModel)]="newStudent.telephone" name="telephone"
 								placeholder="Téléphone" />
 						</div>
-						<!-- Vous pouvez ajouter les autres champs ici : address, birthday, gender -->
+						<!-- Vous pouvez ajouter les autres champs ici : address, speciality, gender -->
 						<div class="modal-footer">
 							<button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">Ajouter</button>
 						</div>
@@ -138,7 +138,7 @@
 					<p><strong>Matricule :</strong> {{ selectedStudent.matricule }}</p> <!-- Ajout du matricule -->
 					<p><strong>Email :</strong> {{ selectedStudent.email }}</p>
 					<p><strong>Téléphone :</strong> {{ selectedStudent.telephone }}</p>
-					<p><strong>Date de naissance :</strong> {{ selectedStudent.birthday | date: 'dd/MM/yyyy' }}</p>
+					<p><strong>Date de naissance :</strong> {{ selectedStudent.speciality }}</p>
 					<!-- CHANGÉ -->
 					<p><strong>Genre :</strong> {{ selectedStudent.gender }}</p> <!-- Ajout du genre -->
 					<p><strong>Spécialité :</strong> {{ selectedStudent.speciality }}</p>

@@ -1,24 +1,44 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Speciality } from 'src/app/interfaces/speciality.interface';
-import { SPECIALITY } from 'src/app/mock-speciality';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SpecialityService {
-
   private speciality!: Speciality[];
 
-  private apiUrl = 'http://localhost:8084/api/speciality';
+  private apiUrl = 'http://localhost:8888/api/training/specialities';
 
+  // private apiUrl = 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/speciality';
 
-  constructor() {
-    this.speciality = SPECIALITY
+  http: HttpClient = inject(HttpClient);
+  // Méthode pour obtenir les spécialités
 
+  constructor() {}
+
+  getSpecialities(): Observable<Speciality[]> {
+    return this.http.get<Speciality[]>(this.apiUrl);
   }
 
-  getSpeciality():Speciality[]{
-    return this.speciality;
+  // Méthode pour obtenir une spécialité par son ID
+  getSpecialityById(id: number): Observable<Speciality> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.get<Speciality>(url);
   }
 
+  addSpeciality(speciality: Omit<Speciality, 'id'>): Observable<Speciality> {
+    return this.http.post<Speciality>(this.apiUrl, speciality);
+  }
+
+  deleteSpeciality(id: number): Observable<void> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.delete<void>(url);
+  }
+
+  updateSpeciality(speciality: Speciality): Observable<Speciality> {
+    const url = `${this.apiUrl}/${speciality.id}`;
+    return this.http.put<Speciality>(url, speciality);
+  }
 }

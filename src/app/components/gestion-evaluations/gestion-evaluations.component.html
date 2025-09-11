@@ -8,14 +8,28 @@
     <app-topbar></app-topbar>
 
     <!-- Barre de recherche et bouton Ajouter -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4">
-      <div class="col-6 col-md-9" style="height: 44px;">
+    <div
+      class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4"
+    >
+      <div class="col-6 col-md-9" style="height: 44px">
         <div class="input-group">
-          <span class="input-group-text"><i class="hgi-stroke hgi-search-01"></i></span>
-          <input type="search" placeholder="Rechercher une évaluation..." class="form-control" [(ngModel)]="filterEvaluation" (ngModelChange)="updateFilteredEvaluations()" />
+          <span class="input-group-text"
+            ><i class="hgi-stroke hgi-search-01"></i
+          ></span>
+          <input
+            type="search"
+            placeholder="Rechercher une évaluation..."
+            class="form-control"
+            [(ngModel)]="filterEvaluation"
+            (ngModelChange)="updateFilteredEvaluations()"
+          />
         </div>
       </div>
-      <button class="primary-btn border-0" data-bs-toggle="modal" data-bs-target="#addEvaluationModal">
+      <button
+        class="primary-btn border-0"
+        data-bs-toggle="modal"
+        data-bs-target="#addEvaluationModal"
+      >
         Ajouter une évaluation <i class="hgi-stroke hgi-add-circle"></i>
       </button>
     </div>
@@ -34,17 +48,46 @@
         <tbody>
           <tr *ngFor="let eval of filteredEvaluations">
             <td>{{ eval.code }}</td>
-            <td>{{ eval.date | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ eval.date | date : "dd/MM/yyyy" }}</td>
             <td>{{ eval.description }}</td>
             <td>
               <div class="dropdown">
-                <a href="#" class="text-decoration-none text-black" data-bs-toggle="dropdown">
+                <a
+                  href="#"
+                  class="text-decoration-none text-black"
+                  data-bs-toggle="dropdown"
+                >
                   <i class="hgi-stroke hgi-more-vertical"></i>
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#" (click)="editEvaluation(eval)" data-bs-toggle="modal" data-bs-target="#editEvaluationModal">Modifier</a></li>
-                  <li><a class="dropdown-item" href="#" (click)="viewEvaluation(eval)" data-bs-toggle="modal" data-bs-target="#viewEvaluationModal">Voir les informations</a></li>
-                  <li><a class="dropdown-item text-danger" href="#" (click)="deleteEvaluation(eval.id)">Supprimer</a></li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      (click)="editEvaluation(eval)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#editEvaluationModal"
+                      >Modifier</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      (click)="viewEvaluation(eval)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#viewEvaluationModal"
+                      >Voir les informations</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item text-danger"
+                      href="#"
+                      (click)="deleteEvaluation(eval.id)"
+                      >Supprimer</a
+                    >
+                  </li>
                 </ul>
               </div>
             </td>
@@ -55,33 +98,71 @@
   </main>
 
   <!-- MODAL : Ajouter une évaluation -->
-  <div class="modal fade" id="addEvaluationModal" tabindex="-1" aria-labelledby="addEvaluationModalLabel" aria-hidden="true">
+  <div
+    class="modal fade"
+    id="addEvaluationModal"
+    tabindex="-1"
+    aria-labelledby="addEvaluationModalLabel"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
       <form class="modal-content" (ngSubmit)="addEvaluation()">
         <div class="modal-header">
           <h5 class="modal-title">Ajouter une évaluation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
             <label class="form-label">Code</label>
-            <input type="text" class="form-control" [(ngModel)]="newEvaluation.code" name="code" required>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="newEvaluation.code"
+              name="code"
+              required
+            />
           </div>
           <div class="mb-3">
             <label class="form-label">Description</label>
-            <input type="text" class="form-control" [(ngModel)]="newEvaluation.description" name="description" required>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="newEvaluation.description"
+              name="description"
+              required
+            />
           </div>
           <div class="mb-3">
             <label class="form-label">Date</label>
-            <input type="date" class="form-control" [(ngModel)]="newEvaluation.date" name="date" required>
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="newEvaluation.date"
+              name="date"
+              required
+            />
           </div>
           <div class="mb-3">
             <label class="form-label">Note</label>
-            <input type="number" class="form-control" [(ngModel)]="newEvaluation.note" name="note" required>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="newEvaluation.note"
+              name="note"
+              required
+            />
           </div>
           <div class="mb-3">
             <label class="form-label">Type</label>
-            <select class="form-select" [(ngModel)]="newEvaluation.type" name="type">
+            <select
+              class="form-select"
+              [(ngModel)]="newEvaluation.type"
+              name="type"
+            >
               <option value="CONTRÔLE CONTINU">Contrôle Continu</option>
               <option value="EXAMEN">Examen</option>
               <option value="TP">TP</option>
@@ -89,70 +170,137 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Statut</label>
-            <select class="form-select" [(ngModel)]="newEvaluation.statut" name="status">
+            <select
+              class="form-select"
+              [(ngModel)]="newEvaluation.statut"
+              name="status"
+            >
               <option value="VALIDÉE">Validée</option>
               <option value="NON VALIDÉE">Non Validée</option>
             </select>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">Ajouter</button>
+          <button
+            type="submit"
+            class="primary-btn border-0"
+            data-bs-dismiss="modal"
+          >
+            Ajouter
+          </button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- MODAL : Voir les détails -->
-  <div class="modal fade" id="viewEvaluationModal" tabindex="-1" aria-hidden="true">
+  <div
+    class="modal fade"
+    id="viewEvaluationModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
       <div class="modal-content" *ngIf="selectedEvaluation">
         <div class="modal-header">
           <h5 class="modal-title">Détails de l’évaluation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
         <div class="modal-body">
           <p><strong>Code :</strong> {{ selectedEvaluation.code }}</p>
-          <p><strong>Description :</strong> {{ selectedEvaluation.description }}</p>
-          <p><strong>Date :</strong> {{ selectedEvaluation.date | date: 'dd/MM/yyyy' }}</p>
+          <p>
+            <strong>Description :</strong> {{ selectedEvaluation.description }}
+          </p>
+          <p>
+            <strong>Date :</strong>
+            {{ selectedEvaluation.date | date : "dd/MM/yyyy" }}
+          </p>
           <p><strong>Note :</strong> {{ selectedEvaluation.note }}</p>
           <p><strong>Type :</strong> {{ selectedEvaluation.type }}</p>
           <p><strong>Statut :</strong> {{ selectedEvaluation.statut }}</p>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">
+            Fermer
+          </button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- MODAL : Modifier -->
-  <div class="modal fade" id="editEvaluationModal" tabindex="-1" aria-hidden="true">
+  <div
+    class="modal fade"
+    id="editEvaluationModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
-      <form class="modal-content" *ngIf="editingEvaluation" (ngSubmit)="saveEditEvaluation()">
+      <form
+        class="modal-content"
+        *ngIf="editingEvaluation"
+        (ngSubmit)="saveEditEvaluation()"
+      >
         <div class="modal-header">
           <h5 class="modal-title">Modifier l’évaluation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
             <label class="form-label">Code</label>
-            <input type="text" class="form-control" [(ngModel)]="editingEvaluation.code" name="editCode" required>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="editingEvaluation.code"
+              name="editCode"
+              required
+            />
           </div>
           <div class="mb-3">
             <label class="form-label">Description</label>
-            <input type="text" class="form-control" [(ngModel)]="editingEvaluation.description" name="editDescription" required>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="editingEvaluation.description"
+              name="editDescription"
+              required
+            />
           </div>
           <div class="mb-3">
             <label class="form-label">Date</label>
-            <input type="date" class="form-control" [(ngModel)]="editingEvaluation.date" name="editDate" required>
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="editingEvaluation.date"
+              name="editDate"
+              required
+            />
           </div>
           <div class="mb-3">
             <label class="form-label">Note</label>
-            <input type="number" class="form-control" [(ngModel)]="editingEvaluation.note" name="editNote" required>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="editingEvaluation.note"
+              name="editNote"
+              required
+            />
           </div>
           <div class="mb-3">
             <label class="form-label">Type</label>
-            <select class="form-select" [(ngModel)]="editingEvaluation.type" name="editType">
+            <select
+              class="form-select"
+              [(ngModel)]="editingEvaluation.type"
+              name="editType"
+            >
               <option value="CONTRÔLE CONTINU">Contrôle Continu</option>
               <option value="EXAMEN">Examen</option>
               <option value="TP">TP</option>
@@ -160,14 +308,24 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Statut</label>
-            <select class="form-select" [(ngModel)]="editingEvaluation.statut" name="editStatus">
+            <select
+              class="form-select"
+              [(ngModel)]="editingEvaluation.statut"
+              name="editStatus"
+            >
               <option value="VALIDÉE">Validée</option>
               <option value="NON VALIDÉE">Non Validée</option>
             </select>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">Enregistrer</button>
+          <button
+            type="submit"
+            class="primary-btn border-0"
+            data-bs-dismiss="modal"
+          >
+            Enregistrer
+          </button>
         </div>
       </form>
     </div>

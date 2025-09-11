@@ -1,6 +1,7 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgChartsModule } from 'ng2-charts';
@@ -26,6 +27,9 @@ import { FilterpipePipe } from './filterpipe.pipe';
 import { AuthService } from './services/auth/auth.service';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 
+import { ReactiveFormsModule } from '@angular/forms'; // Pour les formulaires réactifs
+import { DatePipe } from '@angular/common'; // Pour le pipe date
+
 export function initializeApp(authService: AuthService) {
   return () => {
     // Vérifier l'authentification au démarrage
@@ -50,9 +54,11 @@ export function initializeApp(authService: AuthService) {
     GestionEvaluationsComponent,
   ],
   imports: [
+     CommonModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+     ReactiveFormsModule,
     NgChartsModule,
     HttpClientModule,
     BrowserAnimationsModule,
@@ -65,7 +71,7 @@ export function initializeApp(authService: AuthService) {
   ],
   providers: [
     // Provider pour initialiser l'application
-
+        DatePipe,
     {
       provide: APP_INITIALIZER,
       useFactory: initializeApp,

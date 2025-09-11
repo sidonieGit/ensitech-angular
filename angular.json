@@ -88,6 +88,7 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/ngx-toastr/toastr.css",
               "src/styles.css"
               //  l'ajouter ici sivous en avez besoin pour les tests
             ],

@@ -1,0 +1,92 @@
+export const AY = [
+  {
+    id: 1,
+    label: '2023-2024',
+    startDate: new Date('2023-09-01'),
+    endDate: new Date('2024-06-30'),
+    status: 'EN_COURS',
+    period: [
+      {
+        id: 1,
+        entitled: 'Période des Cours',
+        startedAt: new Date('2023-09-01'),
+        endedAt: new Date('2024-02-28'),
+        type: 'COURS',
+      },
+      {
+        id: 2,
+        entitled: 'Période des Examens',
+        startedAt: new Date('2024-03-01'),
+        endedAt: new Date('2024-04-10'),
+        type: 'EXAMENS',
+      },
+      {
+        id: 3,
+        entitled: 'Période des Vacances',
+        startedAt: new Date('2024-04-15'),
+        endedAt: new Date('2024-05-01'),
+        type: 'VACANCES',
+      },
+    ],
+  },
+  {
+    id: 2,
+    label: '2024-2025',
+    startDate: new Date('2024-07-01'),
+    endDate: new Date('2025-10-02'),
+    status: 'TERMINÉE',
+    period: [
+      {
+        id: 1,
+        entitled: 'Période des Cours',
+        startedAt: new Date('2024-07-01'),
+        endedAt: new Date('2024-09-30'),
+        type: 'COURS',
+      },
+      {
+        id: 2,
+        entitled: 'Période des Examens',
+        startedAt: new Date('2024-10-01'),
+        endedAt: new Date('2025-01-31'),
+        type: 'EXAMENS',
+      },
+      {
+        id: 3,
+        entitled: 'Période des Vacances',
+        startedAt: new Date('2024-12-01'),
+        endedAt: new Date('2025-09-30'),
+        type: 'VACANCES',
+      },
+    ],
+  },
+  {
+    id: 3,
+    label: '2025-2026',
+    startDate: new Date('2025-06-01'),
+    endDate: new Date('2025-10-02'),
+    status: 'EN_PREPARATION',
+    period: [
+      {
+        id: 1,
+        entitled: 'Période des Cours',
+        startedAt: new Date('2025-10-03'),
+        endedAt: new Date('2026-04-01'),
+        type: 'COURS',
+      },
+      {
+        id: 2,
+        entitled: 'Période des Examens',
+        startedAt: new Date('2026-04-02'),
+        endedAt: new Date('2026-05-15'),
+        type: 'EXAMENS',
+      },
+      {
+        id: 3,
+        entitled: 'Période des Vacances',
+        startedAt: new Date('2026-05-16'),
+        endedAt: new Date('2026-14-06'),
+        type: 'VACANCES',
+      },
+    ],
+  },
+];

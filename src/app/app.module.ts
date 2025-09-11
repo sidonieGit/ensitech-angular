@@ -1,9 +1,8 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
 import { NgChartsModule } from 'ng2-charts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,9 +24,13 @@ import { TopbarComponent } from './components/topbar/topbar.component';
 import { FiltercoursePipe } from './filtercourse.pipe';
 import { FilterpipePipe } from './filterpipe.pipe';
 import { AuthService } from './services/auth/auth.service';
-import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { GestionAcademicYearComponent } from './components/gestion-academic-year/gestion-academic-year.component';
+import { GestionPeriodComponent } from './components/gestion-period/gestion-period.component';
+import { GestionRegistrationComponent } from './components/gestion-registration/gestion-registration.component';
 
-import { ReactiveFormsModule } from '@angular/forms'; // Pour les formulaires réactifs
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { TrimPipe } from './components/utils/trim.pipe';
+
 import { DatePipe } from '@angular/common'; // Pour le pipe date
 
 export function initializeApp(authService: AuthService) {
@@ -52,15 +55,22 @@ export function initializeApp(authService: AuthService) {
     FiltercoursePipe,
     GestionSpecialityComponent,
     GestionEvaluationsComponent,
+    GestionAcademicYearComponent,
+    GestionPeriodComponent,
+    GestionRegistrationComponent,
+    TrimPipe,
+
+
   ],
   imports: [
-     CommonModule,
+
     BrowserModule,
     AppRoutingModule,
     FormsModule,
      ReactiveFormsModule,
     NgChartsModule,
     HttpClientModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       // Configurer Toastr
@@ -68,6 +78,7 @@ export function initializeApp(authService: AuthService) {
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
     }),
+
   ],
   providers: [
     // Provider pour initialiser l'application

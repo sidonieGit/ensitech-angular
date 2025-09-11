@@ -10,6 +10,10 @@ import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 import { GestionSpecialityComponent } from './components/gestion-speciality/gestion-speciality.component';
 import { GestionEvaluationsComponent } from './components/gestion-evaluations/gestion-evaluations.component';
+import { GestionAcademicYearComponent } from './components/gestion-academic-year/gestion-academic-year.component';
+// import { GestionPeriodComponent } from './components/gestion-period/gestion-period.component';
+import { GestionRegistrationComponent } from './components/gestion-registration/gestion-registration.component';
+
 
 
 const routes: Routes = [
@@ -49,6 +53,22 @@ const routes: Routes = [
 
   { path: 'speciality',
     component: GestionSpecialityComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: ['directeur', 'responsable'] }
+  },
+  { path: 'academic-year',
+    component: GestionAcademicYearComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: ['directeur', 'responsable'] }
+  }
+  ,
+  // { path: 'period',
+  //   component: GestionPeriodComponent,
+  //   canActivate: [authGuard, roleGuard],
+  //   data: { role: ['directeur', 'responsable'] }
+  // }
+  { path: 'registration',
+    component: GestionRegistrationComponent,
     canActivate: [authGuard, roleGuard],
     data: { role: ['directeur', 'responsable'] }
   },

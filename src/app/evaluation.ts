@@ -7,5 +7,5 @@ export interface Evaluation {
   type: 'CONTRÔLE CONTINUE' | 'EXAMEN' | 'TP';
   statut: 'VALIDÉE' | 'NON VALIDEE';
   studentId: number;
-  coursId?: number;
+  coursId: number;
 }

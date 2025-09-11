@@ -8,9 +8,7 @@
     <app-topbar></app-topbar>
 
     <!-- Barre de recherche et bouton Ajouter -->
-    <div
-      class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4"
-    >
+    <div class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4">
       <div class="col-6 col-md-9" style="height: 44px">
         <div class="input-group">
           <span class="input-group-text"
@@ -39,6 +37,7 @@
       <table class="table border table-hover">
         <thead class="table-primary">
           <tr>
+            <th><input type="checkbox" class="form-check-input" /></th>
             <th>Code</th>
             <th>Date</th>
             <th>Description</th>
@@ -47,6 +46,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let eval of filteredEvaluations">
+            <td><input type="checkbox" class="form-check-input" /></td>
             <td>{{ eval.code }}</td>
             <td>{{ eval.date | date : "dd/MM/yyyy" }}</td>
             <td>{{ eval.description }}</td>
@@ -84,9 +84,8 @@
                     <a
                       class="dropdown-item text-danger"
                       href="#"
-                      (click)="deleteEvaluation(eval.id)"
-                      >Supprimer</a
-                    >
+                      (click)="deleteEvaluation(eval.id); $event.preventDefault()"
+                      >Supprimer</a>
                   </li>
                 </ul>
               </div>
@@ -179,7 +178,42 @@
               <option value="NON VALIDÉE">Non Validée</option>
             </select>
           </div>
+
+
+          <!-- Cours -->
+        <div class="mb-3">
+          <label class="form-label">Cours</label>
+          <select
+            class="form-select"
+            [(ngModel)]="newEvaluation.coursId"
+            name="coursId"
+            required
+          >
+            <option value="" disabled selected>Choisir un cours</option>
+            <option *ngFor="let course of courses" [value]="course.id">
+              {{ course.nom }}
+            </option>
+          </select>
         </div>
+
+         <!-- Étudiant -->
+        <div class="mb-3">
+          <label class="form-label">Étudiant</label>
+          <select
+            class="form-select"
+            [(ngModel)]="newEvaluation.studentId"
+            name="studentId"
+            required
+          >
+            <option value="" disabled selected>Choisir un étudiant</option>
+            <option *ngFor="let student of students" [value]="student.id">
+              {{ student.nom }} {{ student.prenom }}
+            </option>
+          </select>
+        </div>
+
+        </div>
+
         <div class="modal-footer">
           <button
             type="submit"
@@ -222,6 +256,9 @@
           <p><strong>Note :</strong> {{ selectedEvaluation.note }}</p>
           <p><strong>Type :</strong> {{ selectedEvaluation.type }}</p>
           <p><strong>Statut :</strong> {{ selectedEvaluation.statut }}</p>
+          <p><strong>Cours :</strong> {{ selectedCourseName }}</p>
+          <p> <strong>Étudiant :</strong> {{ selectedStudentName }}</p>
+
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-bs-dismiss="modal">
@@ -317,6 +354,38 @@
               <option value="NON VALIDÉE">Non Validée</option>
             </select>
           </div>
+
+         <!-- Cours -->
+        <div class="mb-3">
+          <label class="form-label">Cours</label>
+          <select
+            class="form-select"
+            [(ngModel)]="editingEvaluation.coursId"
+            name="editCoursId"
+            required
+          >
+            <option *ngFor="let course of courses" [value]="course.id">
+              {{ course.nom }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Étudiant -->
+        <div class="mb-3">
+          <label class="form-label">Étudiant</label>
+          <select
+            class="form-select"
+            [(ngModel)]="editingEvaluation.studentId"
+            name="editStudentId"
+            required
+          >
+            <option *ngFor="let student of students" [value]="student.id">
+              {{ student.nom }} {{ student.prenom }}
+            </option>
+          </select>
+        </div>
+
+
         </div>
         <div class="modal-footer">
           <button

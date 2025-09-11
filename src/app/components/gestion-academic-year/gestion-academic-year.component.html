@@ -1,0 +1,418 @@
+<section class="d-flex">
+  <!-- SIDEBAR -->
+  <app-sidebar></app-sidebar>
+  <!-- MAIN -->
+  <main class="flex-grow-1">
+    <app-topbar></app-topbar>
+
+    <!-- Barre de recherche et bouton Ajouter -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4">
+      <div class="col-6 col-md-9" style="height: 44px">
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">
+            <i class="hgi-stroke hgi-search-01"></i>
+          </span>
+          <input type="search" placeholder="Rechercher un cours..." class="form-control" [(ngModel)]="filtername"
+            (ngModelChange)="updateFilteredAcademicYear()" />
+        </div>
+      </div>
+      <button class="primary-btn border-0" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
+        Année académique<i class="hgi-stroke hgi-add-circle"></i>
+      </button>
+    </div>
+
+
+
+    <!-- Liste des années academiques -->
+    <div class="students-list mt-5 px-4">
+
+      <table class="table border table-hover">
+        <thead class="table-primary">
+          <tr>
+            <th><input type="checkbox" class="form-check-input" /></th>
+            <!--th>Id</th-->
+            <th>Intitulé</th>
+            <th>Date de debut</th>
+            <th>Date de fin</th>
+            <th>Status</th>
+            <th>Periode</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let academicYear of filteredAcademicYear">
+            <td><input type="checkbox" class="form-check-input" /></td>
+            <!--td>{{ academicYear.id }}</td-->
+            <td>{{ academicYear.label}}</td>
+            <td>{{ academicYear.startDate | date:'dd/MM/yyyy'}}</td>
+            <td>{{ academicYear.endDate | date:'dd/MM/yyyy'}}</td>
+            <td><em [ngClass]="{
+                'bg-orange': academicYear.status === 'EN_PREPARATION',
+                'bg-green': academicYear.status === 'EN_COURS',
+                'bg-red': academicYear.status === 'TERMINÉE'
+              }">{{ academicYear.status | lowercase}}</em></td>
+            <td >{{getCurrentPeriod(academicYear)}}</td>
+            <td>
+              <div class="dropdown">
+                <a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  <i class="hgi-stroke hgi-more-vertical"></i>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="editAcademicYear(academicYear)"
+                      data-bs-toggle="modal" data-bs-target="#editTeacherModal">Modifier</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="viewAcademicYear(academicYear)"
+                      data-bs-toggle="modal" data-bs-target="#viewTeacherModal">Voir les informations</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="delete(academicYear.id)">Supprimer</a>
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <p>{{ filteredAcademicYear.length }} résultats</p>
+        <nav aria-label="Page navigation">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous">&lt;</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next">&gt;</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal pour creer une année academique -->
+<div class="modal fade" id="addTeacherModal" tabindex="-1" aria-labelledby="addTeacherModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-intitule">Créer une année académique</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="addAcademicYear()" #addForm="ngForm">
+          <div class="mb-3">
+            <label for="label" class="form-label">Intitulé</label>
+            <input type="text" [(ngModel)]="newAcademicYear.label" name="label"
+            (ngModelChange)="newAcademicYear.label = $event.trim()"
+            [class.is-invalid]="labelControl.invalid && (labelControl.touched || labelControl.dirty)"
+            placeholder="2025-2026" required pattern="^2\d{3}-2\d{3}$"
+            class="form-control" #labelControl="ngModel"/>
+
+              <small *ngIf="labelControl.invalid && labelControl.touched" class="invalid-feedback">
+                <ng-container *ngIf="labelControl.hasError('required')">
+                  Le champ intitulé est requis.
+                </ng-container>
+                <ng-container *ngIf="labelControl.hasError('pattern')">
+                  L'intitulé doit être de type "2XXX-2XXX" >= à la periode actuelle.
+                </ng-container>
+              </small>
+
+          </div>
+          <div class="mb-3">
+            <label for="startDate" class="form-label">Date de début</label>
+            <input type="date" [(ngModel)]="newAcademicYear.startDate" name="startDate" placeholder="Date de début"
+              required
+              [min]="currentYearStart"
+              class="form-control"
+              [class.is-Invalid]="startDateControl.invalid && (startDateControl.touched || startDateControl.dirty)"
+              #startDateControl="ngModel"/>
+              <small *ngIf="startDateControl.invalid && startDateControl.touched" class="text-danger">
+                <ng-container *ngIf="startDateControl.hasError('required')">
+                  Le champ date de début est requis.
+                </ng-container>
+                <ng-container *ngIf="startDateControl.hasError('min')">
+                  La date de début doit être aujourd'hui ou une date future.
+                </ng-container>
+              </small>
+          </div>
+          <div class="mb-3">
+            <label for="endDate" class="form-label">Date de fin</label>
+            <input type="date" [(ngModel)]="newAcademicYear.endDate" name="endDate" placeholder="Date de fin" required
+              class="form-control"
+              [min]="currentYearStart"
+               #endDateControl="ngModel"/>
+              <small *ngIf="endDateControl.invalid && endDateControl.touched" class="text-danger">
+                <ng-container *ngIf="endDateControl.hasError('required')">
+                  Le champ date de fin est requis.
+                </ng-container>
+                <ng-container *ngIf="endDateControl.hasError('min')">
+                  La date de fin doit être une date future.
+                </ng-container>
+              </small>
+          </div>
+          <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select name="status" id="status" class="form-select" [(ngModel)]="newAcademicYear.status" required>
+              <option value="EN_PREPARATION">En Préparation</option>
+              <option value="EN_COURS">En cours</option>
+              <option value="TERMINÉE">Terminée</option>
+            </select>
+          </div>
+
+          <hr>
+          <h6>Gestion des périodes <button type="button" class="btn btn-sm primary-btn" (click)="addPeriodToAcademicYear()"><i class="hgi-stroke hgi-add-circle"></i></button></h6>
+
+          <div class="mb-3 border p-3 rounde" *ngIf="newPeriod">
+            <h6 class="mb-3">Ajouter une nouvelle période</h6>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Intitulé</label>
+                <input type="text" class="form-control" [(ngModel)]="newPeriod.entitled" name="newPeriodEntitled" placeholder="Ex: Période des cours"/>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Type</label>
+                <select class="form-select" [(ngModel)]="newPeriod.typePeriod" name="newPeriodType">
+                  <option value="INSCRIPTION_PERIOD">Periodes des Inscription</option>
+                  <option value="COURS_PERIOD">Periodes des Cours</option>
+                  <option value="EXAMENS_PERIOD">Periodes des Examens</option>
+                  <option value="VACANCES_PERIOD">Periodes des Vacances</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Début</label>
+                <input type="date" class="form-control" [(ngModel)]="newPeriod.startedAt" name="newPeriodStart" [min]="currentYearStart"/>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Fin</label>
+                <input type="date" class="form-control" [(ngModel)]="newPeriod.endedAt" name="newPeriodEnd" [min]="currentYearStart"/>
+              </div>
+            </div>
+
+          </div>
+
+          <div *ngIf="newAcademicYear.periods && newAcademicYear.periods.length > 0">
+            <div *ngFor="let period of newAcademicYear.periods; let i = index" class="alert alert-secondary d-flex justify-content-between align-items-center mb-2">
+              <div>
+                <strong>{{ period.entitled }}</strong>
+                <br>
+                <small>{{ period.startedAt | date:'shortDate' }} - {{ period.endedAt | date:'shortDate' }}</small>
+              </div>
+              <button type="button" class="btn-close" (click)="removePeriod(i)"></button>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="primary-btn border-0" [disabled]="addForm.invalid" data-bs-dismiss="modal">
+              Ajouter
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Modal pour visualiser les informations d'une année ac  -->
+  <div class="modal fade" id="viewTeacherModal" tabindex="-1" aria-labelledby="viewTeacherModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-intitule">Détails de l'année academique</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Id :</strong> {{ selectedAcademicYear?.id }}</p>
+          <p><strong>Intitulé  :</strong> {{ selectedAcademicYear?.label }}</p>
+          <p>
+            <strong>Date de debut:</strong> {{ selectedAcademicYear?.startDate }}
+          </p>
+          <p>
+            <strong>Date de fin :</strong> {{ selectedAcademicYear?.endDate }}
+          </p>
+          <p>
+            <strong>Status:</strong>
+            {{ selectedAcademicYear?.status | lowercase }}
+          </p>
+          <p>
+            <strong>Periodes:</strong>
+            <span *ngFor="let period of selectedAcademicYear?.periods">
+              <p>
+                  {{ period.entitled}}
+              </p>
+            </span>
+          </p>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <ng-container *ngIf="selectedAcademicYear?.status === 'EN_PREPARATION'">
+            <button [disabled]="!selectedAcademicYear?.id || !compareDate(selectedAcademicYear?.startDate!)" class="btn btn-success btn-sm ms-2" (click)="startAcademicYear(selectedAcademicYear?.id)">
+              Démarrer l'année
+            </button>
+          </ng-container>
+          <ng-container *ngIf="selectedAcademicYear?.status === 'EN_COURS'">
+            <button [disabled]="!compareDate(selectedAcademicYear?.startDate!)" class="btn btn-danger btn-sm ms-2" (click)="finishAcademicYear(selectedAcademicYear?.id)">
+              Terminer l'année
+            </button>
+          </ng-container>
+
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Fermer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal pour modifier une année academique -->
+
+ <div class="modal fade" id="editTeacherModal" tabindex="-1" aria-labelledby="editTeacherModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-intitule">Modifier les informations de l'année</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" *ngIf="editingAcademicYear">
+        <form (ngSubmit)="updateAcademicYear()" #academicYearUpdateForm="ngForm">
+          <div class="mb-3">
+            <label for="label" class="form-label">Intitulé</label>
+            <input type="text" [(ngModel)]="editingAcademicYear.label" name="label" placeholder="Intitulé" required class="form-control"
+            (ngModelChange)="editingAcademicYear.label = $event.trim()"
+            pattern="^2\d{3}-2\d{3}$" #labelUpdatedControl="ngModel"
+            [class.is-invalid]="labelUpdatedControl.invalid && (labelUpdatedControl.touched || labelUpdatedControl.dirty)"
+            />
+            <small *ngIf="labelUpdatedControl.invalid && labelUpdatedControl.touched" class="invalid-feedback">
+                <ng-container *ngIf="labelUpdatedControl.hasError('required')">
+                  Le champ intitulé est requis.
+                </ng-container>
+                <ng-container *ngIf="labelUpdatedControl.hasError('pattern')">
+                  L'intitulé doit être de type "2XXX-2XXX" >= à la periode actuelle.
+                </ng-container>
+              </small>
+          </div>
+          <div class="mb-3">
+            <label for="startDate" class="form-label">Date de début</label>
+            <input type="date" [(ngModel)]="editingAcademicYear.startDate" name="startDate" placeholder="Date de début" required class="form-control"
+              [min]="currentYearStart" #startDateUpdatedControl="ngModel"
+              [class.is-Invalid]="startDateUpdatedControl.invalid && (startDateUpdatedControl.touched || startDateUpdatedControl.dirty)"
+
+            />
+            <small *ngIf="startDateUpdatedControl.invalid && startDateUpdatedControl.touched" class="text-danger">
+                <ng-container *ngIf="startDateUpdatedControl.hasError('required')">
+                  Le champ date de début est requis.
+                </ng-container>
+                <ng-container *ngIf="startDateUpdatedControl.hasError('min')">
+                  La date de début doit être aujourd'hui ou une date future.
+                </ng-container>
+              </small>
+          </div>
+          <div class="mb-3">
+            <label for="endDate" class="form-label">Date de fin</label>
+            <input type="date" [(ngModel)]="editingAcademicYear.endDate" name="endDate" placeholder="Date de fin" required
+             class="form-control" [min]=currentYearStart #endDateUpdatedControl="ngModel"
+             [class.is-Invalid]="endDateUpdatedControl.invalid && (endDateUpdatedControl.touched || endDateUpdatedControl.dirty)"
+            />
+              <small *ngIf="endDateUpdatedControl.invalid && endDateUpdatedControl.touched" class="text-danger">
+                <ng-container *ngIf="endDateUpdatedControl.hasError('required')">
+                  Le champ date de fin est requis.
+                </ng-container>
+                <ng-container *ngIf="endDateUpdatedControl.hasError('min')">
+                  La date de fin doit être une date future.
+                </ng-container>
+              </small>
+          </div>
+          <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select name="status" id="status" class="form-select" [(ngModel)]="editingAcademicYear.status" required>
+              <option value="EN_PREPARATION">En Préparation</option>
+              <option value="EN_COURS">En cours</option>
+              <option value="TERMINÉE">Terminée</option>
+            </select>
+          </div>
+
+          <hr>
+
+          <h6>Périodes de l'année académique</h6>
+          <div *ngFor="let period of editingAcademicYear.periods; let i = index" class="border p-3 rounded mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="mb-0">Période {{ i + 1 }}</h6>
+              <button type="button" class="btn-close" (click)="removePeriod(i, editingAcademicYear)"></button>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Intitulé</label>
+                <input type="text" class="form-control" [(ngModel)]="period.entitled" [name]="'editPeriodEntitled' + i" placeholder="Ex: Période des cours"
+                required />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Type</label>
+                <select class="form-select" [(ngModel)]="period.typePeriod" [name]="'editPeriodType' + i" required>
+                  <option value="INSCRIPTION_PERIOD">Inscription</option>
+                  <option value="COURS_PERIOD">Cours</option>
+                  <option value="EXAMENS_PERIOD">Examens</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Début</label>
+                <input type="date" class="form-control" [(ngModel)]="period.startedAt" [name]="'editPeriodStart' + i"
+                required [min]=currentYearStart/>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Fin</label>
+                <input type="date" class="form-control" [(ngModel)]="period.endedAt" [name]="'editPeriodEnd' + i"
+                required [min]=currentYearStart/>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <h6>Ajouter une nouvelle période
+            <button type="button" class="btn btn-sm primary-btn" (click)="newPeriodForEdit = newPeriodForEdit ? null : {}">
+              <i class="hgi-stroke hgi-add-circle"></i>
+            </button>
+          </h6>
+          <div class="mb-3 border p-3 rounded" *ngIf="newPeriodForEdit">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Intitulé</label>
+                <input type="text" class="form-control" [(ngModel)]="newPeriodForEdit.entitled" name="newPeriodEntitledEdit" placeholder="Ex: Période des cours"/>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Type</label>
+                <select class="form-select" [(ngModel)]="newPeriodForEdit.typePeriod" name="newPeriodTypeEdit">
+                  <option value="INSCRIPTION_PERIOD">Inscription</option>
+                  <option value="COURS_PERIOD">Cours</option>
+                  <option value="EXAMENS_PERIOD">Examens</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Début</label>
+                <input type="date" class="form-control" [(ngModel)]="newPeriodForEdit.startedAt" name="newPeriodStartEdit" [min]=currentYearStart/>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Fin</label>
+                <input type="date" class="form-control" [(ngModel)]="newPeriodForEdit.endedAt" name="newPeriodEndEdit" [min]=currentYearStart/>
+              </div>
+            </div>
+            <button type="button" class="btn primary-btn mt-3" (click)="confirmAddPeriodForEdit()">Confirmer l'ajout</button>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="primary-btn border-0" [disabled]="academicYearUpdateForm.invalid" data-bs-dismiss="modal">
+              Enregistrer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>

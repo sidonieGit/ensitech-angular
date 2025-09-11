@@ -12,8 +12,9 @@ import { Course } from 'src/app/interfaces/course.model'; // Utiliser notre inte
 export class CoursesService {
   // URL de votre course-service. Assurez-vous que le port est le bon.
 
-  //private apiUrl = 'http://localhost:8888/api/courses';
-  private apiUrl = 'http://localhost:8888/api/training/courses';
+   private apiUrl ='http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/courses';
+
+  // private apiUrl = 'http://localhost:8888/api/training/courses';
 
   constructor(private http: HttpClient) {}
 
@@ -47,7 +48,7 @@ export class CoursesService {
    * @returns Un Observable qui émettra le cours mis à jour.
    */
   updateCourse(course: Course): Observable<Course> {
-    const url = `${this.apiUrl}/${course.id}`; // L'API REST standard utilise l'ID dans l'URL pour un PUT
+    const url = `${this.apiUrl}`; // L'API REST standard utilise l'ID dans l'URL pour un PUT
     return this.http
       .put<Course>(url, course)
       .pipe(catchError(this.handleError));

@@ -11,5 +11,5 @@ export interface Student {
   birthday?: Date | string | null; // Accepte Date ou string pour la flexibilité
   gender: 'MALE' | 'FEMALE';
   matricule?: string; // Optionnel et généré par le backend
-  courses?: any[]; // Nous utiliserons un DTO de cours plus tard
+  speciality?: string; // Nous utiliserons un DTO de spécialité
 }

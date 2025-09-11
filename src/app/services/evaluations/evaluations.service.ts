@@ -13,6 +13,7 @@ export class EvaluationsService {
   constructor() {
     const savedEvaluations = localStorage.getItem(this.STORAGE_KEY);
     this.evaluations = savedEvaluations ? JSON.parse(savedEvaluations) : EVALUATIONS;
+
   }
 
   getEvaluations(): Observable<Evaluation[]> {

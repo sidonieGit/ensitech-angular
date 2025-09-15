@@ -19,35 +19,35 @@
 			</li>
 			<li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
 				<a class="nav-link scrollto" routerLink="/students" routerLinkActive="actived">
-					<i class="hgi-stroke hgi-course"></i> Gestion Etudiants
+					<i class="hgi-stroke hgi-course"></i> Etudiants
 				</a>
 			</li>
 			<li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
 				<a class="nav-link scrollto" routerLink="/teachers" routerLinkActive="actived">
-					<i class="hgi-stroke hgi-teaching"></i> Gestion Enseignants
+					<i class="hgi-stroke hgi-teaching"></i> Enseignants
 				</a>
 			</li>
 			<li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
 				<a class="nav-link scrollto" routerLink="/courses" routerLinkActive="actived">
-					<i class="hgi-stroke hgi-course"></i> Gestion Cours
+					<i class="hgi-stroke hgi-course"></i> Cours
 				</a>
 			</li>
 
       <li class="nav-item"  *ngIf="hasAccess(['directeur', 'responsable'])">
         <a routerLink="/evaluations" class="nav-link scrollto" routerLinkActive="actived" >
-          <i class="hgi-stroke hgi-add-circle"></i>Gestion des évaluations
+          <i class="hgi hgi-stroke hgi-analytics-up"></i>Evaluations
         </a>
       </li>
 
       <li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
 				<a class="nav-link scrollto" routerLink="/speciality" routerLinkActive="actived">
-					<i class="hgi hgi-stroke hgi-task-01"></i> Gestion Specialités
+					<i class="hgi hgi-stroke hgi-task-01"></i> Specialités
 				</a>
 			</li>
 
       <li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
 				<a class="nav-link scrollto" routerLink="/academic-year" routerLinkActive="actived">
-					<i class="hgi hgi-stroke hgi-calendar-01"></i> Année academiques
+					<i class="hgi hgi-stroke hgi-calendar-01"></i> Années academiques
 				</a>
 			</li>
 

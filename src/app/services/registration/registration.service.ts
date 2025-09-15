@@ -7,8 +7,8 @@ import { Registration } from 'src/app/interfaces/registration.model';
   providedIn: 'root',
 })
 export class RegistrationService {
+  private apiUrl = 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/registrations';
   // private apiUrl = 'http://localhost:8888/api/registrations';
-  private apiUrl = 'http://localhost:8888/api/registrations';
 
   constructor(private http: HttpClient) {}
 

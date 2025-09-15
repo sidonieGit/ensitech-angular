@@ -9,9 +9,9 @@ import { Speciality } from 'src/app/interfaces/speciality.interface';
 export class SpecialityService {
   private speciality!: Speciality[];
 
-  private apiUrl = 'http://localhost:8888/api/training/specialities';
+  // private apiUrl = 'http://localhost:8888/api/training/specialities';
 
-  // private apiUrl = 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/speciality';
+  private apiUrl = 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/speciality';
 
   http: HttpClient = inject(HttpClient);
   // Méthode pour obtenir les spécialités

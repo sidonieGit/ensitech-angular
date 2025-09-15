@@ -7,8 +7,8 @@ import { AcademicYear } from 'src/app/interfaces/academic.model';
   providedIn: 'root',
 })
 export class AcademicYearService {
-  // private apiUrl = 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/academic-year';
-  private apiUrl = 'http://localhost:8888/api/academic-year';
+  private apiUrl = 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/academic-year';
+  // private apiUrl = 'http://localhost:8888/api/academic-year';
   // private apiUrl = 'http/:/localhost:8085/academic-years'; // URL de l'API
 
   http: HttpClient = inject(HttpClient);

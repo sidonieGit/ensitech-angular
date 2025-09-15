@@ -1,7 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { AcademicYear } from 'src/app/interfaces/academic.model';
 import { Registration } from 'src/app/interfaces/registration.model';
+import { Speciality } from 'src/app/interfaces/speciality.interface';
+import { Student } from 'src/app/interfaces/students.model';
+import { AcademicYearService } from 'src/app/services/academic-year/academic-year.service';
 import { RegistrationService } from 'src/app/services/registration/registration.service';
+import { SpecialityService } from 'src/app/services/speciality/speciality.service';
+import { StudentsService } from 'src/app/services/students/students.service';
 
 @Component({
   selector: 'app-gestion-registration',
@@ -21,29 +27,72 @@ export class GestionRegistrationComponent implements OnInit {
     academicYearLabel: '',
   };
   registrations: Registration[] = [];
-
+  specialities: Speciality[] = [];
+  academicYears: AcademicYear[] = [];
+  students: Student[] = [];
   // editingRegistration = { ...this.newRegistration };
+
+  // test for datalist
+  list = ['Paris', 'Londres', 'Kinshasa', 'Dakar'];
+  selectedValue = '';
 
   registrationService: RegistrationService = inject(RegistrationService);
   toastr: ToastrService = inject(ToastrService);
+  specialityService: SpecialityService = inject(SpecialityService);
+  academicYearService = inject(AcademicYearService);
+  studentService = inject(StudentsService);
 
   ngOnInit(): void {
     this.loadRegistrations();
+    this.loadSpecialities();
+    this.loadAcademicYears();
+    this.loadStudents();
+  }
+
+  loadStudents(): void {
+    this.studentService.getStudents().subscribe({
+      next: (students) => {
+        this.students = students;
+      },
+      error: (err) => {
+        this.toastr.error(`Erreur de chargement de la liste des étudiants`);
+      },
+    });
+  }
+
+  loadAcademicYears(): void {
+    this.academicYearService.getAcademicYears().subscribe({
+      next: (academicYear) => {
+        this.academicYears = academicYear;
+      },
+      error: (err) => {
+        this.toastr.error(`Erreur de chargement des années académiques`);
+      },
+    });
+  }
+
+  loadSpecialities(): void {
+    this.specialityService.getSpecialities().subscribe({
+      next: (speciality) => {
+        this.specialities = speciality;
+      },
+      error: (err) => {
+        this.toastr.error(`Erreur de chargement des specialités`);
+      },
+    });
   }
 
   loadRegistrations(): void {
     // Logic to load registrations from a service
-    // For example, this could be a call to a service that fetches registrations
     this.registrationService.getRegistrations().subscribe({
       next: (data) => {
         // this.registration
-
         this.registrations = data;
         this.filteredRegistrations = data;
         // this.updateFilteredRegistrations;
       },
       error: (err) => {
-        console.error('Erreur lors du chargement', err);
+        this.toastr.error(`Erreur de chargement des inscriptions `);
       },
     });
   }
@@ -74,8 +123,7 @@ export class GestionRegistrationComponent implements OnInit {
             `L'enregistrement ${data.registrationNumber} a été ajouté.`,
             'Succès !'
           );
-
-          console.log('Enregistrement ajouté avec succès', data);
+          // console.log('Enregistrement ajouté avec succès', data);
           this.loadRegistrations(); // Recharger la liste après l'ajout
         },
         error: (err) => {
@@ -83,7 +131,7 @@ export class GestionRegistrationComponent implements OnInit {
             `Erreur lors de l'ajout d'un enregistrement : ${err}`,
             'Erreur !'
           );
-          console.error("Erreur lors de l'ajout d'un enregistrement", err);
+          // console.error("Erreur lors de l'ajout d'un enregistrement", err);
         },
       });
       this.resetForm();
@@ -95,7 +143,7 @@ export class GestionRegistrationComponent implements OnInit {
     this.editingRegistration = { ...registration };
   }
 
-  updateRegistration(){
+  updateRegistration() {
     if (this.editingRegistration) {
       this.registrationService
         .updateRegistration(this.editingRegistration)
@@ -125,10 +173,7 @@ export class GestionRegistrationComponent implements OnInit {
     if (id !== undefined && query) {
       this.registrationService.deleteRegistration(id).subscribe({
         next: () => {
-          this.toastr.success(
-            `L'enregistrement a été supprimé.`,
-            'Succès !'
-          );
+          this.toastr.success(`L'enregistrement a été supprimé.`, 'Succès !');
           this.loadRegistrations(); // Recharger la liste après la suppression
         },
         error: (err) => {
@@ -139,7 +184,6 @@ export class GestionRegistrationComponent implements OnInit {
         },
       });
     }
-
   }
 
   saveEditRegistration() {}

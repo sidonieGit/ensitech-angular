@@ -38,7 +38,6 @@ export class SpecialityService {
   }
 
   updateSpeciality(speciality: Speciality): Observable<Speciality> {
-    const url = `${this.apiUrl}/${speciality.id}`;
-    return this.http.put<Speciality>(url, speciality);
+    return this.http.put<Speciality>(this.apiUrl, speciality);
   }
 }

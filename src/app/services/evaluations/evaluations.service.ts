@@ -1,50 +1,79 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Evaluation } from '../../evaluation';
-import { EVALUATIONS } from '../../mock-evaluations';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Evaluation } from '../../interfaces/evaluation.model'; // Assurez-vous d'avoir ce modèle
 
 @Injectable({
   providedIn: 'root',
 })
 export class EvaluationsService {
-  private readonly STORAGE_KEY = 'evaluations';
-  private evaluations: Evaluation[] = [];
+  private apiUrl = 'http://localhost:8888/api/training/evaluations';
 
-  constructor() {
-    const savedEvaluations = localStorage.getItem(this.STORAGE_KEY);
-    this.evaluations = savedEvaluations ? JSON.parse(savedEvaluations) : EVALUATIONS;
-  }
+  constructor(private http: HttpClient) {}
 
   getEvaluations(): Observable<Evaluation[]> {
-    return of(this.evaluations);
+    return this.http
+      .get<Evaluation[]>(this.apiUrl)
+      .pipe(catchError(this.handleError));
   }
 
-  addEvaluation(evaluation: Evaluation): Observable<Evaluation> {
-    evaluation.id = this.evaluations.length > 0
-      ? (this.evaluations[this.evaluations.length - 1].id ?? 0) + 1
-      : 1;
-    this.evaluations.push({ ...evaluation });
-    this.saveToLocalStorage();
-    return of(evaluation);
+  getEvaluationById(id: number): Observable<Evaluation> {
+    return this.http
+      .get<Evaluation>(`${this.apiUrl}/${id}`)
+      .pipe(catchError(this.handleError));
   }
 
-  deleteEvaluation(id: number | undefined): Observable<void> {
-    if (id === undefined) return of();
-    this.evaluations = this.evaluations.filter(e => e.id !== id);
-    this.saveToLocalStorage();
-    return of();
+  createEvaluation(
+    evaluationData: Omit<Evaluation, 'id'>
+  ): Observable<Evaluation> {
+    return this.http
+      .post<Evaluation>(this.apiUrl, evaluationData)
+      .pipe(catchError(this.handleError));
   }
 
-  updateEvaluation(updated: Evaluation): Observable<Evaluation> {
-    const idx = this.evaluations.findIndex(e => e.id === updated.id);
-    if (idx !== -1) {
-      this.evaluations[idx] = { ...updated };
-      this.saveToLocalStorage();
+  updateEvaluation(evaluation: Evaluation): Observable<Evaluation> {
+    // Le backend attend l'objet complet dans le corps du PUT
+    return this.http
+      .put<Evaluation>(this.apiUrl, evaluation)
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteEvaluation(id: number): Observable<boolean> {
+    return this.http.delete(`${this.apiUrl}/${id}`).pipe(
+      // Si la requête DELETE réussit, le backend retourne 204 No Content.
+      // On utilise `map` pour transformer cette réussite en `true`.
+      map(() => true),
+      // Si la requête échoue, on intercepte l'erreur et on retourne `false`.
+      catchError((error) => {
+        console.error('Error deleting evaluation', error);
+        return of(false); // of() crée un Observable qui émet `false` puis se termine.
+      })
+    );
+  }
+
+  // -- Méthodes spécifiques --
+
+  getEvaluationsByStudent(studentId: number): Observable<Evaluation[]> {
+    return this.http
+      .get<Evaluation[]>(`${this.apiUrl}/by-student/${studentId}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  getEvaluationsByCourse(courseId: number): Observable<Evaluation[]> {
+    return this.http
+      .get<Evaluation[]>(`${this.apiUrl}/by-course/${courseId}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Une erreur inconnue est survenue !';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Erreur : ${error.error.message}`;
+    } else {
+      errorMessage = `Code d'erreur ${error.status}: ${error.message}`;
     }
-    return of(updated);
-  }
-
-  private saveToLocalStorage(): void {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.evaluations));
+    console.error(errorMessage);
+    return throwError(() => new Error(errorMessage));
   }
 }

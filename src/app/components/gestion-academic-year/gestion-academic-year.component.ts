@@ -1,17 +1,14 @@
-
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { AcademicYear } from 'src/app/interfaces/academic.model';
 import { Period } from 'src/app/interfaces/period.model';
-import { AY } from 'src/app/mocks/mock-academic';
 import { AcademicYearService } from 'src/app/services/academic-year/academic-year.service';
-
 
 @Component({
   selector: 'app-gestion-academic-year',
   templateUrl: './gestion-academic-year.component.html',
   styleUrls: ['./gestion-academic-year.component.css'],
 })
-export class GestionAcademicYearComponent  {
+export class GestionAcademicYearComponent {
   academicYear: AcademicYear[] = [];
   filtername: string = '';
   selectedAcademicYear: AcademicYear | null = null;
@@ -45,8 +42,8 @@ export class GestionAcademicYearComponent  {
     // Initialisation ou chargement des années académiques
     this.loadAcademicYears();
 
-     const today = new Date();
-     this.currentYearStart = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
+    const today = new Date();
+    this.currentYearStart = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
   }
 
   addPeriodToAcademicYear(academicYear?: any): void {
@@ -144,7 +141,6 @@ export class GestionAcademicYearComponent  {
     );
   }
 
-
   // Méthode de création de l'année académique mise à jour
   addAcademicYear() {
     // Appel de la validation avant la soumission
@@ -207,7 +203,9 @@ export class GestionAcademicYearComponent  {
   }
 
   delete(id: number | undefined): void {
-    let query =confirm("Êtes-vous sûr de vouloir supprimer cette année académique ?");
+    let query = confirm(
+      'Êtes-vous sûr de vouloir supprimer cette année académique ?'
+    );
     if (id && query) {
       this.academicYearService.deleteAcademicYear(id).subscribe({
         next: () => {
@@ -302,41 +300,43 @@ export class GestionAcademicYearComponent  {
     return true;
   }
 
-  startAcademicYear(id : number | undefined){
-    this.academicYearService.changeAcademicYearStatus(id, "START").subscribe({
+  startAcademicYear(id: number | undefined) {
+    this.academicYearService.changeAcademicYearStatus(id, 'START').subscribe({
       next: (data) => {
-        console.log("Année académique démarrée avec succès :", data);
+        console.log('Année académique démarrée avec succès :', data);
         this.loadAcademicYears(); // Recharger la liste après le démarrage
       },
       error: (error) =>
-        console.error("Erreur lors du démarrage de l'année académique", error)
-    })
+        console.error("Erreur lors du démarrage de l'année académique", error),
+    });
   }
 
-  finishAcademicYear(id : number | undefined) {
-
-    this.academicYearService.changeAcademicYearStatus(id, "COMPLETE").subscribe({
-      next: (data) => {
-        console.log('Année académique terminée avec succès :', data);
-        this.loadAcademicYears();
-      },
-      error: (error) =>
-        console.error("Erreur lors de la terminaison de l'année académique", error)
-    })
+  finishAcademicYear(id: number | undefined) {
+    this.academicYearService
+      .changeAcademicYearStatus(id, 'COMPLETE')
+      .subscribe({
+        next: (data) => {
+          console.log('Année académique terminée avec succès :', data);
+          this.loadAcademicYears();
+        },
+        error: (error) =>
+          console.error(
+            "Erreur lors de la terminaison de l'année académique",
+            error
+          ),
+      });
   }
 
-
-  compareDate(startYear : Date): boolean {
+  compareDate(startYear: Date): boolean {
     let startYearDate = new Date(startYear);
     return startYearDate.getFullYear() <= new Date().getFullYear();
   }
 
-  checkInput(label:string){
+  checkInput(label: string) {
     console.log(label);
-    if(label){
+    if (label) {
       return true;
     }
     return false;
   }
-
 }

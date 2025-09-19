@@ -60,7 +60,7 @@ export class GestionCoursComponent implements OnInit {
         error: (err) => {
           console.error('Error saving course:', err);
           this.loading = false;
-          this.errorMsg = "Erreur lors de l'ajout du cours.";
+          this.toastr.error("Erreur lors de l'ajout du cours.", 'Erreur !');
         },
       });
     }
@@ -88,6 +88,10 @@ export class GestionCoursComponent implements OnInit {
           this.loadCourses();
         } else {
           console.error(`Failed to delete course with id ${id}`);
+          this.toastr.error(
+            'Erreur lors de la suppression du cours.',
+            'Erreur !'
+          );
         }
       });
     }

@@ -74,13 +74,7 @@ export class CoursesService {
     );
   }
 
-  /**
-   * Inscrit un étudiant à un cours spécifique.
-   * @param courseId L'ID du cours.
-   * @param studentId L'ID de l'étudiant à inscrire.
-   * @returns Un Observable avec le cours mis à jour.
-   */
-  enrollStudentToCourse(
+  /*enrollStudentToCourse(
     courseId: number,
     studentId: number
   ): Observable<Course> {
@@ -96,7 +90,7 @@ export class CoursesService {
   ): Observable<Course> {
     const url = `${this.apiUrl}/${courseId}/students/${studentId}`;
     return this.http.delete<Course>(url);
-  }
+  }*/
   /**
    * Gère les erreurs HTTP de manière centralisée pour ce service.
    * @param error L'objet d'erreur HTTP.
@@ -124,5 +118,10 @@ export class CoursesService {
     const url = `${this.apiUrl}/${courseId}/assign-teacher/${teacherId}`;
     // Le corps est vide pour une requête PATCH de ce type.
     return this.http.patch<void>(url, {}).pipe(catchError(this.handleError));
+  }
+
+  getCoursesByTeacher(teacherId: number): Observable<Course[]> {
+    const url = `${this.apiUrl}/by-teacher/${teacherId}`;
+    return this.http.get<Course[]>(url).pipe(catchError(this.handleError));
   }
 }

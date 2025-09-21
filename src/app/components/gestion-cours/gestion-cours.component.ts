@@ -81,19 +81,45 @@ export class GestionCoursComponent implements OnInit {
   }
 
   deleteCourse(id: number | undefined): void {
-    if (id) {
-      this.coursesService.deleteCourse(id).subscribe((isDeleted) => {
-        if (isDeleted) {
-          this.toastr.success('Cours supprimé', 'Succès !');
-          this.loadCourses();
-        } else {
-          console.error(`Failed to delete course with id ${id}`);
-          this.toastr.error(
-            'Erreur lors de la suppression du cours.',
-            'Erreur !'
+    // 1. Vérifier que l'ID n'est pas undefined
+    if (id === undefined) {
+      console.error('Tentative de suppression avec un ID indéfini.');
+      return;
+    }
+
+    // 2. Utiliser la fonction confirm() native du navigateur
+    const confirmation = window.confirm(
+      'Êtes-vous sûr de vouloir supprimer ce cours ?'
+    );
+    // Ou plus simplement : const confirmation = confirm('...');
+
+    // 3. Agir en fonction de la réponse de l'utilisateur
+    if (confirmation) {
+      // Si l'utilisateur a cliqué sur "OK"
+      this.coursesService.deleteCourse(id).subscribe({
+        next: (isDeleted: boolean) => {
+          if (isDeleted) {
+            this.toastr.success(
+              'Le cours a été supprimé avec succès.',
+              'Succès !'
+            );
+            this.loadCourses(); // Recharger la liste pour refléter la suppression
+          } else {
+            this.toastr.error('La suppression du cours a échoué.', 'Erreur');
+            console.error(`La suppression du cours avec l'ID ${id} a échoué.`);
+          }
+        },
+        error: (err) => {
+          this.toastr.error('Une erreur inattendue est survenue.', 'Erreur !');
+          console.error(
+            'Erreur réseau ou inattendue lors de la suppression du cours :',
+            err
           );
-        }
+        },
       });
+    } else {
+      // Si l'utilisateur a cliqué sur "Annuler"
+      this.toastr.info('La suppression a été annulée.', 'Information');
     }
   }
 

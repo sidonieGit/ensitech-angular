@@ -13,6 +13,7 @@ import { GestionEvaluationsComponent } from './components/gestion-evaluations/ge
 import { GestionAcademicYearComponent } from './components/gestion-academic-year/gestion-academic-year.component';
 // import { GestionPeriodComponent } from './components/gestion-period/gestion-period.component';
 import { GestionRegistrationComponent } from './components/gestion-registration/gestion-registration.component';
+import { GenerateRegistrationComponent } from './pdf/registration/generate-registration/generate-registration.component';
 
 
 
@@ -72,6 +73,8 @@ const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { role: ['directeur', 'responsable'] }
   },
+  { path: 'pdf',
+    component: GenerateRegistrationComponent}
 ];
 
 @NgModule({

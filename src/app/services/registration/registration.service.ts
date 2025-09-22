@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Registration } from 'src/app/interfaces/registration.model';
@@ -35,5 +35,23 @@ export class RegistrationService {
   deleteRegistration(id: number): Observable<void> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.delete<void>(url);
+  }
+
+  // pdf generation service
+
+  getRegistrationPdf(id: number | undefined): Observable<ArrayBuffer> {
+     const headers = new HttpHeaders({ Accept: 'application/pdf' });
+     return this.http.get(`${this.apiUrl}/${id}/pdf`, {
+       headers,
+       responseType: 'arraybuffer',
+     });
+  }
+
+  getOriginPdf(id: number | undefined): Observable<ArrayBuffer> {
+     const headers = new HttpHeaders({ Accept: 'application/pdf' });
+     return this.http.get(`${this.apiUrl}/${id}/original-pdf`, {
+       headers,
+       responseType: 'arraybuffer',
+     });
   }
 }

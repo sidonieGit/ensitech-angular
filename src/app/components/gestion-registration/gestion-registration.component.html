@@ -62,6 +62,10 @@
                     <a class="dropdown-item" href="javascript:void(0);"
                       (click)="deleteRegistration(registration.id)">Supprimer</a>
                   </li>
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0);"
+                      (click)="downloadPdfWithQr()">Imprimer</a>
+                  </li>
                 </ul>
               </div>
             </td>
@@ -119,7 +123,8 @@
                class="form-select"
                 [(ngModel)]="newRegistration.specialityLabel" required>
                 <option value="">Choisir une specialité</option>
-                <option *ngFor="let speciality of specialities" [value]="speciality">{{speciality.label}}</option>
+                <!--option *ngFor="let speciality of specialities" [value]="speciality">{{speciality.label}}</option-->
+                <option *ngFor="let speciality of specialities" [value]="speciality.label">{{speciality.label}}</option>
                 <option value="Génie logiciel">Génie logiciel</option>
                 <option value="Sécurité Informatique">Sécurité Informatique</option>
                 <option value="Developpement Mobile">Developpement Mobile</option>
@@ -148,7 +153,12 @@
               <select name="academicYearLabel" id="academicYearLabel"
               class="form-select" [(ngModel)]="newRegistration.academicYearLabel" required>
                 <option value="">Choisir l'année academique</option>
-                <option *ngFor="let academicYear of academicYears" [value]="academicYear">{{academicYear.label}}</option>
+                <!--option *ngFor="let academicYear of academicYears" [value]="academicYear">{{academicYear.label}}</option-->
+                <ng-container *ngFor="let academicYear of academicYears">
+                    <option *ngIf="academicYear.status === 'EN_COURS'" [value]="academicYear.label">
+                        {{academicYear.label}}
+                    </option>
+                </ng-container>
                 <!--option value="2025-2026">2025-2026</option-->
               </select>
             </div>
@@ -173,7 +183,7 @@
   <!-- Modal pour visualiser les informations d'un registration -->
   <div class="modal fade" id="viewTeacherModal" tabindex="-1" aria-labelledby="viewTeacherModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog ">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-intitule">Détails du registration</h5>
@@ -226,7 +236,8 @@
                class="form-select"
                 [(ngModel)]="editingRegistration.specialityLabel" required>
                 <option value="">Choisir une specialité</option>
-                <option *ngFor="let speciality of specialities" [value]="speciality">{{speciality.label}}</option>
+                <!--option *ngFor="let speciality of specialities" [value]="speciality">{{speciality.label}}</option-->
+                <option *ngFor="let speciality of specialities" [value]="speciality.label">{{speciality.label}}</option>
                 <option value="Génie logiciel">Génie logiciel</option>
               </select>
             </div>
@@ -264,7 +275,9 @@
                 </ng-container>
               </small>
               <datalist id="academicYears">
-                <option *ngFor="let academicYear of academicYears" [value]="academicYear.label">{{academicYear.label}}</option>
+                  <ng-container *ngFor="let academicYear of academicYears">
+                      <option *ngIf="academicYear.status === 'EN_COURS'" [value]="academicYear.label">{{academicYear.label}}</option>
+                  </ng-container>
               </datalist>
             </div>
             <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">

@@ -3,7 +3,6 @@ import { ToastrService } from 'ngx-toastr'; // Importer ToastrService
 
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Course } from 'src/app/interfaces/course.model';
 import { Speciality } from 'src/app/interfaces/speciality.interface';
 import { Student } from 'src/app/interfaces/students.model'; // Assurez-vous que le chemin est correct
 import { RegistrationService } from 'src/app/services/registration/registration.service';
@@ -77,12 +76,35 @@ export class GestionStudentsComponent implements OnInit {
             .getLatestRegistrationByMatricule(student.matricule!)
             .pipe(
               catchError((error) => {
-                // Si un étudiant n'a pas d'inscription, l'API retourne 404.
+                /* // Si un étudiant n'a pas d'inscription, l'API retourne 404.
                 // On intercepte l'erreur et on retourne `null` pour ne pas tout faire planter.
-                console.warn(
+                this.toastr.error(
                   `Pas d'inscription trouvée pour ${student.matricule}`,
-                  error
+                  ''
                 );
+                console.error(
+                  "Erreur lors de la récupération de l'inscription",
+                  error
+                );*/
+                // On vérifie si c'est une erreur 404 (cas normal de non-inscription)
+                if (error.status === 404) {
+                  // C'est un cas normal, on ne montre pas de toast d'erreur.
+                  // On se contente de logger un avertissement pour le débogage.
+                  console.warn(
+                    `Pas d'inscription trouvée pour ${student.matricule}. C'est un cas normal.`
+                  );
+                } else {
+                  // Si c'est une autre erreur (500, 0, etc.), c'est un vrai problème.
+                  // ON AFFICHE LE TOAST D'ERREUR DANS CE CAS.
+                  this.toastr.error(
+                    `Erreur lors de la récupération de l'inscription pour ${student.firstName}.`,
+                    ''
+                  );
+                  console.error(
+                    "Erreur lors de la récupération de l'inscription",
+                    error
+                  );
+                }
                 return of(null);
               })
             );
@@ -104,8 +126,14 @@ export class GestionStudentsComponent implements OnInit {
           this.updateFilteredStudents();
         });
       },
-      error: (error) =>
-        console.error('Erreur lors du chargement des étudiants', error),
+      error: (error) => {
+        // --- GESTION DES ERREURS GLOBALES AVEC TOASTR ---
+        this.toastr.error(
+          'Impossible de charger la liste des étudiants. Le serveur a peut-être un problème.',
+          'Erreur de chargement'
+        );
+        console.error('Erreur lors du chargement des étudiants', error);
+      },
     });
   }
 

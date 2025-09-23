@@ -39,7 +39,13 @@
 
 						<td>{{ student.lastName | titlecase }}</td>
 						<td>{{ student.firstName | titlecase }}</td>
-						<td>{{ student.speciality| titlecase }}</td>
+						<td><span *ngIf="student.isEnrolled; else notEnrolled">
+								{{ student.speciality?.label | titlecase }}
+							</span>
+							<ng-template #notEnrolled>
+								<span class="text-muted fst-italic">Non inscrit</span>
+							</ng-template>
+						</td>
 
 						<td>
 							<div class="dropdown">
@@ -141,7 +147,13 @@
 					<p><strong>Date de naissance :</strong> {{ selectedStudent.speciality }}</p>
 					<!-- CHANGÉ -->
 					<p><strong>Genre :</strong> {{ selectedStudent.gender }}</p> <!-- Ajout du genre -->
-					<p><strong>Spécialité :</strong> {{ selectedStudent.speciality }}</p>
+					<p><strong>Spécialité :</strong> <span *ngIf="selectedStudent.isEnrolled; else notEnrolledModal">
+							{{ selectedStudent.speciality?.label | titlecase }}
+						</span>
+						<ng-template #notEnrolledModal>
+							<span class="text-muted fst-italic">Non inscrit</span>
+						</ng-template>
+					</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -188,31 +200,6 @@
 		</div>
 	</div>
 
-	<!-- Modal pour associer un ou plusieurs cours à un étudiant -->
-	<div class="modal fade" id="associateCoursesModal" tabindex="-1" aria-labelledby="associateCoursesModalLabel"
-		aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header" *ngIf="selectedStudent"> <!-- Ajout de *ngIf -->
-					<h5 class="modal-title">Associer des cours à {{ selectedStudent.firstName }} {{ selectedStudent.lastName }}
-					</h5> <!-- CHANGÉ -->
-					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-				</div>
-				<div class="modal-body">
-					<form>
-						<div *ngFor="let course of coursesForModal">
-							<input type="checkbox" [(ngModel)]="course.selected" [name]="'course_' + course.id" />
-							<label>{{ course.title }}</label>
-						</div>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" (click)="associateCourses()" data-bs-dismiss="modal">
-						Associer
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
+
 
 </section>

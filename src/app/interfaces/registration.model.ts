@@ -1,3 +1,5 @@
+import { Student } from './students.model';
+
 export interface Registration {
   id?: number;
   registrationNumber?: string;
@@ -5,4 +7,5 @@ export interface Registration {
   matricule: string;
   specialityLabel: string;
   academicYearLabel: string;
+  student?: Student;
 }

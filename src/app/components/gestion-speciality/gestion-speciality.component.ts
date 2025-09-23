@@ -74,26 +74,34 @@ export class GestionSpecialityComponent {
   }
 
   deleteSpeciality(id: number | undefined): void {
-    if (id) {
-      this.specialityService.deleteSpeciality(id).subscribe({
-        next: () => {
-          this.toastr.success('Spécialité supprimée', 'Succès !');
-          this.specialities = this.specialities.filter(
-            (speciality) => speciality.id !== id
-          );
-          this.updateFilteredSpecialities();
-        },
-        error: (error) => {
-          console.error(
-            'Erreur lors de la suppression de la spécialité',
-            error
-          );
-          this.toastr.error(
-            'Erreur lors de la suppression de la spécialité',
-            'Erreur !'
-          );
-        },
-      });
+    if (id === undefined) {
+      console.error('Tentative de suppression avec un ID indéfini.');
+      return;
+    } else {
+      const confirmation = window.confirm(
+        'Êtes-vous sûr de vouloir supprimer cette spécialité ?'
+      );
+      if (confirmation) {
+        this.specialityService.deleteSpeciality(id).subscribe({
+          next: () => {
+            this.toastr.success('Spécialité supprimée', 'Succès !');
+            this.specialities = this.specialities.filter(
+              (speciality) => speciality.id !== id
+            );
+            this.updateFilteredSpecialities();
+          },
+          error: (error) => {
+            console.error(
+              'Erreur lors de la suppression de la spécialité',
+              error
+            );
+            this.toastr.error(
+              'Erreur lors de la suppression de la spécialité',
+              'Erreur !'
+            );
+          },
+        });
+      }
     }
   }
   updateSpeciality(speciality: Speciality): void {
@@ -130,7 +138,34 @@ export class GestionSpecialityComponent {
     this.selectedSpeciality = speciality;
   }
 
-  saveEditSpeciality(): void {}
+  saveEditSpeciality(): void {
+    if (this.editingSpeciality) {
+      this.specialityService
+        .updateSpeciality(this.editingSpeciality)
+        .subscribe({
+          next: (data) => {
+            this.toastr.success('Spécialité mise à jour', 'Succès !');
+            this.specialities = this.specialities.map((s) => {
+              if (s.id === data.id) {
+                return data;
+              }
+              return s;
+            });
+            this.updateFilteredSpecialities();
+          },
+          error: (error) => {
+            console.error(
+              'Erreur lors de la mise à jour de la spécialité',
+              error
+            );
+            this.toastr.error(
+              'Erreur lors de la mise à jour de la spécialité',
+              'Erreur !'
+            );
+          },
+        });
+    }
+  }
 
   resetForm(): void {
     this.newSpeciality = {

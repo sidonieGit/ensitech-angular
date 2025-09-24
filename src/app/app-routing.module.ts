@@ -13,9 +13,7 @@ import { GestionEvaluationsComponent } from './components/gestion-evaluations/ge
 import { GestionAcademicYearComponent } from './components/gestion-academic-year/gestion-academic-year.component';
 // import { GestionPeriodComponent } from './components/gestion-period/gestion-period.component';
 import { GestionRegistrationComponent } from './components/gestion-registration/gestion-registration.component';
-import { GenerateRegistrationComponent } from './pdf/registration/generate-registration/generate-registration.component';
-
-
+//import { GenerateRegistrationComponent } from './pdf/registration/generate-registration/generate-registration.component';
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent },
@@ -43,7 +41,7 @@ const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { role: ['directeur', 'responsable'] },
   },
- // ... autres routes ...
+  // ... autres routes ...
   {
     path: 'evaluations',
     component: GestionEvaluationsComponent,
@@ -52,29 +50,31 @@ const routes: Routes = [
   },
   { path: 'login-page', component: LoginPageComponent },
 
-  { path: 'speciality',
+  {
+    path: 'speciality',
     component: GestionSpecialityComponent,
     canActivate: [authGuard, roleGuard],
-    data: { role: ['directeur', 'responsable'] }
+    data: { role: ['directeur', 'responsable'] },
   },
-  { path: 'academic-year',
+  {
+    path: 'academic-year',
     component: GestionAcademicYearComponent,
     canActivate: [authGuard, roleGuard],
-    data: { role: ['directeur', 'responsable'] }
-  }
-  ,
+    data: { role: ['directeur', 'responsable'] },
+  },
   // { path: 'period',
   //   component: GestionPeriodComponent,
   //   canActivate: [authGuard, roleGuard],
   //   data: { role: ['directeur', 'responsable'] }
   // }
-  { path: 'registration',
+  {
+    path: 'registration',
     component: GestionRegistrationComponent,
     canActivate: [authGuard, roleGuard],
-    data: { role: ['directeur', 'responsable'] }
+    data: { role: ['directeur', 'responsable'] },
   },
-  { path: 'pdf',
-    component: GenerateRegistrationComponent}
+  // { path: 'pdf',
+  //   component: GenerateRegistrationComponent}
 ];
 
 @NgModule({

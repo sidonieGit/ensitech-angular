@@ -1,7 +1,6 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgChartsModule } from 'ng2-charts';
@@ -31,8 +30,7 @@ import { GestionRegistrationComponent } from './components/gestion-registration/
 
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { TrimPipe } from './components/utils/trim.pipe';
-import { GenerateRegistrationComponent } from './pdf/registration/generate-registration/generate-registration.component';
-
+// import { GenerateRegistrationComponent } from './pdf/registration/generate-registration/generate-registration.component';
 
 export function initializeApp(authService: AuthService) {
   return () => {
@@ -60,9 +58,7 @@ export function initializeApp(authService: AuthService) {
     GestionPeriodComponent,
     GestionRegistrationComponent,
     TrimPipe,
-    GenerateRegistrationComponent,
-
-
+    // GenerateRegistrationComponent,
   ],
   imports: [
     BrowserModule,
@@ -78,7 +74,6 @@ export function initializeApp(authService: AuthService) {
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
     }),
-
   ],
   providers: [
     // Provider pour initialiser l'application

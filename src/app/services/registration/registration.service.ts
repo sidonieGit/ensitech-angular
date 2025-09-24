@@ -7,8 +7,8 @@ import { Registration } from 'src/app/interfaces/registration.model';
   providedIn: 'root',
 })
 export class RegistrationService {
-  private apiUrl = 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/registrations';
-  // private apiUrl = 'http://localhost:8888/api/registrations';
+  // private apiUrl = 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/registrations';
+  private apiUrl = 'http://localhost:8888/api/registrations';
 
   constructor(private http: HttpClient) {}
 
@@ -40,19 +40,20 @@ export class RegistrationService {
   // pdf generation service
 
   getRegistrationPdf(id: number | undefined): Observable<ArrayBuffer> {
-     const headers = new HttpHeaders({ Accept: 'application/pdf' });
-     return this.http.get(`${this.apiUrl}/${id}/pdf`, {
-       headers,
-       responseType: 'arraybuffer',
-     });
+    const headers = new HttpHeaders({ Accept: 'application/pdf' });
+    return this.http.get(`${this.apiUrl}/${id}/pdf`, {
+      headers,
+      responseType: 'arraybuffer',
+    });
   }
 
   getOriginPdf(id: number | undefined): Observable<ArrayBuffer> {
-     const headers = new HttpHeaders({ Accept: 'application/pdf' });
-     return this.http.get(`${this.apiUrl}/${id}/original-pdf`, {
-       headers,
-       responseType: 'arraybuffer',
-     });
+    const headers = new HttpHeaders({ Accept: 'application/pdf' });
+    return this.http.get(`${this.apiUrl}/${id}/original-pdf`, {
+      headers,
+      responseType: 'arraybuffer',
+    });
+  }
 
   /**
    * Récupère la dernière inscription pour un étudiant via son matricule.
@@ -64,6 +65,5 @@ export class RegistrationService {
     return this.http.get<Registration>(
       `${this.apiUrl}/by-student/${matricule}/latest`
     );
-
   }
 }

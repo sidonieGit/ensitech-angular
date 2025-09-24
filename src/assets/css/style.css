@@ -246,24 +246,33 @@ label {
   padding: 31px 20px;
 }
 
-.kpi-card {
+.kpi-card, .kpi-card-alternate{
   color: var(--color-primary);
   background-color: var(--color-gray);
   padding: 20px 28px;
   border-radius: 10px;
   width: 291px;
 }
+.kpi-card-alternate{ /* , .kpi-card:hover*/
+  /* background-color: #c0f1c6 !important; */
+  background-color: #444a5815 !important;
+  color: var(--color-zinc) !important;
+}
+/* .kpi-card-alternate:hover{
+  background-color: var(--color-gray) !important;
+  color: var(--color-primary) !important;
+} */
 
-.kpi-card span {
+.kpi-card span, .kpi-card-alternate span {
   font-size: 29px;
   font-weight: 800;
 }
-.kpi-card h2 {
+.kpi-card h2, .kpi-card-alternate h2 {
   font-size: 22px;
   font-weight: 600;
 }
 
-.icon-box {
+.icon-box, .icon-box-alternate {
   height: 50px;
   width: 55px;
   border-radius: 4px;
@@ -273,6 +282,16 @@ label {
 .icon-box i {
   font-size: 31px;
   font-weight: 400;
+}
+
+.icon-box-alternate i {
+  font-size: 31px;
+  font-weight: 400;
+}
+
+.icon-box-alternate {
+ /* background-color: #519259 !important; */
+ background-color: var(--color-zinc) !important;
 }
 
 /* associate course student */

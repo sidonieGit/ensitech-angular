@@ -13,6 +13,14 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [ 
+                "canvg",
+                "html2canvas",
+                "dompurify",
+                "raf",
+                "rgbcolor",
+                "core-js"
+              ],
             "outputPath": "dist/ensitech-groupe3",
             "index": "src/index.html",
             "main": "src/main.ts",

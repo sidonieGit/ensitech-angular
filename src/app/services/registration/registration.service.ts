@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Registration } from 'src/app/interfaces/registration.model';
@@ -37,6 +37,23 @@ export class RegistrationService {
     return this.http.delete<void>(url);
   }
 
+  // pdf generation service
+
+  getRegistrationPdf(id: number | undefined): Observable<ArrayBuffer> {
+     const headers = new HttpHeaders({ Accept: 'application/pdf' });
+     return this.http.get(`${this.apiUrl}/${id}/pdf`, {
+       headers,
+       responseType: 'arraybuffer',
+     });
+  }
+
+  getOriginPdf(id: number | undefined): Observable<ArrayBuffer> {
+     const headers = new HttpHeaders({ Accept: 'application/pdf' });
+     return this.http.get(`${this.apiUrl}/${id}/original-pdf`, {
+       headers,
+       responseType: 'arraybuffer',
+     });
+
   /**
    * Récupère la dernière inscription pour un étudiant via son matricule.
    * @param matricule Le matricule de l'étudiant.
@@ -47,5 +64,6 @@ export class RegistrationService {
     return this.http.get<Registration>(
       `${this.apiUrl}/by-student/${matricule}/latest`
     );
+
   }
 }

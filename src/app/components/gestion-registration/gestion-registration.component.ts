@@ -9,6 +9,7 @@ import { RegistrationService } from 'src/app/services/registration/registration.
 import { SpecialityService } from 'src/app/services/speciality/speciality.service';
 import { StudentsService } from 'src/app/services/students/students.service';
 
+
 @Component({
   selector: 'app-gestion-registration',
   templateUrl: './gestion-registration.component.html',
@@ -197,4 +198,43 @@ export class GestionRegistrationComponent implements OnInit {
       academicYearLabel: '',
     };
   }
+
+  
+
+  downloadPdfWithQr() {
+    this.registrationService.getRegistrationPdf(this.selectedRegistration?.id).subscribe({
+      next: (data) => {
+        this.downloadFile(data, 'registration-with-qr.pdf');
+      },
+      error: (err) => {
+        this.toastr.error('Erreur lors du téléchargement du PDF avec QR', err);
+      }
+    });
+  }
+
+  downloadOriginalPdf() {
+    this.registrationService
+      .getOriginPdf(this.selectedRegistration?.id)
+      .subscribe({
+        next: (data) => {
+          this.downloadFile(data, 'original-registration.pdf');
+        },
+        error: (err) => {
+          this.toastr.error('Erreur lors du téléchargement du PDF original', err);
+        },
+      });
+  }
+
+  private downloadFile(data: ArrayBuffer, filename: string): void {
+    const blob = new Blob([data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
+
 }

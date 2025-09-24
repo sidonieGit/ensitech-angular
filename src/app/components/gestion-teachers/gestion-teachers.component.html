@@ -31,6 +31,7 @@
 						<th>Nom</th>
 						<th>Prénom</th>
 						<th>Date d'ajout</th>
+						<th>Cours Assignés</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -42,6 +43,7 @@
 						<td>{{ teacher.lastName| titlecase }}</td>
 						<td>{{ teacher.firstName | titlecase}}</td>
 						<td>{{ teacher.createdAt| date: 'dd/MM/yyyy' }}</td>
+						<td>{{ getCoursesByTeacher(teacher) | titlecase }}</td>
 
 						<td>
 							<div class="dropdown">
@@ -50,17 +52,19 @@
 									<i class="hgi-stroke hgi-more-vertical"></i>
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-									<li><a class="dropdown-item" href="javascript:void(0);" (click)="editTeacher(teacher)"
-											data-bs-toggle="modal" data-bs-target="#editTeacherModal">Modifier</a>
+									<li> <button type="button" class="dropdown-item" (click)="editTeacher(teacher)" data-bs-toggle="modal"
+											data-bs-target="#editTeacherModal">Modifier</button></li>
+									<li> <button type="button" class="dropdown-item" (click)="viewTeacher(teacher)" data-bs-toggle="modal"
+											data-bs-target="#viewTeacherModal">Voir les informations</button></li>
+									<li> <!-- NOUVELLE ACTION -->
+										<button type="button" class="dropdown-item" (click)="openAssignCourseModal(teacher)"
+											data-bs-toggle="modal" data-bs-target="#assignCourseModal">
+											Assigner un cours
+										</button>
 									</li>
-									<li><a class="dropdown-item" href="javascript:void(0);" (click)="viewTeacher(teacher)"
-											data-bs-toggle="modal" data-bs-target="#viewTeacherModal">Voir les
-											informations</a></li>
-									<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#courseModal"
-											disabled>Associer un
-											cours</button></li>
-									<li><a class="dropdown-item" href="javascript:void(0);"
-											(click)="deleteTeacher(teacher.id)">Supprimer</a></li>
+									<li> <button type="button" class="dropdown-item"
+											(click)="deleteTeacher(teacher.id)">Supprimer</button>
+									</li>
 								</ul>
 							</div>
 						</td>
@@ -183,5 +187,43 @@
 			</div>
 		</div>
 	</div>
+	<!-- ======================================================= -->
+	<!-- MODAL POUR ASSIGNER UN COURS À UN ENSEIGNANT -->
+	<!-- ======================================================= -->
+	<div class="modal fade" id="assignCourseModal" tabindex="-1" aria-labelledby="assignCourseModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="assignCourseModalLabel" *ngIf="selectedTeacher">
+						Assigner un cours à <span class="text-primary">{{ selectedTeacher.firstName }} {{ selectedTeacher.lastName
+							}}</span>
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<p>Veuillez sélectionner un cours parmi ceux qui ne sont pas encore assignés :</p>
 
+					<div *ngIf="availableCourses.length > 0; else noCourses">
+						<select class="form-select" [(ngModel)]="courseToAssignId" name="courseToAssign">
+							<option [ngValue]="null" disabled>-- Choisir un cours --</option>
+							<option *ngFor="let course of availableCourses" [value]="course.id">
+								{{ course.title }}
+							</option>
+						</select>
+					</div>
+					<ng-template #noCourses>
+						<div class="alert alert-warning">Tous les cours sont déjà assignés.</div>
+					</ng-template>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="button" class="primary-btn border-0" (click)="assignCourseToSelectedTeacher()"
+						[disabled]="!courseToAssignId" data-bs-dismiss="modal">
+						Assigner
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>

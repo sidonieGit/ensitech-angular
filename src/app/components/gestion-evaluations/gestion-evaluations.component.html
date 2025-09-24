@@ -12,7 +12,8 @@
       <div class="col-6 col-md-9" style="height: 44px;">
         <div class="input-group">
           <span class="input-group-text"><i class="hgi-stroke hgi-search-01"></i></span>
-          <input type="search" placeholder="Rechercher une évaluation..." class="form-control" [(ngModel)]="filterEvaluation" (ngModelChange)="updateFilteredEvaluations()" />
+          <input type="search" placeholder="Rechercher une évaluation..." class="form-control"
+            [(ngModel)]="filterEvaluation" (ngModelChange)="updateFilteredEvaluations()" />
         </div>
       </div>
       <button class="primary-btn border-0" data-bs-toggle="modal" data-bs-target="#addEvaluationModal">
@@ -34,7 +35,7 @@
         <tbody>
           <tr *ngFor="let eval of filteredEvaluations">
             <td>{{ eval.code }}</td>
-            <td>{{ eval.date | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ eval.dateEvaluation | date: 'dd/MM/yyyy' }}</td>
             <td>{{ eval.description }}</td>
             <td>
               <div class="dropdown">
@@ -42,9 +43,18 @@
                   <i class="hgi-stroke hgi-more-vertical"></i>
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#" (click)="editEvaluation(eval)" data-bs-toggle="modal" data-bs-target="#editEvaluationModal">Modifier</a></li>
-                  <li><a class="dropdown-item" href="#" (click)="viewEvaluation(eval)" data-bs-toggle="modal" data-bs-target="#viewEvaluationModal">Voir les informations</a></li>
-                  <li><a class="dropdown-item text-danger" href="#" (click)="deleteEvaluation(eval.id)">Supprimer</a></li>
+                  <li> <button type="button" class="dropdown-item" (click)="editEvaluation(eval)" data-bs-toggle="modal"
+                      data-bs-target="#editEvaluationModal">
+                      Modifier
+                    </button></li>
+                  <li> <button type="button" class="dropdown-item" (click)="viewEvaluation(eval)" data-bs-toggle="modal"
+                      data-bs-target="#viewEvaluationModal">
+                      Voir les informations
+                    </button></li>
+                  <li><button type="button" class="dropdown-item text-danger" (click)="deleteEvaluation(eval.id)">
+                      Supprimer
+                    </button>
+                  </li>
                 </ul>
               </div>
             </td>
@@ -55,7 +65,8 @@
   </main>
 
   <!-- MODAL : Ajouter une évaluation -->
-  <div class="modal fade" id="addEvaluationModal" tabindex="-1" aria-labelledby="addEvaluationModalLabel" aria-hidden="true">
+  <div class="modal fade" id="addEvaluationModal" tabindex="-1" aria-labelledby="addEvaluationModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
       <form class="modal-content" (ngSubmit)="addEvaluation()">
         <div class="modal-header">
@@ -73,25 +84,48 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Date</label>
-            <input type="date" class="form-control" [(ngModel)]="newEvaluation.date" name="date" required>
+            <input type="date" class="form-control" [(ngModel)]="newEvaluation.dateEvaluation" name="date" required>
           </div>
           <div class="mb-3">
             <label class="form-label">Note</label>
-            <input type="number" class="form-control" [(ngModel)]="newEvaluation.note" name="note" required>
+            <input type="number" class="form-control" [(ngModel)]="newEvaluation.grade" name="grade" required>
           </div>
+
+          <!-- NOUVEAU : Champ pour sélectionner le cours -->
+          <div class="mb-3">
+            <label class="form-label">Cours concerné</label>
+            <select class="form-select" [(ngModel)]="newEvaluation.courseId" name="courseId" required>
+              <option [ngValue]="0" disabled>Sélectionner un cours</option>
+              <option *ngFor="let course of allCourses" [value]="course.id">
+                {{ course.title }}
+              </option>
+            </select>
+          </div>
+
+          <!-- NOUVEAU : Champ pour sélectionner l'étudiant -->
+          <div class="mb-3">
+            <label class="form-label">Étudiant concerné</label>
+            <select class="form-select" [(ngModel)]="newEvaluation.studentId" name="studentId" required>
+              <option [ngValue]="0" disabled>Sélectionner un étudiant</option>
+              <option *ngFor="let student of allStudents" [value]="student.id">
+                {{ student.firstName }} {{ student.lastName }}
+              </option>
+            </select>
+          </div>
+
           <div class="mb-3">
             <label class="form-label">Type</label>
             <select class="form-select" [(ngModel)]="newEvaluation.type" name="type">
-              <option value="CONTRÔLE CONTINU">Contrôle Continu</option>
+              <option value="CONTROLE_CONTINUE">Contrôle Continu</option>
               <option value="EXAMEN">Examen</option>
               <option value="TP">TP</option>
             </select>
           </div>
           <div class="mb-3">
-            <label class="form-label">Statut</label>
-            <select class="form-select" [(ngModel)]="newEvaluation.statut" name="status">
-              <option value="VALIDÉE">Validée</option>
-              <option value="NON VALIDÉE">Non Validée</option>
+            <label class="form-label">Status</label>
+            <select class="form-select" [(ngModel)]="newEvaluation.status" name="status">
+              <option value="VALIDEE">Validée</option>
+              <option value="NON_VALIDEE">Non Validée</option>
             </select>
           </div>
         </div>
@@ -113,10 +147,27 @@
         <div class="modal-body">
           <p><strong>Code :</strong> {{ selectedEvaluation.code }}</p>
           <p><strong>Description :</strong> {{ selectedEvaluation.description }}</p>
-          <p><strong>Date :</strong> {{ selectedEvaluation.date | date: 'dd/MM/yyyy' }}</p>
-          <p><strong>Note :</strong> {{ selectedEvaluation.note }}</p>
+          <p><strong>Date :</strong> {{ selectedEvaluation.dateEvaluation | date: 'dd/MM/yyyy' }}</p>
+          <p><strong>Note :</strong> {{ selectedEvaluation.grade }}</p>
+          <p><strong>Cours concerné :</strong> <!-- Affiche le titre du cours s'il existe, sinon l'ID, sinon 'N/A' -->
+            <span *ngIf="selectedEvaluation.course; else courseIdOnly">
+              {{ selectedEvaluation.course.title }}
+            </span>
+            <ng-template #courseIdOnly>
+              (ID: {{ selectedEvaluation.courseId || 'N/A' }})
+            </ng-template>
+          </p>
+          <p><strong>Étudiant concerné :</strong>
+            <!-- Affiche le nom de l'étudiant s'il existe, sinon l'ID, sinon 'N/A' -->
+            <span *ngIf="selectedEvaluation.student; else studentIdOnly">
+              {{ selectedEvaluation.student.firstName }} {{ selectedEvaluation.student.lastName }}
+            </span>
+            <ng-template #studentIdOnly>
+              (ID: {{ selectedEvaluation.studentId || 'N/A' }})
+            </ng-template>
+          </p>
           <p><strong>Type :</strong> {{ selectedEvaluation.type }}</p>
-          <p><strong>Statut :</strong> {{ selectedEvaluation.statut }}</p>
+          <p><strong>Status :</strong> {{ selectedEvaluation.status }}</p>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -140,29 +191,31 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Description</label>
-            <input type="text" class="form-control" [(ngModel)]="editingEvaluation.description" name="editDescription" required>
+            <input type="text" class="form-control" [(ngModel)]="editingEvaluation.description" name="editDescription"
+              required>
           </div>
           <div class="mb-3">
             <label class="form-label">Date</label>
-            <input type="date" class="form-control" [(ngModel)]="editingEvaluation.date" name="editDate" required>
+            <input type="date" class="form-control" [(ngModel)]="editingEvaluation.dateEvaluation" name="editDate"
+              required>
           </div>
           <div class="mb-3">
             <label class="form-label">Note</label>
-            <input type="number" class="form-control" [(ngModel)]="editingEvaluation.note" name="editNote" required>
+            <input type="number" class="form-control" [(ngModel)]="editingEvaluation.grade" name="editNote" required>
           </div>
           <div class="mb-3">
             <label class="form-label">Type</label>
             <select class="form-select" [(ngModel)]="editingEvaluation.type" name="editType">
-              <option value="CONTRÔLE CONTINU">Contrôle Continu</option>
+              <option value="CONTROLE_CONTINUE">Contrôle Continu</option>
               <option value="EXAMEN">Examen</option>
               <option value="TP">TP</option>
             </select>
           </div>
           <div class="mb-3">
-            <label class="form-label">Statut</label>
-            <select class="form-select" [(ngModel)]="editingEvaluation.statut" name="editStatus">
-              <option value="VALIDÉE">Validée</option>
-              <option value="NON VALIDÉE">Non Validée</option>
+            <label class="form-label">Status</label>
+            <select class="form-select" [(ngModel)]="editingEvaluation.status" name="editStatus">
+              <option value="VALIDEE">Validée</option>
+              <option value="NON_VALIDEE">Non Validée</option>
             </select>
           </div>
         </div>

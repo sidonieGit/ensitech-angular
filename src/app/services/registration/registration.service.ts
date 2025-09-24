@@ -53,5 +53,17 @@ export class RegistrationService {
        headers,
        responseType: 'arraybuffer',
      });
+
+  /**
+   * Récupère la dernière inscription pour un étudiant via son matricule.
+   * @param matricule Le matricule de l'étudiant.
+   */
+  getLatestRegistrationByMatricule(
+    matricule: string
+  ): Observable<Registration> {
+    return this.http.get<Registration>(
+      `${this.apiUrl}/by-student/${matricule}/latest`
+    );
+
   }
 }

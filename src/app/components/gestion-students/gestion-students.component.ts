@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr'; // Importer ToastrService
-import { Course } from 'src/app/interfaces/course.model';
+
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Speciality } from 'src/app/interfaces/speciality.interface';
 import { Student } from 'src/app/interfaces/students.model'; // Assurez-vous que le chemin est correct
-import { CoursesService } from 'src/app/services/courses/courses.service'; // Assurez-vous que le chemin est correct
+import { RegistrationService } from 'src/app/services/registration/registration.service';
 import { StudentsService } from 'src/app/services/students/students.service';
 
 @Component({
@@ -18,39 +21,125 @@ export class GestionStudentsComponent implements OnInit {
   selectedStudent: Student | null = null;
   editingStudent: Student | null = null;
 
+  // NOUVELLES PROPRIÉTÉS pour les listes déroulantes
+  allSpecialities: Speciality[] = [];
+
   // Modèle pour le formulaire d'ajout
-  newStudent: Omit<Student, 'id' | 'matricule' | 'courses'> = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    telephone: '',
-    address: '',
-    birthday: null, //Utilisez null pour les champs optionnels qui peuvent être vides.
-    // Une chaîne vide "" n'est pas une date valide pour le backend.
-    gender: 'MALE',
-  };
+  newStudent: Omit<Student, 'id' | 'matricule' | 'speciality' | 'isEnrolled'> =
+    {
+      firstName: '',
+      lastName: '',
+      email: '',
+      telephone: '',
+      address: '',
+      birthday: null, //Utilisez null pour les champs optionnels qui peuvent être vides.
+      // Une chaîne vide "" n'est pas une date valide pour le backend.
+      gender: 'MALE',
+    };
 
   // 1. On garde une liste "source" de tous les cours
-  private allCoursesSource: Course[] = [];
+  /* private allCoursesSource: Course[] = [];
 
   // 2. On crée une liste spécifique pour l'affichage dans la modale- // On ajoute une propriété 'selected' pour les checkboxes
-  coursesForModal: (Course & { selected?: boolean })[] = [];
+  coursesForModal: (Course & { selected?: boolean })[] = [];*/
 
   constructor(
     private studentsService: StudentsService,
     //  Ajout de 'private' pour que coursesService soit une propriété de la classe
-    private coursesService: CoursesService,
+    private registrationService: RegistrationService,
     private toastr: ToastrService // Injecter ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.loadStudents();
-    this.loadCourses();
+    this.loadStudentsWithSpeciality();
+  }
+  /**
+   * Charge la liste des étudiants et, pour chacun, tente de récupérer sa spécialité
+   * via sa dernière inscription.
+   */
+  loadStudentsWithSpeciality(): void {
+    this.studentsService.getStudents().subscribe({
+      next: (students) => {
+        if (students.length === 0) {
+          this.allStudents = [];
+          this.updateFilteredStudents();
+          return;
+        }
+
+        // Pour chaque étudiant, on crée un appel pour récupérer sa dernière inscription
+        const registrationRequests = students.map((student) => {
+          if (!student.matricule) {
+            // Si l'étudiant n'a pas de matricule, on ne peut rien faire. On retourne null.
+            return of(null);
+          }
+          return this.registrationService
+            .getLatestRegistrationByMatricule(student.matricule!)
+            .pipe(
+              catchError((error) => {
+                /* // Si un étudiant n'a pas d'inscription, l'API retourne 404.
+                // On intercepte l'erreur et on retourne `null` pour ne pas tout faire planter.
+                this.toastr.error(
+                  `Pas d'inscription trouvée pour ${student.matricule}`,
+                  ''
+                );
+                console.error(
+                  "Erreur lors de la récupération de l'inscription",
+                  error
+                );*/
+                // On vérifie si c'est une erreur 404 (cas normal de non-inscription)
+                if (error.status === 404) {
+                  // C'est un cas normal, on ne montre pas de toast d'erreur.
+                  // On se contente de logger un avertissement pour le débogage.
+                  console.warn(
+                    `Pas d'inscription trouvée pour ${student.matricule}. C'est un cas normal.`
+                  );
+                } else {
+                  // Si c'est une autre erreur (500, 0, etc.), c'est un vrai problème.
+                  // ON AFFICHE LE TOAST D'ERREUR DANS CE CAS.
+                  this.toastr.error(
+                    `Erreur lors de la récupération de l'inscription pour ${student.firstName}.`,
+                    ''
+                  );
+                  console.error(
+                    "Erreur lors de la récupération de l'inscription",
+                    error
+                  );
+                }
+                return of(null);
+              })
+            );
+        });
+
+        // forkJoin exécute tous les appels en parallèle et attend toutes les réponses
+        forkJoin(registrationRequests).subscribe((registrations) => {
+          // On associe chaque inscription (ou null) à l'étudiant correspondant
+          this.allStudents = students.map((student, index) => {
+            const registration = registrations[index];
+            return {
+              ...student,
+              isEnrolled: !!registration, // L'étudiant est inscrit si on a trouvé une inscription
+              speciality: registration
+                ? { label: registration.specialityLabel, description: '' }
+                : undefined,
+            };
+          });
+          this.updateFilteredStudents();
+        });
+      },
+      error: (error) => {
+        // --- GESTION DES ERREURS GLOBALES AVEC TOASTR ---
+        this.toastr.error(
+          'Impossible de charger la liste des étudiants. Le serveur a peut-être un problème.',
+          'Erreur de chargement'
+        );
+        console.error('Erreur lors du chargement des étudiants', error);
+      },
+    });
   }
 
   // --- Méthodes de chargement des données ---
 
-  loadStudents(): void {
+  /* loadStudents(): void {
     this.studentsService.getStudents().subscribe({
       next: (data) => {
         this.allStudents = data;
@@ -59,20 +148,7 @@ export class GestionStudentsComponent implements OnInit {
       error: (error) =>
         console.error('Erreur lors du chargement des étudiants', error),
     });
-  }
-
-  loadCourses(): void {
-    // La méthode de service retourne un Observable, il faut s'y abonner
-    this.coursesService.getCourses().subscribe({
-      next: (data) => {
-        // On stocke la liste source une bonne fois pour toutes
-        this.allCoursesSource = data;
-        console.log('Cours chargés :', this.allCoursesSource); // Pour déboguer
-      },
-      error: (error) =>
-        console.error('Erreur lors du chargement des cours', error),
-    });
-  }
+  }*/
 
   // --- Méthodes pour le CRUD ---
 
@@ -96,7 +172,7 @@ export class GestionStudentsComponent implements OnInit {
           `L'étudiant ${createdStudent.firstName} ${createdStudent.lastName} a été ajouté.`,
           'Succès !'
         );
-        this.loadStudents(); // Recharger la liste
+        this.loadStudentsWithSpeciality(); // Recharger la liste
         this.resetForm();
       },
       error: (error) =>
@@ -122,7 +198,7 @@ export class GestionStudentsComponent implements OnInit {
       this.studentsService.deleteStudent(id).subscribe({
         next: () => {
           this.toastr.info("L'étudiant a été supprimé.", 'Information');
-          this.loadStudents();
+          this.loadStudentsWithSpeciality();
         },
         error: (error) => console.error('Erreur lors de la suppression', error),
       });
@@ -144,7 +220,7 @@ export class GestionStudentsComponent implements OnInit {
             'Succès !'
           );
 
-          this.loadStudents();
+          this.loadStudentsWithSpeciality;
           this.editingStudent = null; // Important pour fermer la modale
         },
         error: (error) => console.error('Erreur lors de la mise à jour', error),
@@ -177,14 +253,14 @@ export class GestionStudentsComponent implements OnInit {
   // }
 
   // CORRECTION : Ajout de la méthode manquante pour afficher les titres
-  getCourseTitles(courses: Course[] | undefined): string {
+  /*getCourseTitles(courses: Course[] | undefined): string {
     if (!courses || courses.length === 0) {
       return 'Aucun cours associé';
     }
     return courses.map((course) => course.title).join(', ');
-  }
+  }*/
 
-  associateCourses(): void {
+  /* associateCourses(): void {
     if (this.selectedStudent && this.selectedStudent.id) {
       // On utilise la liste de la modale pour trouver les cours sélectionnés
       const selectedCourseIds = this.coursesForModal
@@ -202,5 +278,5 @@ export class GestionStudentsComponent implements OnInit {
             console.error("Erreur lors de l'association des cours", error),
         });
     }
-  }
+  }*/
 }

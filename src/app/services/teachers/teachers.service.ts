@@ -10,8 +10,9 @@ import { Teacher } from 'src/app/interfaces/teachers.model';
 })
 export class TeachersService {
   // L'URL de base de votre API Spring Boot
-  private apiUrl =
-    'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/teachers';
+  // private apiUrl =
+  // 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/teachers';
+  private apiUrl = 'http://localhost:8888/api/teachers';
 
   // 1. Injecter HttpClient
   constructor(private http: HttpClient) {}

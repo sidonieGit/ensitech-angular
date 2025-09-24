@@ -12,7 +12,7 @@ import { Course } from 'src/app/interfaces/course.model'; // Utiliser notre inte
 export class CoursesService {
   // URL de votre course-service. Assurez-vous que le port est le bon.
   // private apiUrl =
-  //   'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/courses';
+  // 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/courses';
   private apiUrl = 'http://localhost:8888/api/training/courses';
 
   constructor(private http: HttpClient) {}
@@ -74,13 +74,7 @@ export class CoursesService {
     );
   }
 
-  /**
-   * Inscrit un étudiant à un cours spécifique.
-   * @param courseId L'ID du cours.
-   * @param studentId L'ID de l'étudiant à inscrire.
-   * @returns Un Observable avec le cours mis à jour.
-   */
-  enrollStudentToCourse(
+  /*enrollStudentToCourse(
     courseId: number,
     studentId: number
   ): Observable<Course> {
@@ -96,7 +90,7 @@ export class CoursesService {
   ): Observable<Course> {
     const url = `${this.apiUrl}/${courseId}/students/${studentId}`;
     return this.http.delete<Course>(url);
-  }
+  }*/
   /**
    * Gère les erreurs HTTP de manière centralisée pour ce service.
    * @param error L'objet d'erreur HTTP.
@@ -113,5 +107,21 @@ export class CoursesService {
     }
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
+  }
+
+  /**
+   * Assigne un enseignant à un cours spécifique.
+   * @param courseId L'ID du cours à mettre à jour.
+   * @param teacherId L'ID de l'enseignant à assigner.
+   */
+  assignTeacherToCourse(courseId: number, teacherId: number): Observable<void> {
+    const url = `${this.apiUrl}/${courseId}/assign-teacher/${teacherId}`;
+    // Le corps est vide pour une requête PATCH de ce type.
+    return this.http.patch<void>(url, {}).pipe(catchError(this.handleError));
+  }
+
+  getCoursesByTeacher(teacherId: number): Observable<Course[]> {
+    const url = `${this.apiUrl}/by-teacher/${teacherId}`;
+    return this.http.get<Course[]>(url).pipe(catchError(this.handleError));
   }
 }

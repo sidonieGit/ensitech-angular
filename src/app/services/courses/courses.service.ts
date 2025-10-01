@@ -4,16 +4,14 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs'; // Importer throwError
 import { catchError, map } from 'rxjs/operators';
+import api_URL from 'src/apiUrl';
 import { Course } from 'src/app/interfaces/course.model'; // Utiliser notre interface standard
 
 @Injectable({
   providedIn: 'root',
 })
 export class CoursesService {
-  // URL de votre course-service. Assurez-vous que le port est le bon.
-  // private apiUrl =
-  // 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/courses';
-  private apiUrl = 'http://localhost:8888/api/training/courses';
+  private apiUrl = api_URL + 'training/courses';
 
   constructor(private http: HttpClient) {}
 

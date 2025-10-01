@@ -18,5 +18,6 @@ export interface Student {
 
   //verifie si l'etudiant est inscrit afin de savoir sa specialité
   isEnrolled?: boolean;
-  speciality?: Speciality; // Nous allons utiliser cette propriété pour stocker la spécialité de l'étudiant
+  //initialisation de la specialité à non inscrit pour l'affichage et eviter erreur 500
+  speciality?: Speciality;
 }

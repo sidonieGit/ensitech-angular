@@ -1,14 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import api_URL from 'src/apiUrl';
 import { Registration } from 'src/app/interfaces/registration.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RegistrationService {
-  // private apiUrl = 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/registrations';
-  private apiUrl = 'http://localhost:8888/api/registrations';
+  private apiUrl = api_URL + 'registrations';
 
   constructor(private http: HttpClient) {}
 

@@ -1,16 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import api_URL from 'src/apiUrl';
 import { Student } from 'src/app/interfaces/students.model'; // Importez le DTO
 
 @Injectable({
   providedIn: 'root',
 })
 export class StudentsService {
-  // L'URL de votre user-service
-  // private apiUrl =
-  //   'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/students';
-  private apiUrl = 'http://localhost:8888/api/students';
+  private apiUrl = api_URL + 'students';
 
   constructor(private http: HttpClient) {}
 

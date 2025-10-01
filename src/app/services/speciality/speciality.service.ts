@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import api_URL from 'src/apiUrl';
 import { Speciality } from 'src/app/interfaces/speciality.interface';
 
 @Injectable({
@@ -9,9 +10,7 @@ import { Speciality } from 'src/app/interfaces/speciality.interface';
 export class SpecialityService {
   private speciality!: Speciality[];
 
-  private apiUrl = 'http://localhost:8888/api/training/specialities';
-
-  // private apiUrl = 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/speciality';
+  private apiUrl = api_URL + 'specialities';
 
   http: HttpClient = inject(HttpClient);
   // Méthode pour obtenir les spécialités

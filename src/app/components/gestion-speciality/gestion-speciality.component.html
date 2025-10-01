@@ -25,7 +25,7 @@
 				<thead class="table-primary">
 					<tr>
 						<th><input type="checkbox" class="form-check-input" /></th>
-						<th>Id</th>
+						<!-- <th>Id</th> -->
 						<th>Titre</th>
 						<th>Description</th>
 						<th>Actions</th>
@@ -33,11 +33,11 @@
 				</thead>
 				<tbody>
 					<tr *ngFor="let speciality of filteredSpecialities">
-						<td><input type="checkbox" class="form-check-input" /></td>
-						<td>{{ speciality.id }}</td>
-						<td>{{ speciality.label }}</td>
-						<td>{{ speciality.description }}</td>
-						<td>
+						<td data-label=""><input type="checkbox" class="form-check-input" /></td>
+						<!-- <td>{{ speciality.id }}</td> -->
+						<td data-label="Titre">{{ speciality.label }}</td>
+						<td data-label="Description">{{ speciality.description }}</td>
+						<td data-label="Actions">
 							<div class="dropdown">
 								<a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
 									aria-expanded="false">

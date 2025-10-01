@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Evaluation } from '../../interfaces/evaluation.model'; // Assurez-vous d'avoir ce modèle
+import api_URL from 'src/apiUrl';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EvaluationsService {
-  private apiUrl = 'http://localhost:8888/api/training/evaluations';
+  private apiUrl = api_URL + 'evaluations';
 
   constructor(private http: HttpClient) {}
 

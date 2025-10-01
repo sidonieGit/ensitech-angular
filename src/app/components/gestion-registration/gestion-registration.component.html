@@ -37,13 +37,13 @@
         </thead>
         <tbody>
           <tr *ngFor="let registration of filteredRegistrations">
-            <td><input type="checkbox" class="form-check-input" /></td>
-            <td>{{ registration.registrationNumber}}</td>
-            <td>{{ registration.level }}</td>
-            <td>{{ registration.specialityLabel }}</td>
-            <td>{{ registration.matricule }}</td>
-            <td>{{ registration.academicYearLabel }}</td>
-            <td>
+            <td data-label=""><input type="checkbox" class="form-check-input" /></td>
+            <td data-label="N°">{{ registration.registrationNumber}}</td>
+            <td data-label="Niveau">{{ registration.level }}</td>
+            <td data-label="Specialité">{{ registration.specialityLabel }}</td>
+            <td data-label="Matricule">{{ registration.matricule }}</td>
+            <td data-label="Année Academique">{{ registration.academicYearLabel }}</td>
+            <td data-label="Actions">
               <div class="dropdown">
                 <a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
                   aria-expanded="false">

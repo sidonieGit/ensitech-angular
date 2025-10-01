@@ -28,7 +28,7 @@
         <thead class="table-primary">
           <tr>
             <th><input type="checkbox" class="form-check-input" /></th>
-            <th>Id</th>
+            <!-- <th>Id</th> -->
             <th>Intitulé</th>
             <th>Date de debut</th>
             <th>Date de fin</th>
@@ -38,14 +38,14 @@
         </thead>
         <tbody>
           <tr *ngFor="let period of filteredPeriod">
-            <td><input type="checkbox" class="form-check-input" /></td>
-            <td>{{ period.id }}</td>
-            <td>{{ period.entitled}}</td>
-            <td>{{ period.startedAt | date:'short'}}</td>
-            <td>{{ period.endedAt | date:'short'}}</td>
+            <td data-label=""><input type="checkbox" class="form-check-input" /></td>
+            <!-- <td>{{ period.id }}</td> -->
+            <td data-label="Intitulé">{{ period.entitled}}</td>
+            <td data-label="Date de début">{{ period.startedAt | date:'short'}}</td>
+            <td data-label="Date de fin">{{ period.endedAt | date:'short'}}</td>
 
-            <td><em>{{ period.typePeriod | lowercase}}</em></td>
-            <td>
+            <td data-label="Type"><em>{{ period.typePeriod | lowercase}}</em></td>
+            <td data-label="Actions">
               <div class="dropdown">
                 <a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
                   aria-expanded="false">
@@ -97,18 +97,18 @@
           <form (ngSubmit)="addPeriod()">
             <div class="mb-3">
               <label for="label" class="form-label">Intitulé</label>
-              <input type="text" [(ngModel)]="newPeriod.entitled" name="label" placeholder="intitulé de la periode" required
-                class="form-control" />
+              <input type="text" [(ngModel)]="newPeriod.entitled" name="label" placeholder="intitulé de la periode"
+                required class="form-control" />
             </div>
             <div class="mb-3">
               <label for="startedAt" class="form-label">Date de debut </label>
               <input type="date" [(ngModel)]="newPeriod.startedAt" name="startedAt" placeholder="Date de debut" required
-                class="form-control"/>
+                class="form-control" />
             </div>
             <div class="mb-3">
               <label for="endedAt" class="form-label">Date de fin </label>
               <input type="date" [(ngModel)]="newPeriod.endedAt" name="endedAt" placeholder="Date de fin" required
-                class="form-control"/>
+                class="form-control" />
             </div>
             <!--div class="mb-3">
               <label for="type" class="form-label">type </label>
@@ -121,12 +121,12 @@
             </div-->
             <div class="mb-3">
               <label for="period" class="form-label">Periode</label>
-                <select name="period" id="period" class="form-select" >
-                  <option value="INSCRIPTION" *ngIf="" >Periode des Inscriptions</option>
-                  <option value="COURS">Periode des Cours</option>
-                  <option value="EXAMEN">Periode des Examens</option>
-                  <option value="VACANCE">Periode des Vacances</option>
-                </select>
+              <select name="period" id="period" class="form-select">
+                <option value="INSCRIPTION" *ngIf="">Periode des Inscriptions</option>
+                <option value="COURS">Periode des Cours</option>
+                <option value="EXAMEN">Periode des Examens</option>
+                <option value="VACANCE">Periode des Vacances</option>
+              </select>
             </div>
 
             <div class="modal-footer">
@@ -151,7 +151,7 @@
         </div>
         <div class="modal-body">
           <p><strong>Id :</strong> {{ selectedPeriod?.id }}</p>
-          <p><strong>Intitulé  :</strong> {{ selectedPeriod?.entitled }}</p>
+          <p><strong>Intitulé :</strong> {{ selectedPeriod?.entitled }}</p>
           <p>
             <strong>Date de debut:</strong> {{ selectedPeriod?.startedAt }}
           </p>
@@ -190,8 +190,8 @@
             </div>
             <div class="mb-3">
               <label for="startedAt" class="form-label">Date de debut</label>
-              <input type="date" [(ngModel)]="editingPeriod.startedAt" name="startedAt" placeholder="Date de debut" required
-                class="form-control" />
+              <input type="date" [(ngModel)]="editingPeriod.startedAt" name="startedAt" placeholder="Date de debut"
+                required class="form-control" />
             </div>
             <div class="mb-3">
               <label for="startedAt" class="form-label">Date de fin</label>

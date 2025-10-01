@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import api_URL from 'src/apiUrl';
 export interface LoginRequest {
   email: string;
   password: string;
@@ -25,9 +26,7 @@ export class AuthService {
     ];*/
 
   private authenticated = false;
-  private baseUrl =
-   'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/auth';
-  // private baseUrl = 'http://localhost:8888/api/auth';
+  private baseUrl = api_URL + 'auth';
 
   constructor(private router: Router, private http: HttpClient) {}
 

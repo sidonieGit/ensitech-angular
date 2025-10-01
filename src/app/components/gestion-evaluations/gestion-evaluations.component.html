@@ -34,10 +34,10 @@
         </thead>
         <tbody>
           <tr *ngFor="let eval of filteredEvaluations">
-            <td>{{ eval.code }}</td>
-            <td>{{ eval.dateEvaluation | date: 'dd/MM/yyyy' }}</td>
-            <td>{{ eval.description }}</td>
-            <td>
+            <td data-label="Code">{{ eval.code }}</td>
+            <td data-label="Date">{{ eval.dateEvaluation | date: 'dd/MM/yyyy' }}</td>
+            <td data-label="Description">{{ eval.description }}</td>
+            <td data-label="Actions">
               <div class="dropdown">
                 <a href="#" class="text-decoration-none text-black" data-bs-toggle="dropdown">
                   <i class="hgi-stroke hgi-more-vertical"></i>

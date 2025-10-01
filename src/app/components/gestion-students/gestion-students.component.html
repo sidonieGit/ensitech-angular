@@ -37,9 +37,9 @@
 					<tr *ngFor="let student of filteredStudents">
 						<td><input type="checkbox" class="form-check-input" /></td>
 
-						<td>{{ student.lastName | titlecase }}</td>
-						<td>{{ student.firstName | titlecase }}</td>
-						<td><span *ngIf="student.isEnrolled; else notEnrolled">
+						<td data-label="Nom de Famille">{{ student.lastName | titlecase }}</td>
+						<td data-label="Prénom">{{ student.firstName | titlecase }}</td>
+						<td data-label="Spécialité"><span *ngIf="student.isEnrolled; else notEnrolled">
 								{{ student.speciality?.label | titlecase }}
 							</span>
 							<ng-template #notEnrolled>
@@ -47,7 +47,7 @@
 							</ng-template>
 						</td>
 
-						<td>
+						<td data-label="Actions">
 							<div class="dropdown">
 								<a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
 									aria-expanded="false">

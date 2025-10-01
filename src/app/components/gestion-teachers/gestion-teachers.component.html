@@ -39,13 +39,13 @@
 
 					<tr *ngFor="let teacher of filteredTeachers">
 
-						<td><input type="checkbox" class="form-check-input" /></td>
-						<td>{{ teacher.lastName| titlecase }}</td>
-						<td>{{ teacher.firstName | titlecase}}</td>
-						<td>{{ teacher.createdAt| date: 'dd/MM/yyyy' }}</td>
-						<td>{{ getCoursesByTeacher(teacher) | titlecase }}</td>
+						<td data-label=""><input type="checkbox" class="form-check-input" /></td>
+						<td data-label="Nom">{{ teacher.lastName| titlecase }}</td>
+						<td data-label="Prénom">{{ teacher.firstName | titlecase}}</td>
+						<td data-label="Date d'ajout">{{ teacher.createdAt| date: 'dd/MM/yyyy' }}</td>
+						<td data-label="Cours Assignés">{{ getCoursesByTeacher(teacher) | titlecase }}</td>
 
-						<td>
+						<td data-label="Actions">
 							<div class="dropdown">
 								<a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
 									aria-expanded="false">

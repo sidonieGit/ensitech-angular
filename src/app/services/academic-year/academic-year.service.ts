@@ -1,15 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import api_URL from 'src/apiUrl';
 import { AcademicYear } from 'src/app/interfaces/academic.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AcademicYearService {
-  // private apiUrl = 'http://ec2-18-234-93-67.compute-1.amazonaws.com:8888/api/academic-year';
-  private apiUrl = 'http://localhost:8888/api/academic-year';
-  // private apiUrl = 'http/:/localhost:8085/academic-years'; // URL de l'API
+  private apiUrl = api_URL + 'academic-year';
 
   http: HttpClient = inject(HttpClient);
   constructor() {}

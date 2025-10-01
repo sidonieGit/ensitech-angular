@@ -9,7 +9,7 @@ import api_URL from 'src/apiUrl';
   providedIn: 'root',
 })
 export class EvaluationsService {
-  private apiUrl = api_URL + 'evaluations';
+  private apiUrl = api_URL + 'training/evaluations';
 
   constructor(private http: HttpClient) {}
 

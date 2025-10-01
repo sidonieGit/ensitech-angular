@@ -10,7 +10,7 @@ import { Speciality } from 'src/app/interfaces/speciality.interface';
 export class SpecialityService {
   private speciality!: Speciality[];
 
-  private apiUrl = api_URL + 'specialities';
+  private apiUrl = api_URL + 'training/specialities';
 
   http: HttpClient = inject(HttpClient);
   // Méthode pour obtenir les spécialités

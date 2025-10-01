@@ -302,7 +302,7 @@ label {
   font-weight: 600;
   font-size: 1.3rem;
 }
-/*tableau*/
+/tableau/
 .modal-table {
   background-color: var(--color-body);
   border-collapse: separate !important;
@@ -320,7 +320,7 @@ label {
 .modal-table thead tr th {
   border: none;
 }
-/*tableau*/
+/tableau/
 .form-select {
   background-color: var(--color-gray) !important;
 }

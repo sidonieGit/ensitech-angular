@@ -1,5 +1,5 @@
 <!-- TOP NAV -->
-<div class="top-nav d-flex justify-content-between align-items-center">
+<!-- <div class="top-nav d-flex justify-content-between align-items-center">
 	<span class="text-sm">Année scolaire 2024-2025</span>
 	<div class="d-flex gap-2 align-items-center">
 		<span class="user-icon d-flex justify-content-center align-items-center">
@@ -8,6 +8,27 @@
 		<div class="d-flex flex-column align-items-end user-information">
 			<span class="user-role">{{ currentRole }}</span>
 			<span class="user-name">{{currentUser}}</span>
+		</div>
+	</div>
+</div> -->
+
+<!-- TOP NAV -->
+<div class="top-nav d-flex justify-content-between align-items-center">
+	<!-- Bouton hamburger visible uniquement sur mobile -->
+	<button class="btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas"
+		aria-controls="sidebarOffcanvas">
+		<i class="bi bi-list" style="font-size: 1.5rem;"></i>
+	</button>
+
+	<span class="text-sm">Année scolaire 2024-2025</span>
+
+	<div class="d-flex gap-2 align-items-center">
+		<span class="user-icon d-flex justify-content-center align-items-center">
+			<i class="hgi-stroke hgi-user"></i>
+		</span>
+		<div class="d-flex flex-column align-items-end user-information">
+			<span class="user-role">{{ currentRole }}</span>
+			<span class="user-name">{{ currentUser }}</span>
 		</div>
 	</div>
 </div>

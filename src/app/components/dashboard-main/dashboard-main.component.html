@@ -73,16 +73,16 @@
 </main>
 <br />
 <!-- //MAIN -->
-<div class="container">
+<div class="container chart-container mt-4">
 	<div class="row px-5">
 		<div class="col-md-6">
-			<canvas baseChart [data]="barChartData" [type]="'bar'">
+			<canvas id="myChart" baseChart [data]="barChartData" [type]="'bar'">
 			</canvas>
 		</div>
 		<div class="col-md-6">
 			<div class="row px-5 w-75">
 				<div class="float-end">
-					<canvas baseChart [data]="barChartData" [type]="'pie'">
+					<canvas id="myChart" baseChart [data]="barChartData" [type]="'pie'">
 					</canvas>
 				</div>
 			</div>

@@ -199,9 +199,13 @@ export class GestionRegistrationComponent implements OnInit {
     };
   }
 
-  
+
 
   downloadPdfWithQr() {
+    if (!this.selectedRegistration?.id) {
+      this.toastr.warning('Aucune inscription sélectionné.');
+      return;
+    }
     this.registrationService.getRegistrationPdf(this.selectedRegistration?.id).subscribe({
       next: (data) => {
         this.downloadFile(data, 'registration-with-qr.pdf');
@@ -213,11 +217,15 @@ export class GestionRegistrationComponent implements OnInit {
   }
 
   downloadOriginalPdf() {
+    if (!this.selectedRegistration?.id) {
+      this.toastr.warning('Aucune inscription sélectionné.');
+      return;
+    }
     this.registrationService
       .getOriginPdf(this.selectedRegistration?.id)
       .subscribe({
         next: (data) => {
-          this.downloadFile(data, 'original-registration.pdf');
+          this.downloadFile(data, 'registration.pdf');
         },
         error: (err) => {
           this.toastr.error('Erreur lors du téléchargement du PDF original', err);
@@ -231,10 +239,10 @@ export class GestionRegistrationComponent implements OnInit {
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
-    document.body.appendChild(a);
+    // document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
+    // document.body.removeChild(a);
   }
 
 }

@@ -40,6 +40,9 @@ export class RegistrationService {
   // pdf generation service
 
   getRegistrationPdf(id: number | undefined): Observable<ArrayBuffer> {
+    if (id === undefined) {
+      throw new Error('L’ID est requis pour générer le PDF');
+    }
     const headers = new HttpHeaders({ Accept: 'application/pdf' });
     return this.http.get(`${this.apiUrl}/${id}/pdf`, {
       headers,
@@ -48,6 +51,9 @@ export class RegistrationService {
   }
 
   getOriginPdf(id: number | undefined): Observable<ArrayBuffer> {
+    if (id === undefined) {
+      throw new Error('L’ID est requis pour générer le PDF');
+    }
     const headers = new HttpHeaders({ Accept: 'application/pdf' });
     return this.http.get(`${this.apiUrl}/${id}/original-pdf`, {
       headers,

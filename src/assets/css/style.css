@@ -1,8 +1,7 @@
+/* You can add global styles to this file, and also import other style files */
 /* Import des fonts family */
-
 @import url("https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
-
 :root {
   --color-white: #ffffff;
   --color-black: #222222;
@@ -12,30 +11,24 @@
   --font-base: "Inter", sans-serif;
   --sidbar-width: 260px;
 }
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
 a {
   text-decoration: none;
 }
-
 ul,
 li {
   list-style: none;
 }
-
 i {
   font-size: 18px;
 }
-
 span {
   display: block;
 }
-
 button {
   height: 44px;
   border-radius: 4px;
@@ -47,124 +40,35 @@ button {
   padding: 10px 20px;
   gap: 6px;
 }
-
 button.primary-btn {
   background-color: var(--color-primary);
   color: var(--color-white);
 }
 button.primary-btn:hover {
-  background-color: var(--color-white) ;
+  background-color: var(--color-white);
   color: var(--color-primary);
   border: 1px solid var(--color-primary) !important;
   transition: 0.5s ease-out;
-
 }
-
 button.outline-btn {
   background-color: transparent;
   border: 1px solid var(--color-primary);
 }
-
 body {
   background-color: var(--color-white);
   color: var(--color-black);
   font-family: var(--font-base);
 }
 
-/* Login page */
-/* .container {
-  width: 100%;
-  height: 100svh;
-  display: flex;
-}
-
-.left {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 50%;
-}
-
-.title-login {
-  font-family: "Epilogue", sans-serif;
-  margin-bottom: 25px;
-}
-
-.right {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--color-primary);
-  width: 50%;
-}
-
-.formulaire {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-direction: column;
-  width: 323px;
-}
-
-.formulaire > div {
-  position: relative;
-  width: 100%;
-}
-
-label {
-  font-size: 14px;
-  font-weight: 500;
-  position: absolute;
-  left: 12px;
-  top: 8px;
-}
-
-.connexion-input {
-  padding-top: 15px;
-  padding-left: 12px;
-  padding-right: 12px;
-  padding-bottom: 2px;
-  border-radius: 4px;
-  height: 48px;
-  border-width: 0;
-  background-color: #f3f4f6ff;
-  width: 100%;
-  margin-bottom: 24px;
-}
-
-.submit-btn {
-  padding: 12px;
-  width: 347px;
-  height: 44px;
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border-width: 0;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  font-family: "Inter", sans-serif;
-}
-
-.submit-btn:hover {
-  background-color: rgb(0, 36, 71);
-} */
-
-/* //Login page */
-
-/* Dashboard page */
-
 .logo-container {
   padding: 32px 0;
 }
-
 .navbar {
   height: 100%;
   width: var(--sidbar-width);
   border-right: 1px solid var(--color-gray);
   padding: 0 25px 25px;
 }
-
 .nav-link {
   display: flex;
   align-items: center;
@@ -177,41 +81,54 @@ label {
   color: var(--color-primary) !important;
   width: 210px;
 }
-
 .nav-link.actived {
   background-color: var(--color-primary);
   color: var(--color-white) !important;
   border-radius: 4px;
 }
-
 .deconnexion .nav-link {
   background-color: var(--color-gray) !important;
   color: var(--color-primary);
 }
-
+/* mobile first*/
 .top-nav {
   height: 64px;
   padding: 0 20px;
   border-bottom: 1px solid var(--color-gray);
+  display: flex; /* Added for flexbox alignment */
+  align-items: center; /* Vertically center items */
+  justify-content: space-between; /* Space out items */
 }
-
+.top-nav .user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .top-nav .user-icon {
   height: 40px;
   width: 40px;
   border-radius: 4px;
   background-color: var(--color-gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
+.top-nav .user-icon i {
+  font-size: 20px;
+  color: var(--color-primary);
+}
+.top-nav .user-information .user-name {
+  font-size: 16px;
+  font-weight: 500;
+}
 .top-nav .user-information .user-role {
   font-size: 14px;
   font-weight: 400;
   color: var(--color-zinc);
 }
-
 .export-button-container {
   padding: 22px 20px 0;
 }
-
 .table th {
   background-color: #003366;
   color: #fff;
@@ -241,59 +158,61 @@ label {
 .pagination .page-item:last-child .page-link {
   border-radius: 50%; /* Rond pour les boutons de navigation (< et >) */
 }
-
 .kpi-container {
   padding: 31px 20px;
+  display: flex;
+  flex-wrap: wrap; /* Added for responsivity */
+  gap: 20px; /* Space between cards */
+  justify-content: space-between; /* Distribute cards */
 }
-
-.kpi-card, .kpi-card-alternate{
+.kpi-card,
+.kpi-card-alternate {
   color: var(--color-primary);
   background-color: var(--color-gray);
   padding: 20px 28px;
   border-radius: 10px;
-  width: 291px;
+  width: calc(33.333% - 20px); /* For 3 columns on large screens */
+  min-width: 291px; /* Minimum width to avoid squishing */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.kpi-card-alternate{ /* , .kpi-card:hover*/
-  /* background-color: #c0f1c6 !important; */
+.kpi-card-alternate {
   background-color: #444a5815 !important;
   color: var(--color-zinc) !important;
 }
-/* .kpi-card-alternate:hover{
-  background-color: var(--color-gray) !important;
-  color: var(--color-primary) !important;
-} */
-
-.kpi-card span, .kpi-card-alternate span {
+.kpi-card span,
+.kpi-card-alternate span {
   font-size: 29px;
   font-weight: 800;
 }
-.kpi-card h2, .kpi-card-alternate h2 {
+.kpi-card h2,
+.kpi-card-alternate h2 {
   font-size: 22px;
   font-weight: 600;
 }
-
-.icon-box, .icon-box-alternate {
+.icon-box,
+.icon-box-alternate {
   height: 50px;
   width: 55px;
   border-radius: 4px;
   color: var(--color-white);
   background-color: var(--color-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .icon-box i {
   font-size: 31px;
   font-weight: 400;
 }
-
 .icon-box-alternate i {
   font-size: 31px;
   font-weight: 400;
 }
-
 .icon-box-alternate {
- /* background-color: #519259 !important; */
- background-color: var(--color-zinc) !important;
+  background-color: var(--color-zinc) !important;
 }
-
 /* associate course student */
 .modal-title {
   margin-top: 30px;
@@ -302,13 +221,12 @@ label {
   font-weight: 600;
   font-size: 1.3rem;
 }
-/tableau/
+/*tableau*/
 .modal-table {
   background-color: var(--color-body);
   border-collapse: separate !important;
   border-spacing: 0 10px !important; /* Espacement vertical entre les lignes */
 }
-
 .modal-table tbody tr td {
   background-color: var(--color-gray);
   padding: 10px;
@@ -320,22 +238,359 @@ label {
 .modal-table thead tr th {
   border: none;
 }
-/tableau/
+/*tableau*/
 .form-select {
   background-color: var(--color-gray) !important;
 }
-
 .search-bg {
   background-color: #b9b9b9 !important;
 }
-
 /* //Dashboard page */
-
 /* Responsive */
+/* Base layout for small screens (mobile-first) */
+.d-flex.mobile-column {
+  flex-direction: column;
+}
 
-@media (min-width: 1500px) {
-  .kpi-card {
-    width: 350px !important;
+/* Sidebar behavior for mobile */
+app-sidebar {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: var(--color-white);
+  border-top: 1px solid var(--color-gray);
+  /*display: none; Hidden by default on mobile, can be toggled by JS */
+}
+
+app-sidebar.show-sidebar {
+  /* display: block; */
+}
+
+main {
+  margin-left: 0 !important; /* Reset margin for mobile */
+}
+
+.top-nav .user-information {
+  display: none; /* Hide user name/role on small screens */
+}
+
+/* Kpi cards stack on small screens */
+.kpi-container {
+  flex-direction: row;
+  align-items: center;
+}
+
+.kpi-card,
+.kpi-card-alternate {
+  width: 100% !important; /* Full width on small screens */
+  max-width: 400px; /* Max width to prevent stretching too much */
+}
+
+/* Tables responsive behavior */
+.students-list table,
+.evaluations-list table,
+.matricules-list table {
+  display: block;
+  width: 100%;
+  overflow-x: auto; /* Enable horizontal scrolling for tables */
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.students-list thead,
+.evaluations-list thead,
+.matricules-list thead {
+  display: none; /* Hide table headers on small screens */
+}
+
+.students-list tbody,
+.evaluations-list tbody,
+.matricules-list tbody {
+  display: block;
+  width: 100%;
+}
+
+.students-list tr,
+.evaluations-list tr,
+.matricules-list tr {
+  display: block;
+  margin-bottom: 10px;
+  border: 1px solid var(--color-gray);
+  border-radius: 8px;
+  padding: 10px;
+  background-color: var(--color-white);
+}
+
+.students-list td,
+.evaluations-list td,
+.matricules-list td {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--color-gray);
+}
+
+.students-list td:last-child,
+.evaluations-list td:last-child,
+.matricules-list td:last-child {
+  border-bottom: none;
+}
+
+.students-list td::before,
+.evaluations-list td::before,
+.matricules-list td::before {
+  content: attr(data-label); /* Display header as data-label */
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+/* Specific adjustments for search and add buttons */
+.d-flex.justify-content-between.align-items-center.flex-wrap {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.d-flex.justify-content-between.align-items-center.flex-wrap > div,
+.d-flex.justify-content-between.align-items-center.flex-wrap > button {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Charts responsive */
+.container > .row > .col-md-6 {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Medium screens (tablets) */
+@media (min-width: 768px) {
+  app-sidebar {
+    position: static;
+    /*display: block;  Always visible on larger screens */
+    width: var(--sidbar-width);
+    height: 100vh;
+    border-right: 1px solid var(--color-gray);
+    border-top: none;
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
+  }
+
+  main {
+    margin-left: var(--sidbar-width);
+  }
+
+  .d-flex.mobile-column {
+    flex-direction: row; /* Revert to row for main content */
+  }
+
+  .top-nav .user-information {
+    display: block; /* Show user info on medium screens */
+  }
+
+  .kpi-card,
+  .kpi-card-alternate {
+    width: calc(50% - 10px); /* Two columns on medium screens */
+  }
+
+  /* Tables revert to normal */
+  .students-list table,
+  .evaluations-list table,
+  .matricules-list table {
+    display: table;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .students-list thead,
+  .evaluations-list thead,
+  .matricules-list thead {
+    display: table-header-group;
+  }
+
+  .students-list tbody,
+  .evaluations-list tbody,
+  .matricules-list tbody {
+    display: table-row-group;
+  }
+
+  .students-list tr,
+  .evaluations-list tr,
+  .matricules-list tr {
+    display: table-row;
+    border: none;
+    padding: 0;
+    background-color: transparent;
+  }
+
+  .students-list td,
+  .evaluations-list td,
+  .matricules-list td {
+    display: table-cell;
+    border-bottom: 1px solid var(--color-gray);
+    justify-content: flex-start;
+  }
+
+  .students-list td::before,
+  .evaluations-list td::before,
+  .matricules-list td::before {
+    content: none;
+  }
+
+  .d-flex.justify-content-between.align-items-center.flex-wrap {
+    flex-direction: row;
+  }
+
+  .d-flex.justify-content-between.align-items-center.flex-wrap
+    > div.col-6.col-md-9 {
+    width: 75%;
+    margin-bottom: 0;
+  }
+
+  .d-flex.justify-content-between.align-items-center.flex-wrap > button {
+    width: auto;
+    margin-bottom: 0;
+  }
+
+  .container > .row > .col-md-6 {
+    width: 50%;
+    margin-bottom: 0;
+  }
+
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* -------- TOP NAV -------- */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1050;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  padding: 0.5rem 1rem;
+}
+
+/* -------- CARDS -------- */
+.dashboard-card {
+  border-radius: 0.75rem;
+  background: #f8f9fa;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.dashboard-card:hover {
+  background: #e9ecef;
+}
+
+/* -------- CHARTS -------- */
+.chart-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.chart-container canvas,
+.chart-container svg {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* -------- SIDEBAR -------- */
+@media (min-width: 992px) {
+  #sidebarOffcanvas {
+    position: static !important;
+    transform: none !important;
+    visibility: visible !important;
+    width: var(--sidbar-width, 250px);
+    border-right: 1px solid var(--color-gray, #ddd);
+  }
+
+  main {
+    margin-left: var(--sidbar-width, 250px);
+  }
+}
+
+@media (max-width: 991px) {
+  #sidebarOffcanvas {
+    width: 80% !important; /* sidebar prend 80% sur mobile */
+  }
+
+  main {
+    margin-left: 0 !important;
+  }
+}
+/* Large screens (desktops) */
+@media (min-width: 992px) {
+  #sidebarOffcanvas {
+    /* Ces règles forcent l'Offcanvas à devenir un Sidebar fixe à gauche */
+    position: fixed !important; /* Utilisez fixed pour un sidebar qui reste */
+    left: 0 !important;
+    transform: none !important;
+    visibility: visible !important;
+    width: var(--sidbar-width, 250px);
+    height: 100vh;
+    border-right: 1px solid var(--color-gray, #ddd);
+    /* Assurez-vous que l'élément parent de l'Offcanvas est flex ou grid pour qu'il occupe la bonne place */
+  }
+
+  /* Important: Mettez à jour le margin de main */
+  main {
+    margin-left: var(--sidbar-width, 250px) !important;
+  }
+  .kpi-card,
+  .kpi-card-alternate {
+    width: calc(33.333% - 20px); /* Three columns on large screens */
+  }
+  .kpi-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  canvas {
+    display: flex !important;
+    width: 419.556px !important;
+    height: 209.778px !important;
+    overflow-clip-margin: content-box !important;
+    overflow: auto !important;
+  }
+}
+
+/* RETIREZ LES REGLES QUI FORCENT LA VISIBILITÉ OU MASQUENT LE MENU EN DESSOUS DE 992PX */
+
+/* -------- SIDEBAR (pour les écrans > 992px) -------- */
+@media (min-width: 992px) {
+  #sidebarOffcanvas {
+    /* Ces règles forcent l'Offcanvas à devenir un Sidebar fixe à gauche */
+    position: fixed !important; /* Utilisez fixed pour un sidebar qui reste */
+    left: 0 !important;
+    transform: none !important;
+    visibility: visible !important;
+    width: var(--sidbar-width, 250px);
+    height: 100vh;
+    border-right: 1px solid var(--color-gray, #ddd);
+    /* Assurez-vous que l'élément parent de l'Offcanvas est flex ou grid pour qu'il occupe la bonne place */
+  }
+
+  /* Important: Mettez à jour le margin de main */
+  main {
+    margin-left: var(--sidbar-width, 250px) !important;
+  }
+}
+
+@media (max-width: 991px) {
+  #sidebarOffcanvas {
+    width: 80% !important;
+  }
+
+  /* Mettre à jour le margin de main */
+  main {
+    margin-left: 0 !important;
   }
 }
 
@@ -343,8 +598,22 @@ label {
   .kpi-card {
     width: 330px;
   }
+  .kpi-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+@media (min-width: 1500px) {
+  .kpi-card {
+    width: 350px !important;
+  }
+  .kpi-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 
+/* Login page responsive */
 @media screen and (max-width: 760px) {
   .container {
     gap: 30px;
@@ -358,23 +627,21 @@ label {
     width: 50%;
   }
 }
-
 @media screen and (max-width: 400px) {
-  form {
+  .formulaire {
     width: 85%;
   }
   .right {
     height: 100%;
   }
-
   .left {
     padding-bottom: 30px;
   }
-
   .submit-btn {
     width: 100%;
   }
 }
+
 /* create new student */
 .input-area {
   background-color: var(--color-gray) !important;
@@ -386,7 +653,6 @@ label {
   background-color: var(--color-gray) !important;
 }
 /* create new student */
-
 .bg-orange {
   background-color: #ffc300 !important;
   border-radius: 5px !important;
@@ -397,15 +663,13 @@ label {
   border-radius: 5px !important;
   padding: 2px !important;
   /* color: white ; */
-
 }
 .bg-red {
   background-color: #c13131 !important;
   border-radius: 5px !important;
   padding: 2px !important;
-  color: #f3f4f6 ;
+  color: #f3f4f6;
 }
-
 .btn-logout {
   background-color: var(--color-gray) !important;
   color: var(--color-primary) !important;
@@ -414,18 +678,27 @@ label {
   height: 44px !important;
   border: 1px solid var(--color-primary) !important;
 }
-.btn-logout:hover{
+.btn-logout:hover {
   background-color: var(--color-primary) !important;
   color: var(--color-white) !important;
   border-radius: 4px !important;
   border: none !important;
   transition: 0.5s ease-out;
-
 }
 .nav-link:hover {
   background-color: var(--color-primary) !important;
   color: var(--color-white) !important;
   border-radius: 4px !important;
-  opacity: .7;
+  opacity: 0.7;
+}
 
+/* General Layout */
+.d-flex {
+  display: flex;
+}
+.flex-grow-1 {
+  flex-grow: 1;
+}
+app-sidebar + main {
+  margin-left: var(--sidbar-width); /* Adjust main content position */
 }

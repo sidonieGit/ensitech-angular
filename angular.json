@@ -96,10 +96,15 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
-              //  l'ajouter ici sivous en avez besoin pour les tests
+              "src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+               "node_modules/bootstrap-icons/font/bootstrap-icons.css"
+              
+              
             ],
-            "scripts": []
+            "scripts": [
+               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           }
         }
       }

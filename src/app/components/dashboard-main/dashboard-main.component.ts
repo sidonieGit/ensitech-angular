@@ -23,15 +23,22 @@ export class DashboardMainComponent implements OnInit {
   // Données pour le graphique, initialisées avec des zéros.
   // Elles seront mises à jour lorsque les données de l'API arriveront.
   public barChartData = {
-    labels: ['Enseignants', 'Etudiants', 'Cours'],
+    labels: [
+      'Enseignants',
+      'Etudiants',
+      'Inscriptions',
+      'Spécialités',
+      'Cours',
+      'Evaluations',
+    ],
     datasets: [
       {
-        label: 'Effectif',
-        data: [0, 0, 0], // On commence à 0
-        backgroundColor: ['#006699', '#f1bb35', '#38a3a5'],
-        borderColor: ['#f3f4f6', '#f3f4f6', '#f3f4f6'],
+        label: 'Statistiques',
+        data: [0, 0, 0, 0, 0, 0], // On commence à 0
+        backgroundColor: ['#006699', '#f1bb35', '#f20444', '#0003ff', '#38a3a5', '#6a4c93'],
+        borderColor: ['#f3f4f6', '#f3f4f6', '#f3f4f6', '#f3f4f6', '#f3f4f6', '#f3f4f6'],
         borderWidth: 1,
-        hoverBackgroundColor: ['#444a58', '#444a58', '#444a58'],
+        hoverBackgroundColor: ['#444a58', '#444a58', '#444a58', '#444a58', '#444a58', '#444a58'],
       },
     ],
   };
@@ -51,8 +58,8 @@ export class DashboardMainComponent implements OnInit {
     private studentService: StudentsService,
     private teachersService: TeachersService, // Correction du nom de la variable
     private coursesService: CoursesService,
-    private specialityService : SpecialityService,
-    private registrationService : RegistrationService,
+    private specialityService: SpecialityService,
+    private registrationService: RegistrationService,
     private EvaluationsService: EvaluationsService
   ) {}
 
@@ -75,7 +82,7 @@ export class DashboardMainComponent implements OnInit {
         newData[0] = this.totalTeachers;
         this.barChartData.datasets[0].data = newData;
 
-        console.log(`Nombre total d'enseignants : ${this.totalTeachers}`);
+
       },
       error: (error) => {
         // Ce code s'exécute en cas d'erreur
@@ -87,7 +94,6 @@ export class DashboardMainComponent implements OnInit {
       },
     });
 
-
     // --- Chargement des données des étudiants (gardé commenté comme demandé) ---
     this.studentService.getStudents().subscribe({
       next: (students) => {
@@ -98,14 +104,16 @@ export class DashboardMainComponent implements OnInit {
         newData[1] = this.totalStudents;
         this.barChartData.datasets[0].data = newData;
 
-        console.log(`Nombre total d'étudiants : ${this.totalStudents}`);
+
       },
       error: (error) => {
-        console.error("Erreur lors de la récupération du nombre d'étudiants", error);
+        console.error(
+          "Erreur lors de la récupération du nombre d'étudiants",
+          error
+        );
         this.totalStudents = 0;
-      }
+      },
     });
-
 
     // --- Chargement des données des cours (gardé commenté comme demandé) ---
     this.coursesService.getCourses().subscribe({
@@ -114,48 +122,81 @@ export class DashboardMainComponent implements OnInit {
 
         // Mettre à jour les données du graphique
         const newData = [...this.barChartData.datasets[0].data];
-        newData[2] = this.totalCourses;
+        newData[4] = this.totalCourses;
         this.barChartData.datasets[0].data = newData;
 
-        console.log(`Nombre total de cours : ${this.totalCourses}`);
       },
       error: (error) => {
-        console.error("Erreur lors de la récupération du nombre de cours", error);
+        console.error(
+          'Erreur lors de la récupération du nombre de cours',
+          error
+        );
         this.totalCourses = 0;
-      }
+      },
     });
 
     // --- Chargement des données des spécialités ---
     this.specialityService.getSpecialities().subscribe({
       next: (specialities) => {
+        const newData = [...this.barChartData.datasets[0].data];
+        newData[3] = specialities.length;
+        this.barChartData.datasets[0].data = newData;
         this.totalSpecialities = specialities.length;
-        console.log(`Nombre total de spécialités : ${this.totalSpecialities}`);
+
       },
       error: (error) => {
-        console.error("Erreur lors de la récupération du nombre de spécialités", error);
+        console.error(
+          'Erreur lors de la récupération du nombre de spécialités',
+          error
+        );
         this.totalSpecialities = 0;
-      }
+      },
     });
 
     // --- Chargement des données des inscriptions ---
     this.registrationService.getRegistrations().subscribe({
       next: (registrations) => {
+        const newData = [...this.barChartData.datasets[0].data];
+        newData[2] = registrations.length;
+        this.barChartData.datasets[0].data = newData;
         this.totalRegistrations = registrations.length;
       },
       error: (error) => {
-        console.error("Erreur lors de la récupération du nombre d'inscriptions", error);
+        console.error(
+          "Erreur lors de la récupération du nombre d'inscriptions",
+          error
+        );
         this.totalRegistrations = 0;
-      }
+      },
     });
 
     // --- Chargement des données des évaluations ---
     this.EvaluationsService.getEvaluations().subscribe({
       next: (evaluations) => {
+        const newData = [...this.barChartData.datasets[0].data];
+        newData[5] = evaluations.length;
+        this.barChartData.datasets[0].data = newData;
         this.totalEvaluations = evaluations.length;
+
+        // On crée un NOUVEL objet data pour forcer le rafraîchissement
+        // mise du graphe dans le dernier chargement pour être sûr que tout est prêt
+        // avant d'actualiser le graphique.
+        this.barChartData = {
+          ...this.barChartData, // Copie des labels
+          datasets: [
+            {
+              ...this.barChartData.datasets[0], // Copie des autres propriétés du dataset
+              data: newData, // Utilise les nouvelles données
+            },
+          ],
+        };
       },
       error: (error) => {
-        console.error("Erreur lors de la récupération du nombre d'évaluations", error);
-      }
+        console.error(
+          "Erreur lors de la récupération du nombre d'évaluations",
+          error
+        );
+      },
     });
   }
 }

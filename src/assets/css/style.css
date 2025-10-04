@@ -163,7 +163,7 @@ body {
   display: flex;
   flex-wrap: wrap; /* Added for responsivity */
   gap: 20px; /* Space between cards */
-  justify-content: space-between; /* Distribute cards */
+  /*justify-content: space-between;  Distribute cards */
 }
 .kpi-card,
 .kpi-card-alternate {
@@ -171,8 +171,9 @@ body {
   background-color: var(--color-gray);
   padding: 20px 28px;
   border-radius: 10px;
-  width: calc(33.333% - 20px); /* For 3 columns on large screens */
-  min-width: 291px; /* Minimum width to avoid squishing */
+
+  flex: 1 1 100%; /* Par défaut, occupe toute la largeur et peut grandir/rétrécir */
+  min-width: 280px; /* Conservez un min-width raisonnable */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -375,23 +376,28 @@ main {
     border-right: 1px solid var(--color-gray);
     border-top: none;
     flex-shrink: 0; /* Prevent sidebar from shrinking */
-  }
+ }
+    .kpi-card,
+  .kpi-card-alternate {
+    /* Les cartes prennent ~50% de la largeur (2 par ligne) */
+    width: calc(50% - 10px); /* 50% - la moitié du gap (20px) de chaque côté */
+    flex: 0 0 calc(50% - 10px); /* Désactive la croissance, utilise la largeur fixe */
+  }
+ 
 
   main {
     margin-left: var(--sidbar-width);
   }
-
+ .container > .row > .col-md-6 {
+    width: 50%;
+    margin-bottom: 0;
+  }
   .d-flex.mobile-column {
     flex-direction: row; /* Revert to row for main content */
   }
 
   .top-nav .user-information {
     display: block; /* Show user info on medium screens */
-  }
-
-  .kpi-card,
-  .kpi-card-alternate {
-    width: calc(50% - 10px); /* Two columns on medium screens */
   }
 
   /* Tables revert to normal */
@@ -502,22 +508,27 @@ main {
   height: auto !important;
 }
 
-/* -------- SIDEBAR -------- */
-@media (min-width: 992px) {
-  #sidebarOffcanvas {
-    position: static !important;
-    transform: none !important;
-    visibility: visible !important;
-    width: var(--sidbar-width, 250px);
-    border-right: 1px solid var(--color-gray, #ddd);
-  }
-
-  main {
-    margin-left: var(--sidbar-width, 250px);
-  }
+/* Charts responsive */
+.chart-wrapper {
+  width: 100%;
+  /* Permet au contenu de déborder horizontalement si le graphique est trop large */
+  overflow-x: auto; 
+  margin-bottom: 20px;
 }
 
-@media (max-width: 991px) {
+.chart-wrapper canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Base layout for charts */
+.container > .row > .col-md-6 {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+
+@media (max-width: 768px) {
   #sidebarOffcanvas {
     width: 80% !important; /* sidebar prend 80% sur mobile */
   }
@@ -525,9 +536,10 @@ main {
   main {
     margin-left: 0 !important;
   }
+  
 }
 /* Large screens (desktops) */
-@media (min-width: 992px) {
+@media (min-width: 769px) {
   #sidebarOffcanvas {
     /* Ces règles forcent l'Offcanvas à devenir un Sidebar fixe à gauche */
     position: fixed !important; /* Utilisez fixed pour un sidebar qui reste */
@@ -542,59 +554,31 @@ main {
 
   /* Important: Mettez à jour le margin de main */
   main {
-    margin-left: var(--sidbar-width, 250px) !important;
+    margin-left: 0!important;
   }
-  .kpi-card,
-  .kpi-card-alternate {
-    width: calc(33.333% - 20px); /* Three columns on large screens */
-  }
+ 
   .kpi-container {
     flex-direction: row;
     justify-content: space-between;
   }
-  canvas {
-    display: flex !important;
-    width: 419.556px !important;
-    height: 209.778px !important;
-    overflow-clip-margin: content-box !important;
-    overflow: auto !important;
-  }
+ 
+   .kpi-card,
+  .kpi-card-alternate {
+    /* Les cartes prennent ~33.33% de la largeur (3 par ligne) */
+    width: calc(33.333% - 14px); /* 33.333% - un tiers du gap (20px) pour 3 items */
+    flex: 0 0 calc(33.333% - 14px);
+  }
+
+ /* Correction des charts (retrait des valeurs fixes non standard) */
+  canvas {
+    width: 100% !important; /* Force la largeur à 100% */
+    height: auto !important; /* Laisse la hauteur s'ajuster */
+    overflow: visible !important; /* Assurez-vous que le canvas n'est pas coupé */
+  }
 }
 
-/* RETIREZ LES REGLES QUI FORCENT LA VISIBILITÉ OU MASQUENT LE MENU EN DESSOUS DE 992PX */
 
-/* -------- SIDEBAR (pour les écrans > 992px) -------- */
-@media (min-width: 992px) {
-  #sidebarOffcanvas {
-    /* Ces règles forcent l'Offcanvas à devenir un Sidebar fixe à gauche */
-    position: fixed !important; /* Utilisez fixed pour un sidebar qui reste */
-    left: 0 !important;
-    transform: none !important;
-    visibility: visible !important;
-    width: var(--sidbar-width, 250px);
-    height: 100vh;
-    border-right: 1px solid var(--color-gray, #ddd);
-    /* Assurez-vous que l'élément parent de l'Offcanvas est flex ou grid pour qu'il occupe la bonne place */
-  }
-
-  /* Important: Mettez à jour le margin de main */
-  main {
-    margin-left: var(--sidbar-width, 250px) !important;
-  }
-}
-
-@media (max-width: 991px) {
-  #sidebarOffcanvas {
-    width: 80% !important;
-  }
-
-  /* Mettre à jour le margin de main */
-  main {
-    margin-left: 0 !important;
-  }
-}
-
-@media (min-width: 1400px) {
+/* @media (min-width: 1400px) {
   .kpi-card {
     width: 330px;
   }
@@ -611,7 +595,7 @@ main {
     flex-direction: row;
     justify-content: space-between;
   }
-}
+} */
 
 /* Login page responsive */
 @media screen and (max-width: 760px) {
@@ -690,15 +674,4 @@ main {
   color: var(--color-white) !important;
   border-radius: 4px !important;
   opacity: 0.7;
-}
-
-/* General Layout */
-.d-flex {
-  display: flex;
-}
-.flex-grow-1 {
-  flex-grow: 1;
-}
-app-sidebar + main {
-  margin-left: var(--sidbar-width); /* Adjust main content position */
 }

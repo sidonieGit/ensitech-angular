@@ -1,5 +1,8 @@
+import { EvaluationsService } from './../../services/evaluations/evaluations.service';
+import { SpecialityService } from './../../services/speciality/speciality.service';
 import { Component, OnInit } from '@angular/core';
 import { CoursesService } from 'src/app/services/courses/courses.service';
+import { RegistrationService } from 'src/app/services/registration/registration.service';
 import { StudentsService } from 'src/app/services/students/students.service';
 import { TeachersService } from 'src/app/services/teachers/teachers.service';
 
@@ -13,6 +16,9 @@ export class DashboardMainComponent implements OnInit {
   totalStudents: number = 0;
   totalCourses: number = 0;
   totalTeachers: number = 0;
+  totalSpecialities: number = 0;
+  totalRegistrations: number = 0;
+  totalEvaluations: number = 0;
 
   // Données pour le graphique, initialisées avec des zéros.
   // Elles seront mises à jour lorsque les données de l'API arriveront.
@@ -44,7 +50,10 @@ export class DashboardMainComponent implements OnInit {
   constructor(
     private studentService: StudentsService,
     private teachersService: TeachersService, // Correction du nom de la variable
-    private coursesService: CoursesService
+    private coursesService: CoursesService,
+    private specialityService : SpecialityService,
+    private registrationService : RegistrationService,
+    private EvaluationsService: EvaluationsService
   ) {}
 
   ngOnInit(): void {
@@ -78,7 +87,7 @@ export class DashboardMainComponent implements OnInit {
       },
     });
 
-    /*
+
     // --- Chargement des données des étudiants (gardé commenté comme demandé) ---
     this.studentService.getStudents().subscribe({
       next: (students) => {
@@ -96,9 +105,8 @@ export class DashboardMainComponent implements OnInit {
         this.totalStudents = 0;
       }
     });
-    */
 
-    /*
+
     // --- Chargement des données des cours (gardé commenté comme demandé) ---
     this.coursesService.getCourses().subscribe({
       next: (courses) => {
@@ -116,6 +124,38 @@ export class DashboardMainComponent implements OnInit {
         this.totalCourses = 0;
       }
     });
-    */
+
+    // --- Chargement des données des spécialités ---
+    this.specialityService.getSpecialities().subscribe({
+      next: (specialities) => {
+        this.totalSpecialities = specialities.length;
+        console.log(`Nombre total de spécialités : ${this.totalSpecialities}`);
+      },
+      error: (error) => {
+        console.error("Erreur lors de la récupération du nombre de spécialités", error);
+        this.totalSpecialities = 0;
+      }
+    });
+
+    // --- Chargement des données des inscriptions ---
+    this.registrationService.getRegistrations().subscribe({
+      next: (registrations) => {
+        this.totalRegistrations = registrations.length;
+      },
+      error: (error) => {
+        console.error("Erreur lors de la récupération du nombre d'inscriptions", error);
+        this.totalRegistrations = 0;
+      }
+    });
+
+    // --- Chargement des données des évaluations ---
+    this.EvaluationsService.getEvaluations().subscribe({
+      next: (evaluations) => {
+        this.totalEvaluations = evaluations.length;
+      },
+      error: (error) => {
+        console.error("Erreur lors de la récupération du nombre d'évaluations", error);
+      }
+    });
   }
 }

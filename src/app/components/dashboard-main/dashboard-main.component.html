@@ -39,9 +39,7 @@
 				<i class="hgi-stroke hgi-course"></i>
 			</span>
 		</div>
-	</div>
 
-	<div class="kpi-container d-flex justify-content-between col-11 mx-auto py-0">
 		<div class="d-flex justify-content-between align-items-center kpi-card-alternate">
 			<div>
 				<span>{{totalSpecialities}}</span>
@@ -60,7 +58,7 @@
 				<i class="hgi-stroke hgi-note-01"></i>
 			</span>
 		</div>
-		<div class="d-flex justify-content-between align-items-center kpi-card">
+		<div class="d-flex justify-content-between align-items-center kpi-card-alternate">
 			<div>
 				<span>{{totalEvaluations}}</span>
 				<h2>Evaluations</h2>
@@ -81,7 +79,7 @@
 		</div>
 
 		<div class="mt-5 col-md-12 col-sm-12 d-flex justify-content-center align-items-center">
-			<div class="row px-5 w-75">
+			<div class="row px-5">
 				<div class="">
 					<canvas id="myChart" baseChart [data]="barChartData" [type]="'pie'">
 					</canvas>

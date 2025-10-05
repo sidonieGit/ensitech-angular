@@ -79,7 +79,10 @@ body {
   padding-left: 16px !important;
   background-color: transparent;
   color: var(--color-primary) !important;
-  width: 210px;
+  /* width: 250px; */
+}
+ul.navbar-navflex-column.w-100 {
+  padding-left: 0%!important;
 }
 .nav-link.actived {
   background-color: var(--color-primary);
@@ -468,6 +471,14 @@ main {
     width: 100%;
     height: 100%;
   }
+    .btn-close {
+    display: none;
+}
+
+.bi-list::before {
+  display: none !important;
+}
+
 }
 
 /* -------- TOP NAV -------- */
@@ -564,9 +575,9 @@ main {
  
    .kpi-card,
   .kpi-card-alternate {
-    /* Les cartes prennent ~33.33% de la largeur (3 par ligne) */
-    width: calc(33.333% - 14px); /* 33.333% - un tiers du gap (20px) pour 3 items */
-    flex: 0 0 calc(33.333% - 14px);
+    /* Les cartes prennent ~50% de la largeur (2 par ligne) */
+    width: calc(50% - 10px); /* 50% - la moitié du gap (20px) de chaque côté */
+    flex: 0 0 calc(50% - 10px); /* Désactive la croissance, utilise la largeur fixe */      
   }
 
  /* Correction des charts (retrait des valeurs fixes non standard) */

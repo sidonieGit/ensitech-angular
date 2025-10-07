@@ -86,6 +86,13 @@ export class GestionStudentsComponent implements OnInit {
                   "Erreur lors de la récupération de l'inscription",
                   error
                 );*/
+                if (error.status === 500) {
+                  // console.warn(
+                  //   `Pas d'inscription étudiant non encore inscrit ${student.matricule}.`
+                  // );
+                  console.error('erreur 5000 pas d inscription de cet étudiant');
+                  
+                }
                 // On vérifie si c'est une erreur 404 (cas normal de non-inscription)
                 if (error.status === 404) {
                   // C'est un cas normal, on ne montre pas de toast d'erreur.
@@ -96,10 +103,10 @@ export class GestionStudentsComponent implements OnInit {
                 } else {
                   // Si c'est une autre erreur (500, 0, etc.), c'est un vrai problème.
                   // ON AFFICHE LE TOAST D'ERREUR DANS CE CAS.
-                  this.toastr.error(
-                    `Erreur lors de la récupération de l'inscription pour ${student.firstName}.`,
-                    ''
-                  );
+                  // this.toastr.error(
+                  //   `Erreur lors de la récupération de l'inscription pour ${student.firstName}.`,
+                  //   ''
+                  // );
                   console.error(
                     "Erreur lors de la récupération de l'inscription",
                     error

@@ -116,7 +116,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             }
 
             // Affiche un toast générique UNIQUEMENT si ce n'est pas une erreur de login 400
-            this.toastr.error(errorMessage, 'Erreur HTTP');
+            // this.toastr.error(errorMessage, 'Erreur HTTP');
+            console.log('erreur 500');
           }
         }
         return throwError(() => error); // Important de rejeter l'erreur pour que le composant la reçoive

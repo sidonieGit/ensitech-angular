@@ -13,7 +13,7 @@ import { Course } from 'src/app/interfaces/course.model'; // Utiliser notre inte
 export class CoursesService {
   private apiUrl = api_URL + 'training/courses';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * Récupère la liste de tous les cours depuis le backend.
@@ -95,16 +95,20 @@ export class CoursesService {
    * @returns Un Observable qui émet l'erreur.
    */
   private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Une erreur inconnue est survenue !';
-    if (error.error instanceof ErrorEvent) {
+    //  let errorMessage = 'Une erreur inconnue est survenue !';
+    /*if (error.error instanceof ErrorEvent) {
       // Erreur côté client ou réseau
       errorMessage = `Erreur : ${error.error.message}`;
     } else {
       // Le backend a retourné un code d'erreur
       errorMessage = `Code d'erreur ${error.status}: ${error.message}`;
+    }*/
+    /*if (error?.error?.message) {
+      errorMessage = error?.error?.message;
     }
-    console.error(errorMessage);
-    return throwError(() => new Error(errorMessage));
+    console.error(errorMessage);*/
+    //return throwError(() => new Error(errorMessage));
+    return throwError(() => error);
   }
 
   /**

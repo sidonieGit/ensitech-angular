@@ -1,8 +1,11 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 // import { CoursModel } from 'src/app/components/gestion-cours/cours.model';
 import { Course } from 'src/app/interfaces/course.model'; // Utiliser notre interface standard
+import { Teacher } from 'src/app/interfaces/teachers.model';
 import { CoursesService } from 'src/app/services/courses/courses.service';
+import { TeachersService } from 'src/app/services/teachers/teachers.service';
 
 @Component({
   selector: 'app-gestion-courses',
@@ -10,6 +13,7 @@ import { CoursesService } from 'src/app/services/courses/courses.service';
   styleUrls: ['./gestion-cours.component.css'],
 })
 export class GestionCoursComponent implements OnInit {
+  allTeachers: Teacher[] = [];
   courses: Course[] = [];
   filtername: string = '';
   selectedCourse: Course | null = null;
@@ -19,14 +23,16 @@ export class GestionCoursComponent implements OnInit {
     title: '',
     coefficient: 0,
     hours: 0,
+    // teacher: null,
   };
   loading: boolean = false;
   errorMsg: string = '';
 
   constructor(
     private coursesService: CoursesService,
+    private teachersService: TeachersService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCourses();
@@ -35,14 +41,39 @@ export class GestionCoursComponent implements OnInit {
   loadCourses(): void {
     //  this.courses = this.coursesService.getCourses();
     //this.updateFilteredCourses();
+    this.loading = true;
     this.coursesService.getCourses().subscribe((data) => {
       this.courses = data;
+      this.loading = false;
       this.updateFilteredCourses();
     });
   }
 
+  loadTeacher() {
+    this.loading = true;
+    this.teachersService
+      .getTeachers().subscribe({
+        next: (data) => {
+          this.loading = false;
+          this.allTeachers = data;
+        },
+        error: (error) => {
+          console.error('Erreur chargement des étudiants', error)
+          this.loading = false;
+          const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+          this.toastr.error(errorMsg, 'Erreur !');
+        },
+      });
+  }
   addCourse(): void {
-    if (this.newCourse.title) {
+    if (
+      this.newCourse.title &&
+      this.newCourse.title.trim() !== '' &&
+      this.newCourse.coefficient &&
+      this.newCourse.coefficient > 0 &&
+      this.newCourse.hours &&
+      this.newCourse.hours > 0
+    ) {
       // Vérifiez que le titre est présent
       /*this.coursesService.addCourse(this.newCourse);
       this.loadCourses();
@@ -57,12 +88,17 @@ export class GestionCoursComponent implements OnInit {
           this.loadCourses();
           this.resetForm();
         },
-        error: (err) => {
-          console.error('Error saving course:', err);
+        error: (err: HttpErrorResponse) => {
+          //console.error('Error saving course:', err);
+          //  console.log('Error saving course:', err?.error?.message);
           this.loading = false;
-          this.toastr.error("Erreur lors de l'ajout du cours.", 'Erreur !');
+          const errorMsg = err?.error?.message ?? 'Erreur lors de la création du cours.';
+          this.toastr.error(errorMsg, 'Erreur !');
+          // this.toastr.error("Erreur lors de l'ajout du cours.", 'Erreur !');
         },
       });
+    } else {
+      this.toastr.error('Veuillez remplir tous les champs correctement.', 'Erreur !');
     }
   }
 
@@ -95,6 +131,7 @@ export class GestionCoursComponent implements OnInit {
 
     // 3. Agir en fonction de la réponse de l'utilisateur
     if (confirmation) {
+      this.loading = true
       // Si l'utilisateur a cliqué sur "OK"
       this.coursesService.deleteCourse(id).subscribe({
         next: (isDeleted: boolean) => {
@@ -103,6 +140,7 @@ export class GestionCoursComponent implements OnInit {
               'Le cours a été supprimé avec succès.',
               'Succès !'
             );
+            this.loading = false;
             this.loadCourses(); // Recharger la liste pour refléter la suppression
           } else {
             this.toastr.error('La suppression du cours a échoué.', 'Erreur');
@@ -110,11 +148,14 @@ export class GestionCoursComponent implements OnInit {
           }
         },
         error: (err) => {
-          this.toastr.error('Une erreur inattendue est survenue.', 'Erreur !');
+          /*this.toastr.error('Une erreur inattendue est survenue.', 'Erreur !');
           console.error(
             'Erreur réseau ou inattendue lors de la suppression du cours :',
             err
-          );
+          );*/
+          this.loading = false;
+          const errorMsg = err?.error?.message ?? 'Une erreur inattendue est survenue';
+          this.toastr.error(errorMsg, 'Erreur !');
         },
       });
     } else {
@@ -132,16 +173,33 @@ export class GestionCoursComponent implements OnInit {
   }
 
   saveEditCourse(): void {
-    if (this.editingCourse) {
+    if (this.editingCourse &&
+      this.editingCourse.title &&
+      this.editingCourse.title.trim() !== '' &&
+      this.editingCourse.coefficient &&
+      this.editingCourse.coefficient > 0 &&
+      this.editingCourse.hours &&
+      this.editingCourse.hours > 0
+
+    ) {
+      this.loading = true;
       this.coursesService.updateCourse(this.editingCourse).subscribe({
         next: (resp) => {
+          this.loading = false;
           console.log('Cours edit:', resp);
           this.toastr.success('Cours mis à jour', 'Succès !');
           this.loadCourses();
           this.editingCourse = null;
         },
-        error: (err) => console.error('Error editing cours:', err),
+        // error: (err) => console.error('Error editing cours:', err),
+        error: (err) => {
+          this.loading = false;
+          const errorMsg = err?.error?.message ?? 'Une erreur inattendue est survenue';
+          this.toastr.error(errorMsg, 'Erreur !');
+        },
       });
+    } else {
+      this.toastr.error('Veuillez remplir tous les champs correctement.', 'Erreur !');
     }
   }
 }

@@ -81,7 +81,7 @@ import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
-  constructor(private toastr: ToastrService) {}
+  constructor(private toastr: ToastrService) { }
 
   intercept(
     request: HttpRequest<unknown>,
@@ -106,9 +106,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             // return throwError(() => error); // Renvoyer l'erreur pour que le composant la gère
           } else {
             // Pour toutes les autres erreurs non spécifiques
-            errorMessage = `Erreur ${error.status}: ${
-              error.message || error.statusText
-            }`;
+            errorMessage = `Erreur ${error.status}: ${error.message || error.statusText
+              }`;
             if (error.error && error.error.error) {
               errorMessage = error.error.error; // Si le backend renvoie un champ 'error'
             } else if (error.error && error.error.message) {

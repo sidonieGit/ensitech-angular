@@ -4,5 +4,6 @@ export interface Course {
   coefficient?: number;
   hours?: number;
   teacherId?: number; // Peut être null si non assigné
+  teacher?: any;
   // Ajoutez d'autres champs si votre DTO backend en a plus
 }

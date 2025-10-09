@@ -46,7 +46,7 @@ export class GestionEvaluationsComponent implements OnInit {
     private coursesService: CoursesService,
     private studentsService: StudentsService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadEvaluations();
@@ -54,46 +54,67 @@ export class GestionEvaluationsComponent implements OnInit {
     this.loadStudents(); // Charger les étudiants
   }
   loadCourses() {
+    this.loading = true;
     this.coursesService.getCourses().subscribe({
       next: (data) => {
+        this.loading = false;
         this.allCourses = data;
       },
-      error: (error) => console.error('Erreur chargement des cours', error),
+      error: (error) => {
+        this.loading = false;
+        const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+        this.toastr.error(errorMsg, 'Erreur !');
+      },
     });
   }
   loadStudents() {
+    this.loading = true;
     this.studentsService.getStudents().subscribe({
       next: (data) => {
+        this.loading = false;
         this.allStudents = data;
       },
-      error: (error) => console.error('Erreur chargement des étudiants', error),
+      error: (error) => {
+        console.error('Erreur chargement des étudiants', error)
+        this.loading = false;
+        const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+        this.toastr.error(errorMsg, 'Erreur !');
+      },
     });
   }
 
   loadEvaluations(): void {
+    this.loading = true;
     this.evaluationsService.getEvaluations().subscribe({
       next: (data) => {
+        console.log('Évaluations chargées:', data);
+        this.loading = false;
         this.evaluations = data;
         this.updateFilteredEvaluations();
       },
-      error: (error) => console.error('Erreur chargement évaluations', error),
+      error: (error) => {
+        console.error('Erreur chargement évaluations', error)
+        this.loading = false;
+        const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+        this.toastr.error(errorMsg, 'Erreur !');
+      },
     });
   }
 
   addEvaluation(): void {
     // Ici, si tu as une API backend, il faut appeler le service pour ajouter et recharger la liste
+    this.loading = true;
     this.evaluationsService.createEvaluation(this.newEvaluation).subscribe({
       next: () => {
+        this.loading = false;
         this.toastr.success('Évaluation créée', 'Succès !');
         this.loadEvaluations();
         this.resetNewEvaluation();
       },
       error: (error) => {
-        console.error('Erreur ajout évaluation', error);
-        this.toastr.error(
-          "Erreur lors de l'ajout de l'évaluation.",
-          'Erreur !'
-        );
+        this.loading = false;
+        const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+        this.toastr.error(errorMsg, 'Erreur !');
       },
     });
   }
@@ -118,18 +139,18 @@ export class GestionEvaluationsComponent implements OnInit {
 
   saveEditEvaluation(): void {
     if (!this.editingEvaluation) return;
+    this.loading = true;
     this.evaluationsService.updateEvaluation(this.editingEvaluation).subscribe({
       next: () => {
+        this.loading = false;
         this.toastr.success('Évaluation mise à jour', 'Succès !');
         this.loadEvaluations();
         this.editingEvaluation = null;
       },
       error: (error) => {
-        console.error('Erreur mise à jour évaluation', error);
-        this.toastr.error(
-          "Erreur lors de la mise à jour de l'évaluation.",
-          'Erreur !'
-        );
+        this.loading = false;
+        const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+        this.toastr.error(errorMsg, 'Erreur !');
       },
     });
   }
@@ -140,11 +161,14 @@ export class GestionEvaluationsComponent implements OnInit {
 
   deleteEvaluation(id: number | undefined): void {
     if (id) {
+      this.loading = true;
       this.evaluationsService.deleteEvaluation(id).subscribe((isDeleted) => {
         if (isDeleted) {
+          this.loading = false;
           this.toastr.success('Évaluation supprimée', 'Succès !');
           this.loadEvaluations();
         } else {
+          this.loading = false;
           console.error(`Failed to delete evaluation with id ${id}`);
           this.toastr.error(
             "Erreur lors de la suppression de l'évaluation.",

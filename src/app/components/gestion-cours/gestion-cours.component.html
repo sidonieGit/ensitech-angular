@@ -194,6 +194,26 @@
                 placeholder="Nombre d'heures"
               />
             </div>
+
+            <div class="mb-3">
+              <label class="form-label">Enseignant</label>
+              <select
+                class="form-select"
+                [(ngModel)]="newCourse.teacherId"
+                name="teacherId"
+                required
+              >
+                <option [ngValue]="0" disabled>
+                  Sélectionner un enseignant
+                </option>
+                <option
+                  *ngFor="let teacher of allTeachers"
+                  [value]="teacher.id"
+                >
+                  {{ teacher.firstName }} {{ teacher.lastName }}
+                </option>
+              </select>
+            </div>
             <div *ngIf="errorMsg" style="color: red">{{ errorMsg }}</div>
             <div class="modal-footer">
               <button
@@ -244,6 +264,17 @@
           <p>
             <strong>Nombre d'heures :</strong>
             {{ selectedCourse?.hours }}
+          </p>
+
+          <p>
+            <strong>Enseignant :</strong>
+            <span *ngIf="selectedCourse?.teacher; else teacherIdOnly">
+              {{ selectedCourse?.teacher?.firstName }}
+              {{ selectedCourse?.teacher?.lastName }}
+            </span>
+            <ng-template #teacherIdOnly>
+              (ID: {{ selectedCourse?.teacherId || "N/A" }})
+            </ng-template>
           </p>
         </div>
         <div class="modal-footer">
@@ -312,6 +343,26 @@
                 placeholder="Nombre d'heures"
                 class="form-control"
               />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Enseignant</label>
+              <select
+                class="form-select"
+                [(ngModel)]="editingCourse.teacherId"
+                name="teacherId"
+                required
+              >
+                <option [ngValue]="0" disabled>
+                  Sélectionner un enseignant
+                </option>
+                <option
+                  *ngFor="let teacher of allTeachers"
+                  [ngValue]="teacher?.id"
+                >
+                  {{ teacher?.firstName }} {{ teacher?.lastName }}
+                </option>
+              </select>
             </div>
             <button
               type="submit"

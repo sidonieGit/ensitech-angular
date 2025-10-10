@@ -23,7 +23,8 @@ export class GestionCoursComponent implements OnInit {
     title: '',
     coefficient: 0,
     hours: 0,
-    // teacher: null,
+    teacher: null,
+    teacherId: 0,
   };
   loading: boolean = false;
   errorMsg: string = '';
@@ -36,6 +37,7 @@ export class GestionCoursComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCourses();
+    this.loadTeacher();
   }
 
   loadCourses(): void {
@@ -80,6 +82,9 @@ export class GestionCoursComponent implements OnInit {
       this.resetForm();*/
       this.loading = true;
       this.errorMsg = '';
+      if (this.newCourse.teacher) {
+        this.newCourse.teacherId = this.newCourse.teacher?.id;
+      }
       this.coursesService.createCourse(this.newCourse).subscribe({
         next: (resp) => {
           this.toastr.success('Cours créé', 'Succès !');
@@ -140,7 +145,7 @@ export class GestionCoursComponent implements OnInit {
               'Le cours a été supprimé avec succès.',
               'Succès !'
             );
-            this.loading = false;
+            // this.loading = false;
             this.loadCourses(); // Recharger la liste pour refléter la suppression
           } else {
             this.toastr.error('La suppression du cours a échoué.', 'Erreur');
@@ -173,6 +178,7 @@ export class GestionCoursComponent implements OnInit {
   }
 
   saveEditCourse(): void {
+    // console.log("teacher ///", this.editingCourse?.teacher)
     if (this.editingCourse &&
       this.editingCourse.title &&
       this.editingCourse.title.trim() !== '' &&
@@ -182,7 +188,12 @@ export class GestionCoursComponent implements OnInit {
       this.editingCourse.hours > 0
 
     ) {
+      // console.log("teacher", this.editingCourse)
       this.loading = true;
+      /*if (this.editingCourse.teacher) {
+        this.editingCourse.teacherId = this.editingCourse.teacher.id;
+      }*/
+
       this.coursesService.updateCourse(this.editingCourse).subscribe({
         next: (resp) => {
           this.loading = false;

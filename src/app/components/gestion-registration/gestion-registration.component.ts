@@ -140,12 +140,15 @@ export class GestionRegistrationComponent implements OnInit {
   }
 
   editRegistration(registration: Registration) {
+
     // Logic to edit an existing registration
     this.editingRegistration = { ...registration };
   }
 
   updateRegistration() {
+
     if (this.editingRegistration) {
+
       this.registrationService
         .updateRegistration(this.editingRegistration)
         .subscribe({
@@ -187,7 +190,7 @@ export class GestionRegistrationComponent implements OnInit {
     }
   }
 
-  saveEditRegistration() {}
+  saveEditRegistration() { }
 
   resetForm() {
     this.newRegistration = {

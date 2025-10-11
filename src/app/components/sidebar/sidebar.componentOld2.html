@@ -1,0 +1,135 @@
+<!-- SIDEBAR
+<nav class="navbar navbar-expand-lg d-flex flex-column min-vh-100">
+	<div class="logo-container d-flex justify-content-center align-items-center">
+		<a class="navbar-brand" href="#">
+			<img src="../assets/images/logo-bleue.svg" alt="Logo" />
+		</a>
+	</div>
+	<div class="d-flex flex-column align-items-center justify-content-between flex-grow-1">
+		<ul class="navbar-nav w-100 flex-column">
+      <li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/registration" routerLinkActive="actived">
+					<i class="hgi hgi-stroke hgi-eraser-add"></i>Inscriptions
+				</a>
+			</li>
+			<li class="nav-item" *ngIf="hasAccess(['directeur'])">
+				<a class="nav-link" routerLink="/dashboard" routerLinkActive="actived">
+					<i class="hgi-stroke hgi-dashboard-square-01"></i> Dashboard
+				</a>
+			</li>
+			<li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/students" routerLinkActive="actived">
+					<i class="hgi-stroke hgi-course"></i> Etudiants
+				</a>
+			</li>
+			<li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/teachers" routerLinkActive="actived">
+					<i class="hgi-stroke hgi-teaching"></i> Enseignants
+				</a>
+			</li>
+			<li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/courses" routerLinkActive="actived">
+					<i class="hgi-stroke hgi-course"></i> Cours
+				</a>
+			</li>
+
+      <li class="nav-item"  *ngIf="hasAccess(['directeur', 'responsable'])">
+        <a routerLink="/evaluations" class="nav-link scrollto" routerLinkActive="actived" >
+          <i class="hgi hgi-stroke hgi-analytics-up"></i>Evaluations
+        </a>
+      </li>
+
+      <li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/speciality" routerLinkActive="actived">
+					<i class="hgi hgi-stroke hgi-task-01"></i> Specialités
+				</a>
+			</li>
+
+      <li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/academic-year" routerLinkActive="actived">
+					<i class="hgi hgi-stroke hgi-calendar-01"></i> Années academiques
+				</a>
+			</li> -->
+
+<!--li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/period" routerLinkActive="actived">
+					<i class="hgi hgi-stroke hgi-calendar-01"></i> Periodes
+				</a>
+			</li-->
+
+
+<!-- </ul>
+		<div class="mt-auto deconnexion w-100">
+			<button (click)="logout()" class="btn btn-logout w-100">Déconnexion</button>
+		</div>
+	</div>
+</nav> -->
+<!-- SIDEBAR -->
+<div class="offcanvas offcanvas-start flex-column min-vh-100 py-1" tabindex="-1" id="sidebarOffcanvas"
+	aria-labelledby="sidebarOffcanvasLabel">
+	<!-- Header mobile uniquement -->
+	<div class="offcanvas-header d-lg-none">
+		<h5 class="offcanvas-title" id="sidebarOffcanvasLabel">Menu</h5>
+		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	</div>
+
+	<div class="logo-container d-flex justify-content-center align-items-center">
+		<a class="navbar-brand" href="#">
+			<img src="../assets/images/logo-bleue.svg" alt="Logo" />
+		</a>
+	</div>
+
+	<div class="d-flex flex-column align-items-center justify-content-between flex-grow-1 m-1">
+		<ul class="navbar-navflex-column w-100">
+			<li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/registration" routerLinkActive="actived">
+					<i class="hgi hgi-stroke hgi-eraser-add"></i> Inscriptions
+				</a>
+			</li>
+			<li class="nav-item" *ngIf="hasAccess(['directeur'])">
+				<a class="nav-link" routerLink="/dashboard" routerLinkActive="actived">
+					<i class="hgi-stroke hgi-dashboard-square-01"></i> Dashboard
+				</a>
+			</li>
+			<li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/students" routerLinkActive="actived">
+					<i class="hgi-stroke hgi-course"></i> Etudiants
+				</a>
+			</li>
+			<li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/teachers" routerLinkActive="actived">
+					<i class="hgi-stroke hgi-teaching"></i> Enseignants
+				</a>
+			</li>
+			<li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/courses" routerLinkActive="actived">
+					<i class="hgi-stroke hgi-course"></i> Cours
+				</a>
+			</li>
+
+			<li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a routerLink="/evaluations" class="nav-link scrollto" routerLinkActive="actived">
+					<i class="hgi hgi-stroke hgi-analytics-up"></i> Evaluations
+				</a>
+			</li>
+
+			<li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/speciality" routerLinkActive="actived">
+					<i class="hgi hgi-stroke hgi-task-01"></i> Specialités
+				</a>
+			</li>
+
+			<li class="nav-item" *ngIf="hasAccess(['directeur', 'responsable'])">
+				<a class="nav-link scrollto" routerLink="/academic-year" routerLinkActive="actived">
+					<i class="hgi hgi-stroke hgi-calendar-01"></i> Années académiques
+				</a>
+			</li>
+		</ul>
+
+		<div class="mt-auto deconnexion w-100">
+			<button (click)="logout()" class="btn btn-logout">
+				Déconnexion
+			</button>
+		</div>
+	</div>
+</div>

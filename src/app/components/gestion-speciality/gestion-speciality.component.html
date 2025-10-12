@@ -46,7 +46,8 @@
             <th><input type="checkbox" class="form-check-input" /></th>
             <!-- <th>Id</th> -->
             <th>Titre</th>
-            <th>Description</th>
+            <!-- <th>Description</th> -->
+            <th>Cycle</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -57,7 +58,8 @@
             </td>
             <!-- <td>{{ speciality.id }}</td> -->
             <td data-label="Titre">{{ speciality.label }}</td>
-            <td data-label="Description">{{ speciality.description }}</td>
+            <!-- <td data-label="Description">{{ speciality.description }}</td> -->
+            <td data-label="Cycle">{{ speciality.cycle }}</td>
             <td data-label="Actions">
               <div class="dropdown">
                 <a
@@ -168,6 +170,21 @@
                 class="form-control"/-->
             </div>
 
+            <div class="mb-3">
+              <label class="form-label">Cours</label>
+              <select
+                class="form-select"
+                [(ngModel)]="newSpeciality.courses"
+                name="courseId"
+                required
+                multiple
+              >
+                <option *ngFor="let course of allCourses" [ngValue]="course">
+                  {{ course.title }}
+                </option>
+              </select>
+            </div>
+
             <div class="modal-footer">
               <button
                 type="submit"
@@ -206,6 +223,15 @@
           <p><strong>Titre :</strong> {{ selectedSpeciality?.label }}</p>
           <p>
             <strong>Description :</strong> {{ selectedSpeciality?.description }}
+          </p>
+          <p><strong>Cycle :</strong> {{ selectedSpeciality?.cycle }}</p>
+          <p>
+            <strong>Cours:</strong>
+            <span *ngFor="let course of selectedSpeciality?.courses">
+              <p>
+                {{ course.title }}
+              </p>
+            </span>
           </p>
         </div>
         <div class="modal-footer">
@@ -294,6 +320,22 @@
               <!--input [(ngModel)]="newRegistration.cycle" name="cycle" placeholder="niveau" required
                 class="form-control"/-->
             </div>
+
+            <div class="mb-3">
+              <label class="form-label">Cours</label>
+              <select
+                class="form-select"
+                [(ngModel)]="editingSpeciality.selectedCourses"
+                name="courseId"
+                required
+                multiple
+              >
+                <option *ngFor="let course of allCourses" [value]="course.id">
+                  {{ course.title }}
+                </option>
+              </select>
+            </div>
+
             <button
               type="submit"
               class="primary-btn border-0"

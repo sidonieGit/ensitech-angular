@@ -6,5 +6,5 @@ export interface Speciality {
   description: string;
   cycle?: string;
   courses?: Course[];
-  // selected?: boolean;
+  selectedCourses?: any;
 }

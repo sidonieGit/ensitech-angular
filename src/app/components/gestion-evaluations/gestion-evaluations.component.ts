@@ -91,6 +91,9 @@ export class GestionEvaluationsComponent implements OnInit {
         this.loading = false;
         this.evaluations = data;
         this.updateFilteredEvaluations();
+        const highestEvaluationId = Math.max(...data?.map(item => item?.id).filter((id): id is number => typeof id === 'number')) || 0;
+        const nextCodeNumber = highestEvaluationId + 1;
+        this.newEvaluation.code = `EVAL-ENS-25-26-${nextCodeNumber.toString().padStart(3, '0')}`;
       },
       error: (error) => {
         console.error('Erreur chargement évaluations', error)
@@ -108,8 +111,9 @@ export class GestionEvaluationsComponent implements OnInit {
       next: () => {
         this.loading = false;
         this.toastr.success('Évaluation créée', 'Succès !');
-        this.loadEvaluations();
         this.resetNewEvaluation();
+        this.loadEvaluations();
+
       },
       error: (error) => {
         this.loading = false;

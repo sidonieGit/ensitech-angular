@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Course } from 'src/app/interfaces/course.model';
 import { Speciality } from 'src/app/interfaces/speciality.interface';
+import { CoursesService } from 'src/app/services/courses/courses.service';
 import { SpecialityService } from 'src/app/services/speciality/speciality.service';
 @Component({
   selector: 'app-gestion-speciality',
@@ -18,6 +20,7 @@ export class GestionSpecialityComponent {
     cycle: '',
     courses: [],
   };
+  allCourses: Course[] = [];
   specialities: Speciality[] = [];
 
   newSpecialities: Speciality[] = [];
@@ -27,9 +30,11 @@ export class GestionSpecialityComponent {
 
   constructor(
     private specialityService: SpecialityService,
+    private coursesService: CoursesService,
     private toastr: ToastrService
   ) {
     this.loadSpecialities();
+    this.loadCourses();
   }
 
   //initialisation des spécialités
@@ -57,8 +62,23 @@ export class GestionSpecialityComponent {
       },
     });
   }
+
+  loadCourses() {
+    this.loading = true;
+    this.coursesService.getCourses().subscribe({
+      next: (data) => {
+        this.loading = false;
+        this.allCourses = data;
+      },
+      error: (error) => {
+        this.loading = false;
+        const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+        this.toastr.error(errorMsg, 'Erreur !');
+      },
+    });
+  }
   addSpeciality(newSpeciality: Speciality): void {
-    if (newSpeciality.label && newSpeciality.description) {
+    if (newSpeciality.label && newSpeciality.cycle) {
       this.loading = true;
       this.specialityService.addSpeciality(newSpeciality).subscribe({
         next: (data) => {
@@ -119,7 +139,7 @@ export class GestionSpecialityComponent {
     }
   }
   updateSpeciality(speciality: Speciality): void {
-    if (speciality.id && speciality.label) {
+    if (speciality && speciality.id && speciality.label && speciality.cycle) {
       this.loading = true;
       this.specialityService.updateSpeciality(speciality).subscribe({
         next: (data) => {
@@ -155,6 +175,8 @@ export class GestionSpecialityComponent {
 
   editSpeciality(speciality: Speciality): void {
     this.editingSpeciality = { ...speciality };
+    this.editingSpeciality.selectedCourses = this.editingSpeciality.courses?.map(course => course.id) || [];
+
   }
   viewSpeciality(speciality: Speciality): void {
     this.selectedSpeciality = speciality;
@@ -163,6 +185,9 @@ export class GestionSpecialityComponent {
   saveEditSpeciality(): void {
     if (this.editingSpeciality) {
       this.loading = true;
+      this.editingSpeciality.courses = this.allCourses.filter(course =>
+        this.editingSpeciality?.selectedCourses?.includes(course.id)
+      );
       this.specialityService
         .updateSpeciality(this.editingSpeciality)
         .subscribe({

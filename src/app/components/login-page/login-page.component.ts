@@ -67,7 +67,7 @@ export class LoginPageComponent {
         let role = res.role;
         if (res.role === 'DIRECTEUR' || res.role === 'SUPER_ADMIN') {
           role = 'directeur';
-        } else if (res.role === 'RESPONSABLE_ETUDES') {
+        } else if (res.role === 'RESPONSABLE_ETUDES' || res.role === 'RESPONSABLE_ETUDE') {
           role = 'responsable';
         }
         res.role = role;
@@ -80,7 +80,8 @@ export class LoginPageComponent {
         if (role === 'directeur') {
           this.router.navigate([`/dashboard`]);
         } else {
-          this.router.navigate([`/courses`]);
+          // this.router.navigate([`/courses`]);
+          this.router.navigate([`/academic-year`]);
         }
         // redirection ou autre action
       },

@@ -1,3 +1,4 @@
+import { Speciality } from 'src/app/interfaces/speciality.interface';
 import { EvaluationsService } from './../../services/evaluations/evaluations.service';
 import { SpecialityService } from './../../services/speciality/speciality.service';
 import { Component, OnInit } from '@angular/core';
@@ -5,6 +6,7 @@ import { CoursesService } from 'src/app/services/courses/courses.service';
 import { RegistrationService } from 'src/app/services/registration/registration.service';
 import { StudentsService } from 'src/app/services/students/students.service';
 import { TeachersService } from 'src/app/services/teachers/teachers.service';
+import { Evaluation } from 'src/app/interfaces/evaluation.model';
 
 @Component({
   selector: 'app-dashboard-main',
@@ -19,6 +21,8 @@ export class DashboardMainComponent implements OnInit {
   totalSpecialities: number = 0;
   totalRegistrations: number = 0;
   totalEvaluations: number = 0;
+  listSpecialities: Speciality[] = [];
+  listEvaluations: Evaluation[] = [];
 
   // Données pour le graphique, initialisées avec des zéros.
   // Elles seront mises à jour lorsque les données de l'API arriveront.
@@ -61,7 +65,7 @@ export class DashboardMainComponent implements OnInit {
     private specialityService: SpecialityService,
     private registrationService: RegistrationService,
     private EvaluationsService: EvaluationsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -138,10 +142,12 @@ export class DashboardMainComponent implements OnInit {
     // --- Chargement des données des spécialités ---
     this.specialityService.getSpecialities().subscribe({
       next: (specialities) => {
+        this.listSpecialities = specialities;
         const newData = [...this.barChartData.datasets[0].data];
         newData[3] = specialities.length;
         this.barChartData.datasets[0].data = newData;
         this.totalSpecialities = specialities.length;
+        console.log('Specialities loaded:', this.listSpecialities);
 
       },
       error: (error) => {
@@ -173,6 +179,7 @@ export class DashboardMainComponent implements OnInit {
     // --- Chargement des données des évaluations ---
     this.EvaluationsService.getEvaluations().subscribe({
       next: (evaluations) => {
+        this.listEvaluations = evaluations;
         const newData = [...this.barChartData.datasets[0].data];
         newData[5] = evaluations.length;
         this.barChartData.datasets[0].data = newData;

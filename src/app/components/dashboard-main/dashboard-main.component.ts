@@ -10,6 +10,7 @@ import { TeachersService } from 'src/app/services/teachers/teachers.service';
 import { Evaluation } from 'src/app/interfaces/evaluation.model';
 import { AcademicYear } from 'src/app/interfaces/academic.model';
 import { catchError, map, Observable, of, switchMap } from 'rxjs';
+import { ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-dashboard-main',
@@ -52,14 +53,14 @@ export class DashboardMainComponent implements OnInit {
           '#38a3a5',
           '#6a4c93',
         ],
-        borderColor: [
-          '#f3f4f6',
-          '#f3f4f6',
-          '#f3f4f6',
-          '#f3f4f6',
-          '#f3f4f6',
-          '#f3f4f6',
-        ],
+        // borderColor: [
+        //   '#f3f4f6',
+        //   '#f3f4f6',
+        //   '#f3f4f6',
+        //   '#f3f4f6',
+        //   '#f3f4f6',
+        //   '#f3f4f6',
+        // ],
         borderWidth: 1,
         hoverBackgroundColor: [
           '#444a58',
@@ -85,18 +86,53 @@ export class DashboardMainComponent implements OnInit {
   };
 
   public registerChart = {
-    labels: ['Inscriptions 2025-2026', 'Inscriptions 2024-2025'],
+    labels: ['chargement ...'],
     datasets: [
       {
-        label: 'Statistiques',
-        data: [0, 0], // On commence à 0
-        backgroundColor: ['#006699', '#f1bb35'],
-        borderColor: ['#f3f4f6', '#f3f4f6'],
-        borderWidth: 1,
+        label: 'Inscriptions par année',
+        data: [0], // On commence à 0
+        backgroundColor: ['#f20444', '#f1bb35'],
+        borderColor: 'none',
+        borderWidth: 0,
         hoverBackgroundColor: ['#444a58', '#444a58'],
       },
     ],
   };
+
+  public registerChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Évolution des inscriptions par année académique',
+      },
+    },
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: 'Nombre d’inscriptions',
+        },
+        beginAtZero: true,
+      },
+      x: {
+        title: {
+          display: true,
+          text: 'Années académiques',
+        },
+      },
+    },
+    datasets: {
+      bar: {
+        // barThickness: 80, // épaisseur des barres
+        maxBarThickness: 120, // limite max si tu veux
+      },
+    },
+  };
+
   constructor(
     private studentService: StudentsService,
     private teachersService: TeachersService, // Correction du nom de la variable
@@ -105,7 +141,7 @@ export class DashboardMainComponent implements OnInit {
     private registrationService: RegistrationService,
     private EvaluationsService: EvaluationsService,
     private academicYearService: AcademicYearService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -184,7 +220,6 @@ export class DashboardMainComponent implements OnInit {
         this.barChartData.datasets[0].data = newData;
         this.totalSpecialities = specialities.length;
         console.log('Specialities loaded:', this.listSpecialities);
-
       },
       error: (error) => {
         console.error(
@@ -198,28 +233,6 @@ export class DashboardMainComponent implements OnInit {
     // --- Chargement des données des inscriptions ---
     this.registrationService.getRegistrations().subscribe({
       next: (registrations) => {
-        // Compter le nombre d'inscriptions par année académique
-        // const groupedByYear = registrations.reduce((acc, r) => {
-        //   const year = r.academicYearLabel || 'Inconnue';
-        //   acc[year] = (acc[year] || 0) + 1;
-        //   return acc;
-        // }, {} as Record<string, number>);
-
-        // // Extraire les années (ex: ['2024-2025', '2025-2026'])
-        // const years = Object.keys(groupedByYear).sort();
-
-        // // Créer les datasets dynamiques
-        // this.registerChart = {
-        //   ...this.registerChart,
-        //   labels: years,
-        //   datasets: [
-        //     {
-        //       ...this.registerChart.datasets[0],
-        //       data: years.map((year) => groupedByYear[year] || 0),
-        //     },
-        //   ],
-        // };
-
         this.totalRegistrations = registrations.length;
 
         // mise à jour du graphique global
@@ -263,39 +276,6 @@ export class DashboardMainComponent implements OnInit {
           "Erreur lors de la récupération du nombre d'évaluations",
           error
         );
-      },
-    });
-  }
-
-  // En supposant que academicYearService.getAcademicYears() retourne un Observable<AcademicYear[]>
-
-  yearInProgress(): Observable<string> {
-    return this.academicYearService.getAcademicYears().pipe(
-      map((academicYears) => {
-        const year = academicYears.find((year) => year.status === 'EN_COURS');
-        return year ? year.label : 'Aucune année en cours';
-      }),
-      catchError((err) => {
-        console.error(`Erreur de chargement de l'année académique`, err);
-        // Retourne un Observable qui émet la valeur d'erreur pour que le flux continue (optionnel)
-        return of('Erreur de chargement');
-      })
-    );
-  }
-
-  latestPreviousYear() {
-    this.academicYearService.getAcademicYears().subscribe({
-      next: (academicYear) => {
-        const previousYears = academicYear
-          .filter((year) => year.status === 'TERMINÉE')
-          .sort((a, b) => b.label.localeCompare(a.label)); // Trier par label décroissant
-        return previousYears.length > 0
-          ? previousYears[0].label
-          : 'Aucune année terminée';
-      },
-      error: (err) => {
-        console.error(`Erreur de chargement de l'année académique`);
-        return 'Erreur de chargement';
       },
     });
   }
@@ -358,7 +338,7 @@ export class DashboardMainComponent implements OnInit {
           const data = counts.map((c) => c.count);
           const backgroundColors = labels.map(
             (label) =>
-              label === labels[labels.length - 1] ? '#38a3a5' : '#f1bb35' // vert pour en cours
+              label === labels[labels.length - 1] ? '#f20444' : '#f1bb35' // red pour en cours
           );
 
           this.registerChart = {

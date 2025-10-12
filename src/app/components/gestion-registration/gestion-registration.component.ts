@@ -203,7 +203,6 @@ export class GestionRegistrationComponent implements OnInit {
   }
 
 
-
   downloadPdfWithQr() {
     if (!this.selectedRegistration?.id) {
       this.toastr.warning('Aucune inscription sélectionné.');

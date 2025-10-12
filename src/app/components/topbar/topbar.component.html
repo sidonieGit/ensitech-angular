@@ -20,10 +20,21 @@
 		<i class="bi bi-list" style="font-size: 1.5rem;"></i>
 	</button>
 
-	<span class="text-sm">Année scolaire 2024-2025</span>
+  <!--div ngfor="let year of academicYear">
+    <span class="text-sm" *ngIf="year.status === 'EN_COURS'">Année scolaire {{year.label}}</span>
+  </div-->
+  <!--span class="text-sm" *ngIf="academicYear.length > 0">Année scolaire {{academicYear[0].label}}</span-->
+  <div class="text-sm" *ngIf="academicYear.length > 0">
+    <div *ngFor="let year of academicYear">
+      <span *ngIf="year.status === 'EN_COURS'">Année scolaire {{year.label}}</span>
+    </div>
+  </div>
 
 	<div class="d-flex gap-2 align-items-center">
-		<span class="user-icon d-flex justify-content-center align-items-center">
+		<span class="user-icon d-flex justify-content-center align-items-center" (click)="onToggleTheme()" style="cursor: pointer;">
+			<i [ngClass]="(isDarkMode$ | async) ? 'hgi hgi-stroke hgi-sun-01': 'hgi hgi-stroke hgi-moon-02'"></i>
+		</span>
+    <span class="user-icon d-flex justify-content-center align-items-center">
 			<i class="hgi-stroke hgi-user"></i>
 		</span>
 		<div class="d-flex flex-column align-items-end user-information">

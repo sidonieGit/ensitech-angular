@@ -53,7 +53,10 @@ button.primary-btn:hover {
 button.outline-btn {
   background-color: transparent;
   border: 1px solid var(--color-primary);
+  transition: 0.5s ease-out;
 }
+
+
 body {
   background-color: var(--color-white);
   color: var(--color-black);
@@ -129,6 +132,7 @@ ul.navbar-navflex-column.w-100 {
   font-weight: 400;
   color: var(--color-zinc);
 }
+
 .export-button-container {
   padding: 22px 20px 0;
 }
@@ -386,7 +390,7 @@ main {
     width: calc(50% - 10px); /* 50% - la moitié du gap (20px) de chaque côté */
     flex: 0 0 calc(50% - 10px); /* Désactive la croissance, utilise la largeur fixe */
   }
- 
+
 
   main {
     margin-left: var(--sidbar-width);
@@ -523,7 +527,7 @@ main {
 .chart-wrapper {
   width: 100%;
   /* Permet au contenu de déborder horizontalement si le graphique est trop large */
-  overflow-x: auto; 
+  overflow-x: auto;
   margin-bottom: 20px;
 }
 
@@ -547,7 +551,7 @@ main {
   main {
     margin-left: 0 !important;
   }
-  
+
 }
 /* Large screens (desktops) */
 @media (min-width: 769px) {
@@ -567,17 +571,17 @@ main {
   main {
     margin-left: 0!important;
   }
- 
+
   .kpi-container {
     flex-direction: row;
     justify-content: space-between;
   }
- 
+
    .kpi-card,
   .kpi-card-alternate {
     /* Les cartes prennent ~50% de la largeur (2 par ligne) */
     width: calc(50% - 10px); /* 50% - la moitié du gap (20px) de chaque côté */
-    flex: 0 0 calc(50% - 10px); /* Désactive la croissance, utilise la largeur fixe */      
+    flex: 0 0 calc(50% - 10px); /* Désactive la croissance, utilise la largeur fixe */
   }
 
  /* Correction des charts (retrait des valeurs fixes non standard) */
@@ -686,3 +690,185 @@ main {
   border-radius: 4px !important;
   opacity: 0.7;
 }
+
+
+/*
+ * DARK MODE STYLES
+ * ----------------------------------------------------
+ * Définit l'ensemble des règles pour le mode sombre
+ * en utilisant le sélecteur `body.dark-mode` ou `:root.dark-mode`
+ */
+
+/* 1. Redéfinition des variables de base dans le scope du mode sombre (Recommandé) */
+:root.dark-mode,
+body.dark-mode {
+  --color-body-dark: #121212; /* Fond principal très sombre */
+  --color-white: #ffffff; /* Texte en couleur principale claire */
+  --color-black: #e0e0e0; /* Texte général/secondaire en gris clair */
+  --color-primary: #024d97; /* Couleur primaire ajustée pour le sombre (plus vive/claire)  #4a90e2*/
+  --color-gray: #242424; /* Fond des éléments (cartes, inputs) */
+  --color-zinc: #a0a0a0; /* Texte rôle, bordures secondaires (gris moyen) */
+  --color-border-dark: #333333; /* Bordure des éléments/séparateurs */
+}
+
+/* 2. Fond et Texte Général */
+body.dark-mode {
+  background-color: var(--color-body-dark);
+  color: var(--color-black); /* Texte général en gris clair */
+}
+
+/* 3. Navigation et Sidebar */
+.dark-mode .navbar {
+  background-color: var(--color-body-dark);
+  border-right: 1px solid var(--color-border-dark);
+}
+
+.dark-mode .top-nav {
+  background-color: var(--color-body-dark);
+  border-bottom: 1px solid var(--color-border-dark);
+}
+
+.dark-mode .top-nav .user-information .user-role {
+  color: var(--color-zinc);
+}
+
+.dark-mode .top-nav .user-icon {
+  background-color: var(--color-gray);
+}
+
+.dark-mode .top-nav .user-icon i {
+  color: var(--color-primary);
+}
+
+.dark-mode .nav-link {
+  color: var(--color-black) !important; /* Liens de navigation clairs */
+}
+
+.dark-mode .nav-link.actived {
+  background-color: var(--color-primary);
+  color: var(--color-white) !important;
+}
+
+.dark-mode .nav-link:hover {
+  background-color: var(--color-gray) !important; /* Un gris plus foncé au survol */
+  color: var(--color-white) !important;
+  opacity: 1;
+}
+
+.dark-mode .deconnexion .nav-link {
+  background-color: var(--color-gray) !important;
+  color: var(--color-primary) !important;
+}
+
+/* 4. Boutons */
+
+.dark-mode button.primary-btn:hover {
+  background-color: var(--color-gray); /* Fond de survol en gris sombre */
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary) !important;
+}
+
+.dark-mode button.outline-btn {
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.dark-mode .btn-logout {
+  background-color: var(--color-gray) !important;
+  color: var(--color-primary) !important;
+  border: 1px solid var(--color-primary) !important;
+}
+.dark-mode .btn-logout:hover {
+  background-color: var(--color-primary) !important;
+  color: var(--color-white) !important;
+  border: none !important;
+}
+
+/* 5. Cartes KPI et Dashboard */
+
+.dark-mode .kpi-card {
+  color: var(--color-primary);
+  background-color: var(--color-gray);
+}
+
+.dark-mode .kpi-card h2,
+.dark-mode .kpi-card-alternate h2 {
+  color: var(--color-black);
+}
+
+.dark-mode .kpi-card-alternate {
+  background-color: #333333 !important; /* Gris plus foncé pour l'alternance */
+  color: var(--color-zinc) !important;
+}
+
+.dark-mode .dashboard-card {
+  background: var(--color-gray);
+}
+
+.dark-mode .dashboard-card:hover {
+  background: #333333;
+}
+
+/* 6. Formulaires et Champs de Saisie */
+
+.dark-mode .input-area,
+.dark-mode .form-select,
+.dark-mode .input-bg {
+  background-color: var(--color-gray) !important;
+  color: var(--color-black) !important;
+  border: 1px solid var(--color-border-dark) !important;
+}
+
+.dark-mode .search-bg {
+    background-color: #555 !important;
+}
+
+/* 7. Tableaux (y compris Responsive) */
+
+.dark-mode .table th {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+/* Styles pour les lignes de tableau en mode sombre */
+.dark-mode .students-list tr,
+.dark-mode .evaluations-list tr,
+.dark-mode .matricules-list tr {
+  background-color: var(--color-body-dark);
+  border: 1px solid var(--color-border-dark);
+}
+
+.dark-mode .students-list td,
+.dark-mode .evaluations-list td,
+.dark-mode .matricules-list td {
+  border-bottom: 1px solid var(--color-border-dark);
+}
+
+.dark-mode .students-list td::before,
+.dark-mode .evaluations-list td::before,
+.dark-mode .matricules-list td::before {
+  color: var(--color-zinc); /* Label en gris moyen */
+}
+
+/* 8. Pagination */
+
+.dark-mode .pagination .page-item .page-link {
+  color: var(--color-black);
+}
+
+.dark-mode .pagination .page-item-active .page-link {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+/* 9. Modal Tableaux */
+.dark-mode .modal-table tbody tr td {
+    background-color: var(--color-gray);
+    color: var(--color-black);
+}
+
+.dark-mode .offcanvas {
+    background-color: var(--color-body-dark);
+    color: var(--color-black);
+}
+/* Les couleurs de statut BG restent les mêmes pour maintenir la signification */

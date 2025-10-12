@@ -42,7 +42,7 @@ export class GestionTeachersComponent implements OnInit {
     private teachersService: TeachersService,
     private toastr: ToastrService,
     private coursesService: CoursesService // Injecter CourseService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadTeachersWithCourses();
@@ -156,6 +156,14 @@ export class GestionTeachersComponent implements OnInit {
       return 'Aucun cours assigné';
     }
     return teacher.courses.map((c) => c.title).join(', ');
+    // return teacher.courses.length + ' cours assigné(s)';
+  }
+  getNbreCoursesByTeacher(teacher: Teacher): string {
+    if (!teacher.courses || teacher.courses.length === 0) {
+      return 'Aucun cours assigné';
+    }
+    // return teacher.courses.map((c) => c.title).join(', ');
+    return teacher.courses.length + ' cours assigné(s)';
   }
 
   loadTeachers(): void {
@@ -197,7 +205,8 @@ export class GestionTeachersComponent implements OnInit {
           `L'enseignant ${this.newTeacher.firstName} ${this.newTeacher.lastName} a été ajouté.`,
           'Succès !'
         );
-        this.loadTeachers(); // Recharger la liste pour voir le nouvel ajout
+        //this.loadTeachers(); // Recharger la liste pour voir le nouvel ajout
+        this.loadTeachersWithCourses();
         // Réinitialiser le formulaire
         this.newTeacher = {
           firstName: '',
@@ -223,7 +232,8 @@ export class GestionTeachersComponent implements OnInit {
       this.teachersService.deleteTeacher(id).subscribe({
         next: () => {
           this.toastr.info("L'enseignant a été supprimé.", 'Information');
-          this.loadTeachers(); // Recharger la liste
+          //this.loadTeachers(); // Recharger la liste
+          this.loadTeachersWithCourses();
         },
         error: (error) => console.error('Erreur lors de la suppression', error),
       });
@@ -245,7 +255,8 @@ export class GestionTeachersComponent implements OnInit {
           "Les informations de l'enseignant ont été mises à jour.",
           'Succès !'
         );
-        this.loadTeachers();
+        // this.loadTeachers();
+        this.loadTeachersWithCourses();
         this.editingTeacher = null; // Cacher le formulaire de la modal
       },
       (error) => console.error('Erreur lors de la mise à jour', error)

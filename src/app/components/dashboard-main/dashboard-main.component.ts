@@ -147,7 +147,7 @@ export class DashboardMainComponent implements OnInit {
         newData[3] = specialities.length;
         this.barChartData.datasets[0].data = newData;
         this.totalSpecialities = specialities.length;
-        console.log('Specialities loaded:', this.listSpecialities);
+        // console.log('Specialities loaded:', this.listSpecialities);
 
       },
       error: (error) => {

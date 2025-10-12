@@ -1,3 +1,4 @@
+import { AcademicYearService } from 'src/app/services/academic-year/academic-year.service';
 import { Speciality } from 'src/app/interfaces/speciality.interface';
 import { EvaluationsService } from './../../services/evaluations/evaluations.service';
 import { SpecialityService } from './../../services/speciality/speciality.service';
@@ -7,6 +8,8 @@ import { RegistrationService } from 'src/app/services/registration/registration.
 import { StudentsService } from 'src/app/services/students/students.service';
 import { TeachersService } from 'src/app/services/teachers/teachers.service';
 import { Evaluation } from 'src/app/interfaces/evaluation.model';
+import { AcademicYear } from 'src/app/interfaces/academic.model';
+import { catchError, map, Observable, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard-main',
@@ -23,6 +26,8 @@ export class DashboardMainComponent implements OnInit {
   totalEvaluations: number = 0;
   listSpecialities: Speciality[] = [];
   listEvaluations: Evaluation[] = [];
+  yearInProgressLabel: AcademicYear[] = [];
+  latestPreviousYearLabel: AcademicYear[] = [];
 
   // Données pour le graphique, initialisées avec des zéros.
   // Elles seront mises à jour lorsque les données de l'API arriveront.
@@ -39,10 +44,31 @@ export class DashboardMainComponent implements OnInit {
       {
         label: 'Statistiques',
         data: [0, 0, 0, 0, 0, 0], // On commence à 0
-        backgroundColor: ['#006699', '#f1bb35', '#f20444', '#0003ff', '#38a3a5', '#6a4c93'],
-        borderColor: ['#f3f4f6', '#f3f4f6', '#f3f4f6', '#f3f4f6', '#f3f4f6', '#f3f4f6'],
+        backgroundColor: [
+          '#006699',
+          '#f1bb35',
+          '#f20444',
+          '#0003ff',
+          '#38a3a5',
+          '#6a4c93',
+        ],
+        borderColor: [
+          '#f3f4f6',
+          '#f3f4f6',
+          '#f3f4f6',
+          '#f3f4f6',
+          '#f3f4f6',
+          '#f3f4f6',
+        ],
         borderWidth: 1,
-        hoverBackgroundColor: ['#444a58', '#444a58', '#444a58', '#444a58', '#444a58', '#444a58'],
+        hoverBackgroundColor: [
+          '#444a58',
+          '#444a58',
+          '#444a58',
+          '#444a58',
+          '#444a58',
+          '#444a58',
+        ],
       },
     ],
   };
@@ -58,17 +84,32 @@ export class DashboardMainComponent implements OnInit {
     },
   };
 
+  public registerChart = {
+    labels: ['Inscriptions 2025-2026', 'Inscriptions 2024-2025'],
+    datasets: [
+      {
+        label: 'Statistiques',
+        data: [0, 0], // On commence à 0
+        backgroundColor: ['#006699', '#f1bb35'],
+        borderColor: ['#f3f4f6', '#f3f4f6'],
+        borderWidth: 1,
+        hoverBackgroundColor: ['#444a58', '#444a58'],
+      },
+    ],
+  };
   constructor(
     private studentService: StudentsService,
     private teachersService: TeachersService, // Correction du nom de la variable
     private coursesService: CoursesService,
     private specialityService: SpecialityService,
     private registrationService: RegistrationService,
-    private EvaluationsService: EvaluationsService
+    private EvaluationsService: EvaluationsService,
+    private academicYearService: AcademicYearService
   ) { }
 
   ngOnInit(): void {
     this.loadDashboardData();
+    this.loadRegistrationsOverYears();
   }
 
   /**
@@ -85,8 +126,6 @@ export class DashboardMainComponent implements OnInit {
         const newData = [...this.barChartData.datasets[0].data];
         newData[0] = this.totalTeachers;
         this.barChartData.datasets[0].data = newData;
-
-
       },
       error: (error) => {
         // Ce code s'exécute en cas d'erreur
@@ -107,8 +146,6 @@ export class DashboardMainComponent implements OnInit {
         const newData = [...this.barChartData.datasets[0].data];
         newData[1] = this.totalStudents;
         this.barChartData.datasets[0].data = newData;
-
-
       },
       error: (error) => {
         console.error(
@@ -128,7 +165,6 @@ export class DashboardMainComponent implements OnInit {
         const newData = [...this.barChartData.datasets[0].data];
         newData[4] = this.totalCourses;
         this.barChartData.datasets[0].data = newData;
-
       },
       error: (error) => {
         console.error(
@@ -162,10 +198,34 @@ export class DashboardMainComponent implements OnInit {
     // --- Chargement des données des inscriptions ---
     this.registrationService.getRegistrations().subscribe({
       next: (registrations) => {
-        const newData = [...this.barChartData.datasets[0].data];
-        newData[2] = registrations.length;
-        this.barChartData.datasets[0].data = newData;
+        // Compter le nombre d'inscriptions par année académique
+        // const groupedByYear = registrations.reduce((acc, r) => {
+        //   const year = r.academicYearLabel || 'Inconnue';
+        //   acc[year] = (acc[year] || 0) + 1;
+        //   return acc;
+        // }, {} as Record<string, number>);
+
+        // // Extraire les années (ex: ['2024-2025', '2025-2026'])
+        // const years = Object.keys(groupedByYear).sort();
+
+        // // Créer les datasets dynamiques
+        // this.registerChart = {
+        //   ...this.registerChart,
+        //   labels: years,
+        //   datasets: [
+        //     {
+        //       ...this.registerChart.datasets[0],
+        //       data: years.map((year) => groupedByYear[year] || 0),
+        //     },
+        //   ],
+        // };
+
         this.totalRegistrations = registrations.length;
+
+        // mise à jour du graphique global
+        const newData = [...this.barChartData.datasets[0].data];
+        newData[2] = this.totalRegistrations;
+        this.barChartData.datasets[0].data = newData;
       },
       error: (error) => {
         console.error(
@@ -205,5 +265,114 @@ export class DashboardMainComponent implements OnInit {
         );
       },
     });
+  }
+
+  // En supposant que academicYearService.getAcademicYears() retourne un Observable<AcademicYear[]>
+
+  yearInProgress(): Observable<string> {
+    return this.academicYearService.getAcademicYears().pipe(
+      map((academicYears) => {
+        const year = academicYears.find((year) => year.status === 'EN_COURS');
+        return year ? year.label : 'Aucune année en cours';
+      }),
+      catchError((err) => {
+        console.error(`Erreur de chargement de l'année académique`, err);
+        // Retourne un Observable qui émet la valeur d'erreur pour que le flux continue (optionnel)
+        return of('Erreur de chargement');
+      })
+    );
+  }
+
+  latestPreviousYear() {
+    this.academicYearService.getAcademicYears().subscribe({
+      next: (academicYear) => {
+        const previousYears = academicYear
+          .filter((year) => year.status === 'TERMINÉE')
+          .sort((a, b) => b.label.localeCompare(a.label)); // Trier par label décroissant
+        return previousYears.length > 0
+          ? previousYears[0].label
+          : 'Aucune année terminée';
+      },
+      error: (err) => {
+        console.error(`Erreur de chargement de l'année académique`);
+        return 'Erreur de chargement';
+      },
+    });
+  }
+
+  loadRegistrationsOverYears(): void {
+    // Charger toutes les années académiques
+    this.academicYearService
+      .getAcademicYears()
+      .pipe(
+        map((years) => {
+          // Trier par label croissant (ex: 2020-2021 → 2024-2025)
+          return years.sort((a, b) => a.label.localeCompare(b.label));
+        }),
+        map((sortedYears) => {
+          // Trouver l'année en cours
+          const currentYearIndex = sortedYears.findIndex(
+            (year) => year.status === 'EN_COURS'
+          );
+
+          if (currentYearIndex === -1) {
+            throw new Error('Aucune année en cours trouvée !');
+          }
+
+          // Garder les 4 années précédentes + l’année en cours
+          const startIndex = Math.max(0, currentYearIndex - 4);
+          const selectedYears = sortedYears.slice(
+            startIndex,
+            currentYearIndex + 1
+          );
+
+          return selectedYears;
+        }),
+        switchMap((selectedYears) => {
+          // Charger toutes les inscriptions
+          return this.registrationService.getRegistrations().pipe(
+            map((registrations) => {
+              // Compter les inscriptions par année sélectionnée
+              const counts = selectedYears.map((year) => {
+                const count = registrations.filter(
+                  (r) => r.academicYearLabel === year.label
+                ).length;
+                return { label: year.label, count };
+              });
+              return counts;
+            })
+          );
+        }),
+        catchError((err) => {
+          console.error(
+            'Erreur lors du chargement des inscriptions par année :',
+            err
+          );
+          return of([]);
+        })
+      )
+      .subscribe((counts) => {
+        // Mettre à jour le graphique
+        if (counts.length > 0) {
+          const labels = counts.map((c) => c.label);
+          const data = counts.map((c) => c.count);
+          const backgroundColors = labels.map(
+            (label) =>
+              label === labels[labels.length - 1] ? '#38a3a5' : '#f1bb35' // vert pour en cours
+          );
+
+          this.registerChart = {
+            ...this.registerChart,
+            labels,
+            datasets: [
+              {
+                ...this.registerChart.datasets[0],
+                data,
+                backgroundColor: backgroundColors,
+              },
+            ],
+          };
+        }
+      });
   }
 }

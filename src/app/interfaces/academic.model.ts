@@ -5,6 +5,6 @@ export interface AcademicYear {
   label: string;
   startDate: Date; // Date de début de l'année académique
   endDate: Date; // Date de fin de l'année académique
-  status?: 'EN_COURS' | 'TERMINÉE' | 'EN_PREPARATION';// Statut de l'année académique (par exemple, "active", "inactive")
+  status?: 'EN_COURS' | 'TERMINEE' | 'EN_PREPARATION';// Statut de l'année académique (par exemple, "active", "inactive")
   periods?  :Period[] // periode l'année ac
 }

@@ -284,7 +284,7 @@ export class GestionAcademicYearComponent {
       }
       // Si aucune période en cours n'est trouvée
       if (academicYear.endDate < currentDate) {
-        academicYear.status = 'TERMINÉE';
+        academicYear.status = 'TERMINEE';
       }
     }
 

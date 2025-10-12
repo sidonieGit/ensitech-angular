@@ -222,7 +222,6 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
   }
 
 
-
   downloadPdfWithQr() {
     if (!this.selectedRegistration?.id) {
       this.toastr.warning('Aucune inscription sélectionné.');

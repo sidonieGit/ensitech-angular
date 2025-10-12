@@ -87,12 +87,12 @@
 <!-- //MAIN -->
 <div class="container chart-container mt-4">
   <div class="row px-5 py-4 rounded">
-    <!-- <div class="col-md-12 col-sm-12">
+    <!--div class="col-md-12 col-sm-12">
       <canvas id="myChart" baseChart [data]="barChartData" [type]="'bar'">
       </canvas>
-    </div> -->
+    </div-->
 
-    <!-- <div
+    <!--div
       class="mt-5 col-md-12 col-sm-12 d-flex justify-content-center align-items-center"
     >
       <div class="row px-5">
@@ -101,7 +101,7 @@
           </canvas>
         </div>
       </div>
-    </div> -->
+    </div-->
 
     <!-- <app-evaluation-graph
       [specialities]="listSpecialities"
@@ -110,5 +110,11 @@
     </app-evaluation-graph> -->
     <app-evaluation-graph [specialities]="listSpecialities">
     </app-evaluation-graph>
+    <div class="col-md-12 col-sm-12 m-4">
+        <canvas id="myChart" baseChart [data]="registerChart" [type]="'bar'" [options]="registerChartOptions">
+        </canvas>
+    </div>
   </div>
+
 </div>
+

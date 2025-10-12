@@ -1,4 +1,12 @@
 <div class="col-md-12 col-sm-12 m-4">
+  <div class="text-center">
+    <span
+      *ngIf="loading"
+      class="spinner-border spinner-border-sm me-2"
+      role="status"
+      aria-hidden="true"
+    ></span>
+  </div>
   <canvas
     baseChart
     [data]="barChartData"

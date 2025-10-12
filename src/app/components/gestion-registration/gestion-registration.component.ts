@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DoCheck, inject, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { AcademicYear } from 'src/app/interfaces/academic.model';
 import { Registration } from 'src/app/interfaces/registration.model';
@@ -15,7 +15,7 @@ import { StudentsService } from 'src/app/services/students/students.service';
   templateUrl: './gestion-registration.component.html',
   styleUrls: ['./gestion-registration.component.css'],
 })
-export class GestionRegistrationComponent implements OnInit {
+export class GestionRegistrationComponent implements OnInit, DoCheck {
   selectedRegistration: Registration | null = null;
   editingRegistration: Registration | null = null;
   filteredRegistrations: Registration[] = [];
@@ -29,6 +29,7 @@ export class GestionRegistrationComponent implements OnInit {
   };
   registrations: Registration[] = [];
   specialities: Speciality[] = [];
+  allSpecialities: Speciality[] = [];
   academicYears: AcademicYear[] = [];
   students: Student[] = [];
   // editingRegistration = { ...this.newRegistration };
@@ -36,6 +37,8 @@ export class GestionRegistrationComponent implements OnInit {
   // test for datalist
   list = ['Paris', 'Londres', 'Kinshasa', 'Dakar'];
   selectedValue = '';
+
+  lastSelectedLevel: string | null = null;
 
   registrationService: RegistrationService = inject(RegistrationService);
   toastr: ToastrService = inject(ToastrService);
@@ -48,6 +51,21 @@ export class GestionRegistrationComponent implements OnInit {
     this.loadSpecialities();
     this.loadAcademicYears();
     this.loadStudents();
+  }
+  ngDoCheck() {
+
+    if (this.newRegistration && this.newRegistration.level &&
+      this.newRegistration.level !== this.lastSelectedLevel) {
+      //console.log('Vérification manuelle :', this.newRegistration.level);
+      // Met à jour la dernière valeur
+      this.lastSelectedLevel = this.newRegistration.level;
+      const level = this.newRegistration.level.toLowerCase().includes('l') ? 'LICENCE' :
+        this.newRegistration.level.toLowerCase().includes('m') ? 'MASTER' : '';
+      // console.log('level', level);
+      //console.log('this.specialities', this.specialities);
+      this.specialities = this.allSpecialities.filter(s => s.cycle?.toLowerCase() === level.toLowerCase());
+
+    }
   }
 
   loadStudents(): void {
@@ -76,6 +94,7 @@ export class GestionRegistrationComponent implements OnInit {
     this.specialityService.getSpecialities().subscribe({
       next: (speciality) => {
         this.specialities = speciality;
+        this.allSpecialities = speciality;
       },
       error: (err) => {
         this.toastr.error(`Erreur de chargement des specialités`);

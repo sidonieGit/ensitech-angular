@@ -1,23 +1,87 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { forkJoin, Observable, of, throwError } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { RegistrationService } from 'src/app/services/registration/registration.service';
+import { StudentsService } from 'src/app/services/students/students.service';
 import { Evaluation } from '../../interfaces/evaluation.model'; // Assurez-vous d'avoir ce modèle
 import api_URL from 'src/apiUrl';
+import { Student } from 'src/app/interfaces/students.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EvaluationsService {
   private apiUrl = api_URL + 'training/evaluations';
+  allStudents: Student[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private studentsService: StudentsService,
+    private registrationService: RegistrationService,) { }
 
+  loadStudentWithSpeciality(): Observable<Student[]> {
+    return this.studentsService.getStudents().pipe(
+      catchError(err => {
+        console.error('Erreur lors du chargement des étudiants', err);
+        return of([]);
+      }),
+      switchMap(students => {
+        if (students.length === 0) return of([]);
+
+        const registrationRequests = students.map(student => {
+          if (!student.matricule) return of(null);
+          return this.registrationService.getLatestRegistrationByMatricule(student.matricule!).pipe(
+            catchError(() => of(null))
+          );
+        });
+
+
+        return forkJoin(registrationRequests).pipe(
+          map(registrations => students.map((student, index) => {
+            const registration = registrations[index];
+            //if (registration && student.matricule) {
+            return {
+              ...student,
+              isEnrolled: !!registration,
+              speciality: registration ? { label: registration.specialityLabel, description: '' } : undefined
+              // speciality: registration ? registration.specialityLabel : undefined
+            };
+            //}
+          }))
+        );
+      })
+    );
+  }
+  /* Retourne toutes les évaluations enrichies avec l'étudiant et sa spécialité
+  */
+  loadEvaluationWithStudentAndSpeciality(): Observable<Evaluation[]> {
+    return this.loadStudentWithSpeciality().pipe(
+      switchMap(studentsWithRegistration =>
+        this.getEvaluations().pipe(
+          map(evaluations => evaluations.map(ev => {
+            const student = studentsWithRegistration.find(s => s.id === ev.student?.id) || ev.student?.id;
+            return {
+              ...ev,
+              student
+            } as Evaluation;
+          }))
+        )
+      )
+    );
+  }
   getEvaluations(): Observable<Evaluation[]> {
     return this.http
       .get<Evaluation[]>(this.apiUrl)
       .pipe(catchError(this.handleError));
   }
+
+  getEvaluationsStudent(): Observable<Student[]> {
+    return this.loadStudentWithSpeciality()
+      .pipe(catchError(this.handleError));
+  }
+
+
 
   getEvaluationById(id: number): Observable<Evaluation> {
     return this.http

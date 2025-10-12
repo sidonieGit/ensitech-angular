@@ -15,10 +15,13 @@ export class SpecialityService {
   http: HttpClient = inject(HttpClient);
   // Méthode pour obtenir les spécialités
 
-  constructor() {}
+  constructor() { }
 
   getSpecialities(): Observable<Speciality[]> {
     return this.http.get<Speciality[]>(this.apiUrl);
+  }
+  getSpecialitiesByLabel(label: string): Observable<Speciality[]> {
+    return this.http.get<Speciality[]>(this.apiUrl + "/search?label=" + label);
   }
 
   // Méthode pour obtenir une spécialité par son ID

@@ -52,6 +52,7 @@
             <th>Note</th>
             <th>Etudiant</th>
             <th>Cours</th>
+            <th>Spécialité</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -67,6 +68,9 @@
             </td>
             <td data-label="Cours">
               {{ eval?.course?.title }}
+            </td>
+            <td data-label="Spécialité">
+              {{ eval?.student?.speciality?.label ?? "N/A" }}
             </td>
             <td data-label="Actions">
               <div class="dropdown">
@@ -149,7 +153,7 @@
             />
           </div> -->
           <div class="mb-3">
-            <label class="form-label">Description</label>
+            <label class="form-label">Commentaire</label>
             <input
               type="text"
               class="form-control"
@@ -179,6 +183,24 @@
             />
           </div>
 
+          <!-- NOUVEAU : Champ pour sélectionner l'étudiant -->
+          <div class="mb-3">
+            <label class="form-label">Étudiant concerné</label>
+            <select
+              class="form-select"
+              [(ngModel)]="newEvaluation.studentId"
+              name="studentId"
+              required
+            >
+              <option [ngValue]="0" disabled>Sélectionner un étudiant</option>
+              <option *ngFor="let student of allStudents" [value]="student.id">
+                {{ student.firstName }} {{ student.lastName }},{{
+                  student.speciality?.label
+                }}
+              </option>
+            </select>
+          </div>
+
           <!-- NOUVEAU : Champ pour sélectionner le cours -->
           <div class="mb-3">
             <label class="form-label">Cours concerné</label>
@@ -191,22 +213,6 @@
               <option [ngValue]="0" disabled>Sélectionner un cours</option>
               <option *ngFor="let course of allCourses" [value]="course.id">
                 {{ course.title }}
-              </option>
-            </select>
-          </div>
-
-          <!-- NOUVEAU : Champ pour sélectionner l'étudiant -->
-          <div class="mb-3">
-            <label class="form-label">Étudiant concerné</label>
-            <select
-              class="form-select"
-              [(ngModel)]="newEvaluation.studentId"
-              name="studentId"
-              required
-            >
-              <option [ngValue]="0" disabled>Sélectionner un étudiant</option>
-              <option *ngFor="let student of allStudents" [value]="student.id">
-                {{ student.firstName }} {{ student.lastName }}
               </option>
             </select>
           </div>
@@ -268,7 +274,7 @@
         <div class="modal-body">
           <p><strong>Code :</strong> {{ selectedEvaluation.code }}</p>
           <p>
-            <strong>Description :</strong> {{ selectedEvaluation.description }}
+            <strong>Commentaire :</strong> {{ selectedEvaluation.description }}
           </p>
           <p>
             <strong>Date :</strong>
@@ -290,7 +296,8 @@
             <!-- Affiche le nom de l'étudiant s'il existe, sinon l'ID, sinon 'N/A' -->
             <span *ngIf="selectedEvaluation.student; else studentIdOnly">
               {{ selectedEvaluation.student.firstName }}
-              {{ selectedEvaluation.student.lastName }}
+              {{ selectedEvaluation.student.lastName }},
+              {{ selectedEvaluation.student.speciality?.label || "N/A" }}
             </span>
             <ng-template #studentIdOnly>
               (ID: {{ selectedEvaluation.studentId || "N/A" }})
@@ -342,7 +349,7 @@
             />
           </div>
           <div class="mb-3">
-            <label class="form-label">Description</label>
+            <label class="form-label">Commentaire</label>
             <input
               type="text"
               class="form-control"
@@ -370,6 +377,41 @@
               name="editNote"
               required
             />
+          </div>
+
+          <!-- NOUVEAU : Champ pour sélectionner l'étudiant -->
+          <div class="mb-3">
+            <label class="form-label">Étudiant concerné</label>
+            <select
+              class="form-select"
+              [(ngModel)]="editingEvaluation.studentId"
+              name="studentId"
+              required
+              disabled
+            >
+              <option [ngValue]="0" disabled>Sélectionner un étudiant</option>
+              <option *ngFor="let student of allStudents" [value]="student.id">
+                {{ student.firstName }} {{ student.lastName }},{{
+                  student.speciality?.label
+                }}
+              </option>
+            </select>
+          </div>
+
+          <!-- NOUVEAU : Champ pour sélectionner le cours -->
+          <div class="mb-3">
+            <label class="form-label">Cours concerné</label>
+            <select
+              class="form-select"
+              [(ngModel)]="editingEvaluation.course.id"
+              name="courseId"
+              required
+            >
+              <option [ngValue]="0" disabled>Sélectionner un cours</option>
+              <option *ngFor="let course of allCourses" [value]="course.id">
+                {{ course.title }}
+              </option>
+            </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Type</label>

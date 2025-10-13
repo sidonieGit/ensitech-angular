@@ -826,16 +826,21 @@ body.dark-mode {
 /* 7. Tableaux (y compris Responsive) */
 
 .dark-mode .table th {
-  background-color: var(--color-primary);
+  /* background-color: var(--color-primary); */
+  background-color: var(--color-border-dark);
   color: var(--color-white);
 }
-
+.dark-mode .table td {
+  background-color: var(--color-body-dark);
+  color: var(--color-white);
+  border-bottom: 1px solid var(--color-border-dark);
+}
 /* Styles pour les lignes de tableau en mode sombre */
 .dark-mode .students-list tr,
 .dark-mode .evaluations-list tr,
 .dark-mode .matricules-list tr {
   background-color: var(--color-body-dark);
-  border: 1px solid var(--color-border-dark);
+  border: 0.5px solid var(--color-border-dark);
 }
 
 .dark-mode .students-list td,
@@ -863,7 +868,7 @@ body.dark-mode {
 
 /* 9. Modal Tableaux */
 .dark-mode .modal-table tbody tr td {
-    background-color: var(--color-gray);
+    background-color: var(--color-gray) ;
     color: var(--color-black);
 }
 
@@ -871,4 +876,10 @@ body.dark-mode {
     background-color: var(--color-body-dark);
     color: var(--color-black);
 }
+
+.dark-mode .modal-content {
+    background-color: var(--color-body-dark) !important;
+    /* color: var(--color-black); */
+}
+
 /* Les couleurs de statut BG restent les mêmes pour maintenir la signification */

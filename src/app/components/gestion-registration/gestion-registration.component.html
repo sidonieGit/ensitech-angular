@@ -6,28 +6,17 @@
     <app-topbar></app-topbar>
 
     <!-- Barre de recherche et bouton Ajouter -->
-    <div
-      class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4"
-    >
+    <div class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4">
       <div class="col-6 col-md-9" style="height: 44px">
         <div class="input-group">
           <span class="input-group-text" id="basic-addon1">
             <i class="hgi-stroke hgi-search-01"></i>
           </span>
-          <input
-            type="search"
-            placeholder="Rechercher un registration..."
-            class="form-control"
-            [(ngModel)]="filtername"
-            (ngModelChange)="updateFilteredRegistrations()"
-          />
+          <input type="search" placeholder="Rechercher un registration..." class="form-control" [(ngModel)]="filtername"
+            (ngModelChange)="updateFilteredRegistrations()" />
         </div>
       </div>
-      <button
-        class="primary-btn border-0"
-        data-bs-toggle="modal"
-        data-bs-target="#addTeacherModal"
-      >
+      <button class="primary-btn border-0" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
         Nouvelle Inscription<i class="hgi-stroke hgi-add-circle"></i>
       </button>
     </div>
@@ -60,51 +49,26 @@
             </td>
             <td data-label="Actions">
               <div class="dropdown">
-                <a
-                  href="#"
-                  class="text-decoration-none text-black"
-                  id="dropdownMenuButton"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
+                <a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                  aria-expanded="false">
                   <i class="hgi-stroke hgi-more-vertical"></i>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li>
-                    <a
-                      class="dropdown-item"
-                      href="javascript:void(0);"
-                      (click)="editRegistration(registration)"
-                      data-bs-toggle="modal"
-                      data-bs-target="#editTeacherModal"
-                      >Modifier</a
-                    >
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="editRegistration(registration)"
+                      data-bs-toggle="modal" data-bs-target="#editTeacherModal">Modifier</a>
                   </li>
                   <li>
-                    <a
-                      class="dropdown-item"
-                      href="javascript:void(0);"
-                      (click)="viewRegistration(registration)"
-                      data-bs-toggle="modal"
-                      data-bs-target="#viewTeacherModal"
-                      >Voir les informations</a
-                    >
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="viewRegistration(registration)"
+                      data-bs-toggle="modal" data-bs-target="#viewTeacherModal">Voir les informations</a>
                   </li>
                   <li>
-                    <a
-                      class="dropdown-item"
-                      href="javascript:void(0);"
-                      (click)="deleteRegistration(registration.id)"
-                      >Supprimer</a
-                    >
+                    <a class="dropdown-item" href="javascript:void(0);"
+                      (click)="deleteRegistration(registration.id)">Supprimer</a>
                   </li>
                   <li>
-                    <a
-                      class="dropdown-item"
-                      href="javascript:void(0);"
-                      (click)="downloadPdfWithQr()"
-                      >Imprimer</a
-                    >
+                    <a class="dropdown-item" href="javascript:void(0);"
+                      (click)="chooseRegistration(registration)">Imprimer</a>
                   </li>
                 </ul>
               </div>
@@ -112,9 +76,7 @@
           </tr>
         </tbody>
       </table>
-      <div
-        class="d-flex flex-column flex-md-row justify-content-between align-items-center"
-      >
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
         <p>{{ filteredRegistrations.length }} résultats</p>
         <nav aria-label="Page navigation">
           <ul class="pagination">
@@ -131,22 +93,12 @@
   </main>
 
   <!-- Modal pour ajouter un registration -->
-  <div
-    class="modal fade"
-    id="addTeacherModal"
-    tabindex="-1"
-    aria-labelledby="addTeacherModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="addTeacherModal" tabindex="-1" aria-labelledby="addTeacherModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-intitule">Nouvelle Inscription</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <form (ngSubmit)="addRegistration()">
@@ -157,13 +109,7 @@
             </div-->
             <div class="mb-3">
               <label for="level" class="form-label">Niveau</label>
-              <select
-                name="level"
-                id="level"
-                class="form-select"
-                [(ngModel)]="newRegistration.level"
-                required
-              >
+              <select name="level" id="level" class="form-select" [(ngModel)]="newRegistration.level" required>
                 <option value="" disabled selected>Choisir le niveau</option>
                 <option value="L1">Licence 1</option>
                 <option value="L2">Licence 2</option>
@@ -176,19 +122,11 @@
             </div>
             <div class="mb-3">
               <label for="specialityLabel" class="form-label">Specialité</label>
-              <select
-                name="specialityLabel"
-                id="specialityLabel"
-                class="form-select"
-                [(ngModel)]="newRegistration.specialityLabel"
-                required
-              >
+              <select name="specialityLabel" id="specialityLabel" class="form-select"
+                [(ngModel)]="newRegistration.specialityLabel" required>
                 <option value="">Choisir une specialité</option>
                 <!--option *ngFor="let speciality of specialities" [value]="speciality">{{speciality.label}}</option-->
-                <option
-                  *ngFor="let speciality of specialities"
-                  [value]="speciality.label"
-                >
+                <option *ngFor="let speciality of specialities" [value]="speciality.label">
                   {{ speciality.label }}
                 </option>
 
@@ -196,59 +134,35 @@
             </div>
             <div class="mb-3">
               <label for="matricule" class="form-label">Matricule</label>
-              <input
-                list="studentMatricules"
-                class="form-control"
-                type="text"
-                [(ngModel)]="newRegistration.matricule"
-                name="matricule"
-                required
-                placeholder="Matricule de l'etudiant"
-                #matriculeControl="ngModel"
+              <input list="studentMatricules" class="form-control" type="text" [(ngModel)]="newRegistration.matricule"
+                name="matricule" required placeholder="Matricule de l'etudiant" #matriculeControl="ngModel"
                 [class.is-invalid]="
                   matriculeControl.invalid &&
                   (matriculeControl.dirty || matriculeControl.touched)
-                "
-              />
-              <small
-                class="text-danger"
-                *ngIf="
+                " />
+              <small class="text-danger" *ngIf="
                   matriculeControl.invalid &&
                   (matriculeControl.dirty || matriculeControl.touched)
-                "
-              >
+                ">
                 <ng-container *ngIf="matriculeControl.hasError('required')">
                   Le matricule est requis.
                 </ng-container>
               </small>
 
               <datalist id="studentMatricules">
-                <option
-                  *ngFor="let student of students"
-                  [value]="student.matricule"
-                >
+                <option *ngFor="let student of students" [value]="student.matricule">
                   {{ student.matricule }}
                 </option>
               </datalist>
             </div>
             <div class="mb-3">
-              <label for="academicYearLabel" class="form-label"
-                >Année academique</label
-              >
-              <select
-                name="academicYearLabel"
-                id="academicYearLabel"
-                class="form-select"
-                [(ngModel)]="newRegistration.academicYearLabel"
-                required
-              >
+              <label for="academicYearLabel" class="form-label">Année academique</label>
+              <select name="academicYearLabel" id="academicYearLabel" class="form-select"
+                [(ngModel)]="newRegistration.academicYearLabel" required>
                 <option value="">Choisir l'année academique</option>
                 <!--option *ngFor="let academicYear of academicYears" [value]="academicYear">{{academicYear.label}}</option-->
                 <ng-container *ngFor="let academicYear of academicYears">
-                  <option
-                    *ngIf="academicYear.status === 'EN_COURS'"
-                    [value]="academicYear.label"
-                  >
+                  <option *ngIf="academicYear.status === 'EN_COURS'" [value]="academicYear.label">
                     {{ academicYear.label }}
                   </option>
                 </ng-container>
@@ -263,11 +177,7 @@
                 </datalist>
             </div-->
             <div class="modal-footer">
-              <button
-                type="submit"
-                class="primary-btn border-0"
-                data-bs-dismiss="modal"
-              >
+              <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
                 Ajouter
               </button>
             </div>
@@ -278,22 +188,13 @@
   </div>
 
   <!-- Modal pour visualiser les informations d'un registration -->
-  <div
-    class="modal fade"
-    id="viewTeacherModal"
-    tabindex="-1"
-    aria-labelledby="viewTeacherModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="viewTeacherModal" tabindex="-1" aria-labelledby="viewTeacherModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-intitule">Détails du registration</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <p>
@@ -316,11 +217,7 @@
         </div>
 
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Fermer
           </button>
         </div>
@@ -329,24 +226,15 @@
   </div>
 
   <!-- Modal pour modifier une inscription -->
-  <div
-    class="modal fade"
-    id="editTeacherModal"
-    tabindex="-1"
-    aria-labelledby="editTeacherModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="editTeacherModal" tabindex="-1" aria-labelledby="editTeacherModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-intitule">
             Modifier les informations du registration
           </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body" *ngIf="editingRegistration">
           <form (ngSubmit)="updateRegistration()">
@@ -357,13 +245,7 @@
             </div> -->
             <div class="mb-3">
               <label for="level" class="form-label">Niveau</label>
-              <select
-                name="level"
-                id="level"
-                class="form-select"
-                [(ngModel)]="editingRegistration.level"
-                required
-              >
+              <select name="level" id="level" class="form-select" [(ngModel)]="editingRegistration.level" required>
                 <option value="" disabled selected>Choisir le niveau</option>
                 <option value="L1">Licence 1</option>
                 <option value="L2">Licence 2</option>
@@ -375,115 +257,67 @@
                 class="form-control"/-->
             </div>
             <div class="mb-3">
-              <label for="specialityLabelUpdate" class="form-label"
-                >Specialité</label
-              >
+              <label for="specialityLabelUpdate" class="form-label">Specialité</label>
               <!--input type="text" [(ngModel)]="editingRegistration.specialityLabel" name="specialityLabel"
                 placeholder="specialité" required class="form-control" /-->
-              <select
-                name="specialityLabelUpdate"
-                id="specialityLabelUpdate"
-                class="form-select"
-                [(ngModel)]="editingRegistration.specialityLabel"
-                required
-              >
+              <select name="specialityLabelUpdate" id="specialityLabelUpdate" class="form-select"
+                [(ngModel)]="editingRegistration.specialityLabel" required>
                 <option value="">Choisir une specialité</option>
                 <!--option *ngFor="let speciality of specialities" [value]="speciality">{{speciality.label}}</option-->
-                <option
-                  *ngFor="let speciality of specialities"
-                  [value]="speciality.label"
-                >
+                <option *ngFor="let speciality of specialities" [value]="speciality.label">
                   {{ speciality.label }}
                 </option>
                 <!-- <option value="Génie logiciel">Génie logiciel</option> -->
               </select>
             </div>
             <div class="mb-3">
-              <label for="matricule" class="form-label"
-                >Matricule Etudiant</label
-              >
+              <label for="matricule" class="form-label">Matricule Etudiant</label>
               <!--input type="text" [(ngModel)]="editingRegistration.matricule" name="matricule" placeholder="Etudiant"
                 required class="form-control" /-->
-              <input
-                list="studentMatricules"
-                type="text"
-                [(ngModel)]="editingRegistration.matricule"
-                name="matricule"
-                placeholder="Etudiant"
-                required
-                class="form-control"
-                #matriculeControl="ngModel"
-                [class.is-invalid]="
+              <input list="studentMatricules" type="text" [(ngModel)]="editingRegistration.matricule" name="matricule"
+                placeholder="Etudiant" required class="form-control" #matriculeControl="ngModel" [class.is-invalid]="
                   matriculeControl.invalid &&
                   (matriculeControl.dirty || matriculeControl.touched)
-                "
-                disabled
-              />
-              <small
-                class="text-danger"
-                *ngIf="
+                " disabled />
+              <small class="text-danger" *ngIf="
                   matriculeControl.invalid &&
                   (matriculeControl.dirty || matriculeControl.touched)
-                "
-              >
+                ">
                 <ng-container *ngIf="matriculeControl.hasError('required')">
                   Le matricule est requis.
                 </ng-container>
               </small>
               <datalist id="studentMatricules">
-                <option
-                  *ngFor="let student of students"
-                  [value]="student.matricule"
-                >
+                <option *ngFor="let student of students" [value]="student.matricule">
                   {{ student.matricule }}
                 </option>
               </datalist>
             </div>
 
             <div class="mb-3">
-              <label for="academicYear" class="form-label"
-                >Année Academique</label
-              >
-              <input
-                list="academicYears"
-                type="text"
-                [(ngModel)]="editingRegistration.academicYearLabel"
-                name="academicYearLabel"
-                placeholder="Année academique"
-                required
-                class="form-control"
-                #academicYearControl="ngModel"
-                [class.is-invalid]="
+              <label for="academicYear" class="form-label">Année Academique</label>
+              <input list="academicYears" type="text" [(ngModel)]="editingRegistration.academicYearLabel"
+                name="academicYearLabel" placeholder="Année academique" required class="form-control"
+                #academicYearControl="ngModel" [class.is-invalid]="
                   academicYearControl.invalid &&
                   (academicYearControl.dirty || academicYearControl.touched)
-                "
-              />
-              <small
-                class="text-danger"
-                *ngIf="
+                " />
+              <small class="text-danger" *ngIf="
                   academicYearControl.invalid && academicYearControl.touched
-                "
-              >
+                ">
                 <ng-container *ngIf="academicYearControl.hasError('required')">
                   L'année academique est requise.
                 </ng-container>
               </small>
               <datalist id="academicYears">
                 <ng-container *ngFor="let academicYear of academicYears">
-                  <option
-                    *ngIf="academicYear.status === 'EN_COURS'"
-                    [value]="academicYear.label"
-                  >
+                  <option *ngIf="academicYear.status === 'EN_COURS'" [value]="academicYear.label">
                     {{ academicYear.label }}
                   </option>
                 </ng-container>
               </datalist>
             </div>
-            <button
-              type="submit"
-              class="primary-btn border-0"
-              data-bs-dismiss="modal"
-            >
+            <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
               Enregistrer
             </button>
           </form>

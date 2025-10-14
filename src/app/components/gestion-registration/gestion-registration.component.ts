@@ -9,7 +9,6 @@ import { RegistrationService } from 'src/app/services/registration/registration.
 import { SpecialityService } from 'src/app/services/speciality/speciality.service';
 import { StudentsService } from 'src/app/services/students/students.service';
 
-
 @Component({
   selector: 'app-gestion-registration',
   templateUrl: './gestion-registration.component.html',
@@ -19,6 +18,7 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
   selectedRegistration: Registration | null = null;
   editingRegistration: Registration | null = null;
   filteredRegistrations: Registration[] = [];
+  choosenRegistration: Registration | null = null;
   filtername: string = '';
   newRegistration = {
     // registrationNumber: '',
@@ -35,7 +35,6 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
   // editingRegistration = { ...this.newRegistration };
 
   // test for datalist
-  list = ['Paris', 'Londres', 'Kinshasa', 'Dakar'];
   selectedValue = '';
 
   lastSelectedLevel: string | null = null;
@@ -53,18 +52,24 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
     this.loadStudents();
   }
   ngDoCheck() {
-
-    if (this.newRegistration && this.newRegistration.level &&
-      this.newRegistration.level !== this.lastSelectedLevel) {
+    if (
+      this.newRegistration &&
+      this.newRegistration.level &&
+      this.newRegistration.level !== this.lastSelectedLevel
+    ) {
       //console.log('Vérification manuelle :', this.newRegistration.level);
       // Met à jour la dernière valeur
       this.lastSelectedLevel = this.newRegistration.level;
-      const level = this.newRegistration.level.toLowerCase().includes('l') ? 'LICENCE' :
-        this.newRegistration.level.toLowerCase().includes('m') ? 'MASTER' : '';
+      const level = this.newRegistration.level.toLowerCase().includes('l')
+        ? 'LICENCE'
+        : this.newRegistration.level.toLowerCase().includes('m')
+        ? 'MASTER'
+        : '';
       // console.log('level', level);
       //console.log('this.specialities', this.specialities);
-      this.specialities = this.allSpecialities.filter(s => s.cycle?.toLowerCase() === level.toLowerCase());
-
+      this.specialities = this.allSpecialities.filter(
+        (s) => s.cycle?.toLowerCase() === level.toLowerCase()
+      );
     }
   }
 
@@ -116,9 +121,12 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
       },
     });
   }
+
   viewRegistration(registration: Registration) {
     this.selectedRegistration = registration;
+    // this.selectedRegistration = { ...registration };
   }
+
   updateFilteredRegistrations() {
     // Logic to filter registrations based on filtername
     this.filteredRegistrations = this.filteredRegistrations.filter(
@@ -159,15 +167,17 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
   }
 
   editRegistration(registration: Registration) {
-
     // Logic to edit an existing registration
     this.editingRegistration = { ...registration };
   }
 
+  chooseRegistration(registration: Registration) {
+    this.choosenRegistration = { ...registration };
+    this.downloadPdfWithQr(); // Téléchargement du PDF avec QR
+  }
+
   updateRegistration() {
-
     if (this.editingRegistration) {
-
       this.registrationService
         .updateRegistration(this.editingRegistration)
         .subscribe({
@@ -209,7 +219,7 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
     }
   }
 
-  saveEditRegistration() { }
+  saveEditRegistration() {}
 
   resetForm() {
     this.newRegistration = {
@@ -221,20 +231,25 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
     };
   }
 
-
   downloadPdfWithQr() {
-    if (!this.selectedRegistration?.id) {
+    if (!this.choosenRegistration?.id) {
       this.toastr.warning('Aucune inscription sélectionné.');
       return;
     }
-    this.registrationService.getRegistrationPdf(this.selectedRegistration?.id).subscribe({
-      next: (data) => {
-        this.downloadFile(data, 'registration-with-qr.pdf');
-      },
-      error: (err) => {
-        this.toastr.error('Erreur lors du téléchargement du PDF avec QR', err);
-      }
-    });
+
+    this.registrationService
+      .getRegistrationPdf(this.choosenRegistration?.id)
+      .subscribe({
+        next: (data) => {
+          this.downloadFile(data, 'registration-with-qr.pdf');
+        },
+        error: (err) => {
+          this.toastr.error(
+            'Erreur lors du téléchargement du PDF avec QR',
+            err
+          );
+        },
+      });
   }
 
   downloadOriginalPdf() {
@@ -249,7 +264,10 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
           this.downloadFile(data, 'registration.pdf');
         },
         error: (err) => {
-          this.toastr.error('Erreur lors du téléchargement du PDF original', err);
+          this.toastr.error(
+            'Erreur lors du téléchargement du PDF original',
+            err
+          );
         },
       });
   }
@@ -265,5 +283,4 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
     window.URL.revokeObjectURL(url);
     // document.body.removeChild(a);
   }
-
 }

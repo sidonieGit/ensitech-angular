@@ -19,6 +19,7 @@ export class GestionCoursComponent implements OnInit {
   selectedCourse: Course | null = null;
   editingCourse: Course | null = null;
   filteredCourses: Course[] = [];
+  displayedCourses: Course[] = []; // ✅ données visibles (pagination + filtre)
   newCourse: Course = {
     title: '',
     coefficient: 0,
@@ -29,11 +30,14 @@ export class GestionCoursComponent implements OnInit {
   loading: boolean = false;
   errorMsg: string = '';
 
+  currentPage = 1;
+  itemsPerPage = 5;
+
   constructor(
     private coursesService: CoursesService,
     private teachersService: TeachersService,
     private toastr: ToastrService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadCourses();
@@ -53,19 +57,19 @@ export class GestionCoursComponent implements OnInit {
 
   loadTeacher() {
     this.loading = true;
-    this.teachersService
-      .getTeachers().subscribe({
-        next: (data) => {
-          this.loading = false;
-          this.allTeachers = data;
-        },
-        error: (error) => {
-          console.error('Erreur chargement des étudiants', error)
-          this.loading = false;
-          const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
-          this.toastr.error(errorMsg, 'Erreur !');
-        },
-      });
+    this.teachersService.getTeachers().subscribe({
+      next: (data) => {
+        this.loading = false;
+        this.allTeachers = data;
+      },
+      error: (error) => {
+        console.error('Erreur chargement des étudiants', error);
+        this.loading = false;
+        const errorMsg =
+          error?.error?.message ?? 'Une erreur inattendue est survenue';
+        this.toastr.error(errorMsg, 'Erreur !');
+      },
+    });
   }
   addCourse(): void {
     if (
@@ -97,13 +101,17 @@ export class GestionCoursComponent implements OnInit {
           //console.error('Error saving course:', err);
           //  console.log('Error saving course:', err?.error?.message);
           this.loading = false;
-          const errorMsg = err?.error?.message ?? 'Erreur lors de la création du cours.';
+          const errorMsg =
+            err?.error?.message ?? 'Erreur lors de la création du cours.';
           this.toastr.error(errorMsg, 'Erreur !');
           // this.toastr.error("Erreur lors de l'ajout du cours.", 'Erreur !');
         },
       });
     } else {
-      this.toastr.error('Veuillez remplir tous les champs correctement.', 'Erreur !');
+      this.toastr.error(
+        'Veuillez remplir tous les champs correctement.',
+        'Erreur !'
+      );
     }
   }
 
@@ -111,6 +119,14 @@ export class GestionCoursComponent implements OnInit {
     this.filteredCourses = this.courses.filter((course) =>
       course.title.toLowerCase().includes(this.filtername.toLowerCase())
     );
+    this.currentPage = 1; // reset sur page 1
+    this.updateDisplayedCourses();
+  }
+
+  updateDisplayedCourses(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.displayedCourses = this.filteredCourses.slice(start, end);
   }
 
   resetForm(): void {
@@ -136,7 +152,7 @@ export class GestionCoursComponent implements OnInit {
 
     // 3. Agir en fonction de la réponse de l'utilisateur
     if (confirmation) {
-      this.loading = true
+      this.loading = true;
       // Si l'utilisateur a cliqué sur "OK"
       this.coursesService.deleteCourse(id).subscribe({
         next: (isDeleted: boolean) => {
@@ -159,7 +175,8 @@ export class GestionCoursComponent implements OnInit {
             err
           );*/
           this.loading = false;
-          const errorMsg = err?.error?.message ?? 'Une erreur inattendue est survenue';
+          const errorMsg =
+            err?.error?.message ?? 'Une erreur inattendue est survenue';
           this.toastr.error(errorMsg, 'Erreur !');
         },
       });
@@ -179,14 +196,14 @@ export class GestionCoursComponent implements OnInit {
 
   saveEditCourse(): void {
     // console.log("teacher ///", this.editingCourse?.teacher)
-    if (this.editingCourse &&
+    if (
+      this.editingCourse &&
       this.editingCourse.title &&
       this.editingCourse.title.trim() !== '' &&
       this.editingCourse.coefficient &&
       this.editingCourse.coefficient > 0 &&
       this.editingCourse.hours &&
       this.editingCourse.hours > 0
-
     ) {
       // console.log("teacher", this.editingCourse)
       this.loading = true;
@@ -205,12 +222,31 @@ export class GestionCoursComponent implements OnInit {
         // error: (err) => console.error('Error editing cours:', err),
         error: (err) => {
           this.loading = false;
-          const errorMsg = err?.error?.message ?? 'Une erreur inattendue est survenue';
+          const errorMsg =
+            err?.error?.message ?? 'Une erreur inattendue est survenue';
           this.toastr.error(errorMsg, 'Erreur !');
         },
       });
     } else {
-      this.toastr.error('Veuillez remplir tous les champs correctement.', 'Erreur !');
+      this.toastr.error(
+        'Veuillez remplir tous les champs correctement.',
+        'Erreur !'
+      );
     }
+  }
+
+  // for pagination
+  get paginatedCourses() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredCourses.slice(start, start + this.itemsPerPage);
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+  }
+
+  onItemsPerPageChange(value: number): void {
+    this.itemsPerPage = value;
+    this.currentPage = 1;
   }
 }

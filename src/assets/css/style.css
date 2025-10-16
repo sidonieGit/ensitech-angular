@@ -410,12 +410,11 @@ main {
   }
 
 
-    .kpi-card,
-  .kpi-card-alternate {
-    /* Les cartes prennent ~50% de la largeur (2 par ligne) */
-    width: calc(50% - 10px); /* 50% - la moitié du gap (20px) de chaque côté */
-    flex: 0 0 calc(50% - 10px); /* Désactive la croissance, utilise la largeur fixe */
-  }
+   .kpi-card,
+  .kpi-card-alternate {
+    flex: 0 0 calc(33.333% - 14px);
+    max-width: calc(33.333% - 14px);
+  }
 
 
   main {
@@ -897,4 +896,19 @@ main {
 }
 
 
+/* gestion pagination */
+.page-link {
+  cursor: pointer;
+  color: var(--color-primary);
+}
 
+.page-item.active .page-link {
+  background-color: var(--color-white);
+  border-color:var(--color-white);
+  color: var(--color-primary);
+}
+
+.page-item.disabled .page-link {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

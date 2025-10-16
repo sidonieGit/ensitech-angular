@@ -13,6 +13,9 @@ export class GestionSpecialityComponent {
   filtername: string = '';
   selectedSpeciality: Speciality | null = null;
   editingSpeciality: Speciality | null = null;
+
+  displayedSpecialities: Speciality[] = []; // ✅ données visibles (pagination + filtre)
+
   newSpeciality: Speciality = {
     id: 0,
     label: '',
@@ -27,6 +30,9 @@ export class GestionSpecialityComponent {
 
   filteredSpecialities: Speciality[] = [];
   loading: boolean = false;
+
+  currentPage = 1;
+  itemsPerPage = 5;
 
   constructor(
     private specialityService: SpecialityService,
@@ -43,6 +49,14 @@ export class GestionSpecialityComponent {
     this.filteredSpecialities = this.specialities.filter((speciality) =>
       speciality.label.toLowerCase().includes(this.filtername.toLowerCase())
     );
+    this.currentPage = 1; // reset sur page 1
+    this.updateDisplayedSpecialities();
+  }
+
+  updateDisplayedSpecialities(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.displayedSpecialities = this.filteredSpecialities.slice(start, end);
   }
   loadSpecialities() {
     this.loading = true;
@@ -72,7 +86,8 @@ export class GestionSpecialityComponent {
       },
       error: (error) => {
         this.loading = false;
-        const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+        const errorMsg =
+          error?.error?.message ?? 'Une erreur inattendue est survenue';
         this.toastr.error(errorMsg, 'Erreur !');
       },
     });
@@ -93,12 +108,16 @@ export class GestionSpecialityComponent {
           this.loading = false;
           //console.log('Error saving course:', error?.error?.message);
           console.error("Erreur lors de l'ajout de la spécialité", error);
-          const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+          const errorMsg =
+            error?.error?.message ?? 'Une erreur inattendue est survenue';
           this.toastr.error(errorMsg, 'Erreur !');
         },
       });
     } else {
-      this.toastr.error('Veuillez remplir tous les champs correctement.', 'Erreur !');
+      this.toastr.error(
+        'Veuillez remplir tous les champs correctement.',
+        'Erreur !'
+      );
     }
   }
 
@@ -131,7 +150,8 @@ export class GestionSpecialityComponent {
               'Erreur lors de la suppression de la spécialité',
               'Erreur !'
             );*/
-            const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+            const errorMsg =
+              error?.error?.message ?? 'Une erreur inattendue est survenue';
             this.toastr.error(errorMsg, 'Erreur !');
           },
         });
@@ -164,19 +184,23 @@ export class GestionSpecialityComponent {
             'Erreur lors de la mise à jour de la spécialité',
             'Erreur !'
           );*/
-          const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+          const errorMsg =
+            error?.error?.message ?? 'Une erreur inattendue est survenue';
           this.toastr.error(errorMsg, 'Erreur !');
         },
       });
     } else {
-      this.toastr.error('Veuillez remplir tous les champs correctement.', 'Erreur !');
+      this.toastr.error(
+        'Veuillez remplir tous les champs correctement.',
+        'Erreur !'
+      );
     }
   }
 
   editSpeciality(speciality: Speciality): void {
     this.editingSpeciality = { ...speciality };
-    this.editingSpeciality.selectedCourses = this.editingSpeciality.courses?.map(course => course.id) || [];
-
+    this.editingSpeciality.selectedCourses =
+      this.editingSpeciality.courses?.map((course) => course.id) || [];
   }
   viewSpeciality(speciality: Speciality): void {
     this.selectedSpeciality = speciality;
@@ -185,7 +209,7 @@ export class GestionSpecialityComponent {
   saveEditSpeciality(): void {
     if (this.editingSpeciality) {
       this.loading = true;
-      this.editingSpeciality.courses = this.allCourses.filter(course =>
+      this.editingSpeciality.courses = this.allCourses.filter((course) =>
         this.editingSpeciality?.selectedCourses?.includes(course.id)
       );
       this.specialityService
@@ -213,7 +237,8 @@ export class GestionSpecialityComponent {
               'Erreur lors de la mise à jour de la spécialité',
               'Erreur !'
             );*/
-            const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+            const errorMsg =
+              error?.error?.message ?? 'Une erreur inattendue est survenue';
             this.toastr.error(errorMsg, 'Erreur !');
           },
         });
@@ -225,5 +250,20 @@ export class GestionSpecialityComponent {
       label: '',
       description: '',
     };
+  }
+
+  // for pagination
+  get paginatedSpecialities() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredSpecialities.slice(start, start + this.itemsPerPage);
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+  }
+
+  onItemsPerPageChange(value: number): void {
+    this.itemsPerPage = value;
+    this.currentPage = 1;
   }
 }

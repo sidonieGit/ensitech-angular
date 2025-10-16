@@ -14,6 +14,9 @@ export class GestionAcademicYearComponent {
   selectedAcademicYear: AcademicYear | null = null;
   editingAcademicYear: AcademicYear | null = null;
   filteredAcademicYear: AcademicYear[] = [];
+
+  displayedAcademicYears: AcademicYear[] = []; // ✅ données visibles (pagination + filtre)
+
   currentYearStart: string;
 
   newAcademicYear: AcademicYear = {
@@ -37,6 +40,8 @@ export class GestionAcademicYearComponent {
     startedAt: '',
     endedAt: '',
   };
+  currentPage = 1;
+  itemsPerPage = 10;
 
   constructor(private academicYearService: AcademicYearService) {
     // Initialisation ou chargement des années académiques
@@ -169,6 +174,14 @@ export class GestionAcademicYearComponent {
     this.filteredAcademicYear = this.academicYear.filter((ay) =>
       ay.label.toLowerCase().includes(this.filtername.toLowerCase())
     );
+    this.currentPage = 1; // reset sur page 1
+    this.updateDisplayedAcademicYears();
+  }
+
+  updateDisplayedAcademicYears(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.displayedAcademicYears = this.filteredAcademicYear.slice(start, end);
   }
   updateAcademicYear(): void {
     if (this.editingAcademicYear) {
@@ -338,5 +351,19 @@ export class GestionAcademicYearComponent {
       return true;
     }
     return false;
+  }
+
+  get paginatedAcademicYears() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredAcademicYear.slice(start, start + this.itemsPerPage);
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+  }
+
+  onItemsPerPageChange(value: number): void {
+    this.itemsPerPage = value;
+    this.currentPage = 1;
   }
 }

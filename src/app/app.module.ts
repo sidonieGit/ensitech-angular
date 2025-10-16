@@ -31,6 +31,7 @@ import { GestionRegistrationComponent } from './components/gestion-registration/
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { TrimPipe } from './components/utils/trim.pipe';
 import { EvaluationGraphComponent } from './components/evaluation-graph/evaluation-graph.component';
+import { PaginationComponent } from './components/shared/pagination/pagination.component';
 // import { GenerateRegistrationComponent } from './pdf/registration/generate-registration/generate-registration.component';
 
 export function initializeApp(authService: AuthService) {
@@ -60,6 +61,7 @@ export function initializeApp(authService: AuthService) {
     GestionRegistrationComponent,
     TrimPipe,
     EvaluationGraphComponent,
+    PaginationComponent,
     // GenerateRegistrationComponent,
   ],
   imports: [

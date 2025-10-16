@@ -42,7 +42,7 @@ export class GestionTeachersComponent implements OnInit {
     private teachersService: TeachersService,
     private toastr: ToastrService,
     private coursesService: CoursesService // Injecter CourseService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadTeachersWithCourses();
@@ -221,7 +221,10 @@ export class GestionTeachersComponent implements OnInit {
       },
       error: (error) => {
         console.error("Erreur lors de l'ajout", error);
-        this.toastr.error("Erreur lors de l'ajout de l'enseignant", 'Erreur !');
+        this.toastr.error(
+          "Erreur lors de l'ajout de l'enseignant",
+          'addresse mail déja utilisée'
+        );
       },
     });
   }

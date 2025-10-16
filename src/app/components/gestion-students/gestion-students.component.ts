@@ -48,7 +48,7 @@ export class GestionStudentsComponent implements OnInit {
     //  Ajout de 'private' pour que coursesService soit une propriété de la classe
     private registrationService: RegistrationService,
     private toastr: ToastrService // Injecter ToastrService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadStudentsWithSpeciality();
@@ -90,8 +90,9 @@ export class GestionStudentsComponent implements OnInit {
                   // console.warn(
                   //   `Pas d'inscription étudiant non encore inscrit ${student.matricule}.`
                   // );
-                  console.error('erreur 5000 pas d inscription de cet étudiant');
-
+                  console.error(
+                    'erreur 5000 pas d inscription de cet étudiant'
+                  );
                 }
                 // On vérifie si c'est une erreur 404 (cas normal de non-inscription)
                 if (error.status === 404) {
@@ -182,8 +183,12 @@ export class GestionStudentsComponent implements OnInit {
         this.loadStudentsWithSpeciality(); // Recharger la liste
         this.resetForm();
       },
-      error: (error) =>
-        console.error("Erreur lors de l'ajout de l'étudiant", error),
+      error: (error) => {
+        this.toastr.error(
+          "Erreur lors de l'ajout de l'étudiant",
+          'addresse mail déja utilisée'
+        );
+      },
     });
   }
 

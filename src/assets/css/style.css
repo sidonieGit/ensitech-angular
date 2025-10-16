@@ -477,6 +477,11 @@ main {
   }
     .btn-close {
     display: none;
+    
+}
+
+.offcanvas-header {
+  display: none;
 }
 
 .bi-list::before {
@@ -883,3 +888,23 @@ body.dark-mode {
 }
 
 /* Les couleurs de statut BG restent les mêmes pour maintenir la signification */
+
+
+
+
+
+/* --- Fix scroll on mobile --- */
+html, body {
+  height: auto !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important; /* Permet le défilement fluide sur iOS */
+}
+
+main {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+
+

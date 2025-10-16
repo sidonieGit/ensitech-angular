@@ -1,11 +1,7 @@
 <!-- MAIN -->
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.2/Chart.css"
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.2/Chart.css"
   integrity="sha512-SUJFImtiT87gVCOXl3aGC00zfDl6ggYAw5+oheJvRJ8KBXZrr/TMISSdVJ5bBarbQDRC2pR5Kto3xTR0kpZInA=="
-  crossorigin="anonymous"
-  referrerpolicy="no-referrer"
-/>
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
 <main class="flex-grow-1">
   <!-- <div class="export-button-container d-flex justify-content-end">
 		<button class="outline-btn">
@@ -23,16 +19,12 @@
         <i class="hgi-stroke hgi-teaching"></i>
       </span>
     </div>
-    <div
-      class="d-flex justify-content-between align-items-center kpi-card-alternate"
-    >
+    <div class="d-flex justify-content-between align-items-center kpi-card-alternate">
       <div>
         <span>{{ totalStudents }}</span>
         <h2>Étudiants</h2>
       </div>
-      <span
-        class="icon-box-alternate d-flex justify-content-center align-items-center"
-      >
+      <span class="icon-box-alternate d-flex justify-content-center align-items-center">
         <i class="hgi-stroke hgi-student"></i>
       </span>
     </div>
@@ -46,16 +38,12 @@
       </span>
     </div>
 
-    <div
-      class="d-flex justify-content-between align-items-center kpi-card-alternate"
-    >
+    <div class="d-flex justify-content-between align-items-center kpi-card-alternate">
       <div>
         <span>{{ totalSpecialities }}</span>
         <h2>Specialités</h2>
       </div>
-      <span
-        class="icon-box-alternate d-flex justify-content-center align-items-center"
-      >
+      <span class="icon-box-alternate d-flex justify-content-center align-items-center">
         <i class="hgi-stroke hgi-book-02"></i>
       </span>
     </div>
@@ -68,16 +56,12 @@
         <i class="hgi-stroke hgi-note-01"></i>
       </span>
     </div>
-    <div
-      class="d-flex justify-content-between align-items-center kpi-card-alternate"
-    >
+    <div class="d-flex justify-content-between align-items-center kpi-card-alternate">
       <div>
         <span>{{ totalEvaluations }}</span>
         <h2>Evaluations</h2>
       </div>
-      <span
-        class="icon-box-alternate d-flex justify-content-center align-items-center"
-      >
+      <span class="icon-box-alternate d-flex justify-content-center align-items-center">
         <i class="hgi-stroke hgi-analytics-01"></i>
       </span>
     </div>
@@ -86,7 +70,7 @@
 <br />
 <!-- //MAIN -->
 <div class="container chart-container mt-4">
-  <div class="row px-5 py-4 rounded">
+  <div class="row gy-4 px-3 py-4 rounded">
     <!--div class="col-md-12 col-sm-12">
       <canvas id="myChart" baseChart [data]="barChartData" [type]="'bar'">
       </canvas>
@@ -108,13 +92,18 @@
       [evaluations]="listEvaluations"
     >
     </app-evaluation-graph> -->
-    <app-evaluation-graph [specialities]="listSpecialities">
-    </app-evaluation-graph>
-    <div class="col-md-12 col-sm-12 m-4">
-        <canvas id="myChart" baseChart [data]="registerChart" [type]="'bar'" [options]="registerChartOptions">
-        </canvas>
+
+    <div class="col-12 ">
+      <app-evaluation-graph [specialities]="listSpecialities">
+      </app-evaluation-graph>
+    </div>
+
+    <!-- Graphe des inscriptions -->
+
+    <div class="col-12 ">
+      <canvas id="myChart" baseChart [data]="registerChart" [type]="'bar'" [options]="registerChartOptions">
+      </canvas>
     </div>
   </div>
 
 </div>
-

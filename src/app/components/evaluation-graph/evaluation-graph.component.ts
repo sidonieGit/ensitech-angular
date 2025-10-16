@@ -1,5 +1,10 @@
-
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { Evaluation } from 'src/app/interfaces/evaluation.model';
 import { Speciality } from 'src/app/interfaces/speciality.interface';
@@ -8,7 +13,7 @@ import { EvaluationsService } from 'src/app/services/evaluations/evaluations.ser
 @Component({
   selector: 'app-evaluation-graph',
   templateUrl: './evaluation-graph.component.html',
-  styleUrls: ['./evaluation-graph.component.css']
+  styleUrls: ['./evaluation-graph.component.css'],
 })
 export class EvaluationGraphComponent implements OnChanges, OnInit {
   @Input() specialities: Speciality[] = [];
@@ -18,23 +23,38 @@ export class EvaluationGraphComponent implements OnChanges, OnInit {
   evaluations: Evaluation[] = [];
   loading: boolean = false;
 
-  barChartOptions: ChartOptions = {
+  barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
+
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Étudiants avec moyenne ≥ 10 par spécialité',
+      },
+    },
     scales: {
       y: {
         beginAtZero: true,
         title: {
           display: true,
-          text: 'Nombre d\'étudiants'
-        }
+          text: "Nombre d'étudiants",
+        },
       },
       x: {
         title: {
           display: true,
-          text: 'Spécialités'
-        }
-      }
-    }
+          text: 'Spécialités',
+        },
+        ticks: {
+          autoSkip: false, // évite la suppression automatique de labels
+          maxRotation: 30, // réduit l’inclinaison pour les labels longs
+          minRotation: 30, // réduit l’inclinaison pour les labels courts
+        },
+      },
+    },
   };
 
   barChartData: ChartData<'bar'> = {
@@ -43,18 +63,18 @@ export class EvaluationGraphComponent implements OnChanges, OnInit {
       {
         data: [],
         label: 'Étudiants avec moyenne ≥ 10',
-      }
-    ]
+        backgroundColor: ['#f20444', '#f1bb35'],
+        borderColor: 'none',
+        borderWidth: 0,
+        hoverBackgroundColor: ['#444a58', '#444a58'],
+      },
+    ],
   };
 
-  constructor(
-    private evaluationsService: EvaluationsService,
-  ) { }
-
+  constructor(private evaluationsService: EvaluationsService) {}
 
   ngOnInit(): void {
     this.loadEvaluations();
-
   }
   loadEvaluations(): void {
     this.loading = true;
@@ -67,9 +87,10 @@ export class EvaluationGraphComponent implements OnChanges, OnInit {
         this.processData();
       },
       error: (error) => {
-        console.error('Erreur chargement évaluations', error)
+        console.error('Erreur chargement évaluations', error);
         this.loading = false;
-        const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+        const errorMsg =
+          error?.error?.message ?? 'Une erreur inattendue est survenue';
         // this.toastr.error(errorMsg, 'Erreur !');
       },
     });
@@ -159,22 +180,22 @@ export class EvaluationGraphComponent implements OnChanges, OnInit {
     const labels: string[] = [];
     const counts: number[] = [];
 
-    this.specialities.forEach(spec => {
+    this.specialities.forEach((spec) => {
       //  Récupérer les étudiants appartenant à cette spécialité
       const studentsInSpecIds = this.evaluations
-        .filter(ev => ev.student?.speciality?.label === spec.label)
-        .map(ev => ev.studentId);
+        .filter((ev) => ev.student?.speciality?.label === spec.label)
+        .map((ev) => ev.studentId);
 
       const uniqueStudentIds = [...new Set(studentsInSpecIds)];
 
       // Récupérer leurs évaluations uniquement
-      const evalsForStudents = this.evaluations.filter(
-        (ev: any) => uniqueStudentIds.includes(ev.studentId)
+      const evalsForStudents = this.evaluations.filter((ev: any) =>
+        uniqueStudentIds.includes(ev.studentId)
       );
 
       //  Regrouper par étudiant
       const studentGrades: { [studentId: number]: number[] } = {};
-      evalsForStudents.forEach(ev => {
+      evalsForStudents.forEach((ev) => {
         if (!studentGrades[ev.studentId]) {
           studentGrades[ev.studentId] = [];
         }
@@ -183,7 +204,7 @@ export class EvaluationGraphComponent implements OnChanges, OnInit {
 
       //  Calculer moyenne et compter
       let countAccepted = 0;
-      Object.keys(studentGrades).forEach(studentId => {
+      Object.keys(studentGrades).forEach((studentId) => {
         const grades = studentGrades[+studentId];
         const moyenne =
           grades.reduce((sum, note) => sum + note, 0) / grades.length;
@@ -204,14 +225,13 @@ export class EvaluationGraphComponent implements OnChanges, OnInit {
       datasets: [
         {
           data: counts,
-          label: 'Étudiants avec moyenne ≥ 10 par spécialité',
-          backgroundColor: 'rgba(75, 192, 192, 0.7)',
+          label: 'Étudiants avec moyenne ≥ 10',
+          backgroundColor: ['#2004f2ff', '#f1bb35'],
           borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
-        }
-      ]
+          borderWidth: 1,
+          hoverBackgroundColor: ['#444a58', '#444a58'],
+        },
+      ],
     };
   }
-
-
 }

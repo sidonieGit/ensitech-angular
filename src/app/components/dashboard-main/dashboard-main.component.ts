@@ -1,16 +1,16 @@
-import { AcademicYearService } from 'src/app/services/academic-year/academic-year.service';
-import { Speciality } from 'src/app/interfaces/speciality.interface';
-import { EvaluationsService } from './../../services/evaluations/evaluations.service';
-import { SpecialityService } from './../../services/speciality/speciality.service';
 import { Component, OnInit } from '@angular/core';
+import { ChartOptions } from 'chart.js';
+import { catchError, map, of, switchMap } from 'rxjs';
+import { AcademicYear } from 'src/app/interfaces/academic.model';
+import { Evaluation } from 'src/app/interfaces/evaluation.model';
+import { Speciality } from 'src/app/interfaces/speciality.interface';
+import { AcademicYearService } from 'src/app/services/academic-year/academic-year.service';
 import { CoursesService } from 'src/app/services/courses/courses.service';
 import { RegistrationService } from 'src/app/services/registration/registration.service';
 import { StudentsService } from 'src/app/services/students/students.service';
 import { TeachersService } from 'src/app/services/teachers/teachers.service';
-import { Evaluation } from 'src/app/interfaces/evaluation.model';
-import { AcademicYear } from 'src/app/interfaces/academic.model';
-import { catchError, map, Observable, of, switchMap } from 'rxjs';
-import { ChartOptions } from 'chart.js';
+import { EvaluationsService } from './../../services/evaluations/evaluations.service';
+import { SpecialityService } from './../../services/speciality/speciality.service';
 
 @Component({
   selector: 'app-dashboard-main',
@@ -220,7 +220,6 @@ export class DashboardMainComponent implements OnInit {
         this.barChartData.datasets[0].data = newData;
         this.totalSpecialities = specialities.length;
         // console.log('Specialities loaded:', this.listSpecialities);
-
       },
       error: (error) => {
         console.error(

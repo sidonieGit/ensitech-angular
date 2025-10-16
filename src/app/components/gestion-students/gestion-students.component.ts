@@ -21,8 +21,12 @@ export class GestionStudentsComponent implements OnInit {
   selectedStudent: Student | null = null;
   editingStudent: Student | null = null;
 
+  displayedStudents: Student[] = []; // ✅ données visibles (pagination + filtre)
+
   // NOUVELLES PROPRIÉTÉS pour les listes déroulantes
   allSpecialities: Speciality[] = [];
+  currentPage = 1;
+  itemsPerPage = 5;
 
   // Modèle pour le formulaire d'ajout
   newStudent: Omit<Student, 'id' | 'matricule' | 'speciality' | 'isEnrolled'> =
@@ -48,7 +52,7 @@ export class GestionStudentsComponent implements OnInit {
     //  Ajout de 'private' pour que coursesService soit une propriété de la classe
     private registrationService: RegistrationService,
     private toastr: ToastrService // Injecter ToastrService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadStudentsWithSpeciality();
@@ -90,8 +94,9 @@ export class GestionStudentsComponent implements OnInit {
                   // console.warn(
                   //   `Pas d'inscription étudiant non encore inscrit ${student.matricule}.`
                   // );
-                  console.error('erreur 5000 pas d inscription de cet étudiant');
-
+                  console.error(
+                    'erreur 5000 pas d inscription de cet étudiant'
+                  );
                 }
                 // On vérifie si c'est une erreur 404 (cas normal de non-inscription)
                 if (error.status === 404) {
@@ -170,6 +175,14 @@ export class GestionStudentsComponent implements OnInit {
         student.firstName.toLowerCase().includes(filter) ||
         student.lastName.toLowerCase().includes(filter)
     );
+    this.currentPage = 1; // reset sur page 1
+    this.updateDisplayedStudents();
+  }
+
+  updateDisplayedStudents(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.displayedStudents = this.filteredStudents.slice(start, end);
   }
 
   addStudent(): void {
@@ -182,8 +195,12 @@ export class GestionStudentsComponent implements OnInit {
         this.loadStudentsWithSpeciality(); // Recharger la liste
         this.resetForm();
       },
-      error: (error) =>
-        console.error("Erreur lors de l'ajout de l'étudiant", error),
+      error: (error) => {
+        this.toastr.error(
+          "Erreur lors de l'ajout de l'étudiant",
+          'addresse mail déja utilisée'
+        );
+      },
     });
   }
 
@@ -236,6 +253,21 @@ export class GestionStudentsComponent implements OnInit {
 
   viewStudent(student: Student): void {
     this.selectedStudent = student;
+  }
+
+  // for pagination
+  get paginatedStudents() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredStudents.slice(start, start + this.itemsPerPage);
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+  }
+
+  onItemsPerPageChange(value: number): void {
+    this.itemsPerPage = value;
+    this.currentPage = 1;
   }
 
   // --- Méthodes pour l'association des cours ---

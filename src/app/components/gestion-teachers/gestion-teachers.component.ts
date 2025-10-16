@@ -20,6 +20,7 @@ export class GestionTeachersComponent implements OnInit {
   // Pour les modals de vue et de modification
   selectedTeacher: Teacher | null = null;
   editingTeacher: Teacher | null = null;
+  displayedTeachers: Teacher[] = []; // ✅ données visibles (pagination + filtre)
 
   // Pour le formulaire d'ajout
   newTeacher: Omit<Teacher, 'id' | 'createdAt' | 'courses'> = {
@@ -38,11 +39,14 @@ export class GestionTeachersComponent implements OnInit {
   // ID du cours sélectionné dans la modale
   courseToAssignId: number | null = null;
 
+  currentPage = 1;
+  itemsPerPage = 5;
+
   constructor(
     private teachersService: TeachersService,
     private toastr: ToastrService,
     private coursesService: CoursesService // Injecter CourseService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadTeachersWithCourses();
@@ -189,7 +193,15 @@ export class GestionTeachersComponent implements OnInit {
           teacher.firstName.toLowerCase().includes(filter) ||
           teacher.lastName.toLowerCase().includes(filter)
       );
+      this.currentPage = 1; // reset sur page 1
+      this.updateDisplayedTeachers();
     }
+  }
+
+  updateDisplayedTeachers(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.displayedTeachers = this.filteredTeachers.slice(start, end);
   }
 
   addTeacher(): void {
@@ -221,7 +233,10 @@ export class GestionTeachersComponent implements OnInit {
       },
       error: (error) => {
         console.error("Erreur lors de l'ajout", error);
-        this.toastr.error("Erreur lors de l'ajout de l'enseignant", 'Erreur !');
+        this.toastr.error(
+          "Erreur lors de l'ajout de l'enseignant",
+          'addresse mail déja utilisée'
+        );
       },
     });
   }
@@ -266,5 +281,20 @@ export class GestionTeachersComponent implements OnInit {
   // Pour le bouton "Voir les informations"
   viewTeacher(teacher: Teacher): void {
     this.selectedTeacher = teacher;
+  }
+
+  // for pagination
+  get paginatedTeachers() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredTeachers.slice(start, start + this.itemsPerPage);
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+  }
+
+  onItemsPerPageChange(value: number): void {
+    this.itemsPerPage = value;
+    this.currentPage = 1;
   }
 }

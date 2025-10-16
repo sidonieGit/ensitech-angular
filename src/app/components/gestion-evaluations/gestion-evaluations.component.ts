@@ -19,6 +19,7 @@ import { SpecialityService } from 'src/app/services/speciality/speciality.servic
 export class GestionEvaluationsComponent implements DoCheck, OnInit {
   evaluations: Evaluation[] = [];
   filteredEvaluations: Evaluation[] = [];
+  displayedEvaluations: Evaluation[] = []; // ✅ données visibles (pagination + filtre)
 
   // NOUVELLES PROPRIÉTÉS pour les listes déroulantes
   allCourses: Course[] = [];
@@ -51,12 +52,14 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
     studentId: 0,
     courseId: 0,
     course: {
-      id: 0
-    }
-  };;
+      id: 0,
+    },
+  };
   selectedEvaluation: Evaluation | null = null;
   filterEvaluation: string = '';
   lastStudentId: number | null = null; // Pour suivre le dernier studentId sélectionné
+  currentPage = 1;
+  itemsPerPage = 10;
 
   constructor(
     private evaluationsService: EvaluationsService,
@@ -64,7 +67,7 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
     private specialityService: SpecialityService,
 
     private toastr: ToastrService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadEvaluations();
@@ -72,15 +75,18 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
     this.loadStudents(); // Charger les étudiants
   }
   ngDoCheck() {
-
-    if (this.newEvaluation && this.newEvaluation.studentId &&
-      this.newEvaluation.studentId !== this.lastStudentId) {
+    if (
+      this.newEvaluation &&
+      this.newEvaluation.studentId &&
+      this.newEvaluation.studentId !== this.lastStudentId
+    ) {
       // console.log('Vérification manuelle :', this.newEvaluation);
       // Met à jour la dernière valeur
       this.lastStudentId = this.newEvaluation.studentId;
-      const specialityLabel = this.allStudents.find(s => s.id === Number(this.newEvaluation.studentId))?.speciality?.label
+      const specialityLabel = this.allStudents.find(
+        (s) => s.id === Number(this.newEvaluation.studentId)
+      )?.speciality?.label;
       this.loadCoursesBySpeciality(specialityLabel || '');
-
     }
   }
 
@@ -90,11 +96,11 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
       next: (data) => {
         this.loading = false;
         this.allCourses = data[0].courses || [];
-
       },
       error: (error) => {
         this.loading = false;
-        const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+        const errorMsg =
+          error?.error?.message ?? 'Une erreur inattendue est survenue';
         this.toastr.error(errorMsg, 'Erreur !');
       },
     });
@@ -108,7 +114,8 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
       },
       error: (error) => {
         this.loading = false;
-        const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+        const errorMsg =
+          error?.error?.message ?? 'Une erreur inattendue est survenue';
         this.toastr.error(errorMsg, 'Erreur !');
       },
     });
@@ -122,12 +129,13 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
         this.loading = false;
         //console.log('Étudiants chargés:', data);
 
-        this.allStudents = data.filter(s => s.speciality !== undefined);
+        this.allStudents = data.filter((s) => s.speciality !== undefined);
       },
       error: (error) => {
-        console.error('Erreur chargement des étudiants', error)
+        console.error('Erreur chargement des étudiants', error);
         this.loading = false;
-        const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+        const errorMsg =
+          error?.error?.message ?? 'Une erreur inattendue est survenue';
         this.toastr.error(errorMsg, 'Erreur !');
       },
     });
@@ -142,25 +150,31 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
         this.loading = false;
         this.evaluations = data;
         this.updateFilteredEvaluations();
-        const evaluationIds = data
-          ?.map(item => item?.id)
-          .filter((id): id is number => typeof id === 'number') || [];
+        const evaluationIds =
+          data
+            ?.map((item) => item?.id)
+            .filter((id): id is number => typeof id === 'number') || [];
 
-        const highestEvaluationId = evaluationIds.length > 0 ? Math.max(...evaluationIds) : 0;
+        const highestEvaluationId =
+          evaluationIds.length > 0 ? Math.max(...evaluationIds) : 0;
         const nextCodeNumber = highestEvaluationId + 1;
-        this.newEvaluation.code = `EVAL-ENS-25-26-${nextCodeNumber.toString().padStart(3, '0')}`;
+        this.newEvaluation.code = `EVAL-ENS-25-26-${nextCodeNumber
+          .toString()
+          .padStart(3, '0')}`;
       },
       error: (error) => {
-        console.error('Erreur chargement évaluations', error)
+        console.error('Erreur chargement évaluations', error);
         this.loading = false;
-        const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+        const errorMsg =
+          error?.error?.message ?? 'Une erreur inattendue est survenue';
         this.toastr.error(errorMsg, 'Erreur !');
       },
     });
   }
 
   addEvaluation(): void {
-    if (this.newEvaluation &&
+    if (
+      this.newEvaluation &&
       this.newEvaluation.studentId &&
       this.newEvaluation.courseId &&
       this.newEvaluation.grade &&
@@ -176,16 +190,19 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
           this.toastr.success('Évaluation créée', 'Succès !');
           this.resetNewEvaluation();
           this.loadEvaluations();
-
         },
         error: (error) => {
           this.loading = false;
-          const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
+          const errorMsg =
+            error?.error?.message ?? 'Une erreur inattendue est survenue';
           this.toastr.error(errorMsg, 'Erreur !');
         },
       });
     } else {
-      this.toastr.error('Veuillez remplir tous les champs correctement.', 'Erreur !');
+      this.toastr.error(
+        'Veuillez remplir tous les champs correctement.',
+        'Erreur !'
+      );
     }
   }
 
@@ -210,7 +227,8 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
   saveEditEvaluation(): void {
     if (!this.editingEvaluation) return;
     // console.log("editingEvaluation", this.editingEvaluation);
-    if (this.editingEvaluation &&
+    if (
+      this.editingEvaluation &&
       this.editingEvaluation.studentId &&
       this.editingEvaluation.course &&
       this.editingEvaluation.grade &&
@@ -219,21 +237,27 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
       this.editingEvaluation.type
     ) {
       this.loading = true;
-      this.evaluationsService.updateEvaluation(this.editingEvaluation).subscribe({
-        next: () => {
-          this.loading = false;
-          this.toastr.success('Évaluation mise à jour', 'Succès !');
-          this.loadEvaluations();
-          this.editingEvaluation = null;
-        },
-        error: (error) => {
-          this.loading = false;
-          const errorMsg = error?.error?.message ?? 'Une erreur inattendue est survenue';
-          this.toastr.error(errorMsg, 'Erreur !');
-        },
-      });
+      this.evaluationsService
+        .updateEvaluation(this.editingEvaluation)
+        .subscribe({
+          next: () => {
+            this.loading = false;
+            this.toastr.success('Évaluation mise à jour', 'Succès !');
+            this.loadEvaluations();
+            this.editingEvaluation = null;
+          },
+          error: (error) => {
+            this.loading = false;
+            const errorMsg =
+              error?.error?.message ?? 'Une erreur inattendue est survenue';
+            this.toastr.error(errorMsg, 'Erreur !');
+          },
+        });
     } else {
-      this.toastr.error('Veuillez remplir tous les champs correctement.', 'Erreur !');
+      this.toastr.error(
+        'Veuillez remplir tous les champs correctement.',
+        'Erreur !'
+      );
     }
   }
 
@@ -268,5 +292,27 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
         e.description.toLowerCase().includes(filter) ||
         e.code.toLowerCase().includes(filter)
     );
+    this.currentPage = 1; // reset sur page 1
+    this.updateDisplayedEvaluations();
+  }
+
+  updateDisplayedEvaluations(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.displayedEvaluations = this.filteredEvaluations.slice(start, end);
+  }
+
+  get paginatedEvaluations() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredEvaluations.slice(start, start + this.itemsPerPage);
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+  }
+
+  onItemsPerPageChange(value: number): void {
+    this.itemsPerPage = value;
+    this.currentPage = 1;
   }
 }

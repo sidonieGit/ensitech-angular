@@ -372,9 +372,21 @@ main {
   width: 100%;
   margin-bottom: 20px;
 }
+/* Deux colonnes sur tablette */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .kpi-container {
+    justify-content: center;
+  }
+
+  .kpi-card,
+  .kpi-card-alternate {
+    flex: 0 0 calc(50% - 10px); /* Deux cartes par ligne */
+    max-width: calc(50% - 10px);
+  }
+}
 
 /* Medium screens (tablets) */
-@media (min-width: 768px) {
+@media (min-width: 1100px) {
   app-sidebar {
     position: static;
     /*display: block;  Always visible on larger screens */
@@ -384,12 +396,25 @@ main {
     border-top: none;
     flex-shrink: 0; /* Prevent sidebar from shrinking */
  }
-    .kpi-card,
-  .kpi-card-alternate {
-    /* Les cartes prennent ~50% de la largeur (2 par ligne) */
-    width: calc(50% - 10px); /* 50% - la moitié du gap (20px) de chaque côté */
-    flex: 0 0 calc(50% - 10px); /* Désactive la croissance, utilise la largeur fixe */
-  }
+
+ #sidebarOffcanvas {
+    /* Ces règles forcent l'Offcanvas à devenir un Sidebar fixe à gauche */
+    position: fixed !important; /* Utilisez fixed pour un sidebar qui reste */
+    left: 0 !important;
+    transform: none !important;
+    visibility: visible !important;
+    width: var(--sidbar-width, 250px);
+    height: 100vh;
+    border-right: 1px solid var(--color-gray, #ddd);
+    /* Assurez-vous que l'élément parent de l'Offcanvas est flex ou grid pour qu'il occupe la bonne place */
+  }
+
+
+   .kpi-card,
+  .kpi-card-alternate {
+    flex: 0 0 calc(33.333% - 14px);
+    max-width: calc(33.333% - 14px);
+  }
 
 
   main {
@@ -548,6 +573,7 @@ main {
 }
 
 
+
 @media (max-width: 768px) {
   #sidebarOffcanvas {
     width: 80% !important; /* sidebar prend 80% sur mobile */
@@ -558,44 +584,7 @@ main {
   }
 
 }
-/* Large screens (desktops) */
-@media (min-width: 769px) {
-  #sidebarOffcanvas {
-    /* Ces règles forcent l'Offcanvas à devenir un Sidebar fixe à gauche */
-    position: fixed !important; /* Utilisez fixed pour un sidebar qui reste */
-    left: 0 !important;
-    transform: none !important;
-    visibility: visible !important;
-    width: var(--sidbar-width, 250px);
-    height: 100vh;
-    border-right: 1px solid var(--color-gray, #ddd);
-    /* Assurez-vous que l'élément parent de l'Offcanvas est flex ou grid pour qu'il occupe la bonne place */
-  }
 
-  /* Important: Mettez à jour le margin de main */
-  main {
-    margin-left: 0!important;
-  }
-
-  .kpi-container {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-   .kpi-card,
-  .kpi-card-alternate {
-    /* Les cartes prennent ~50% de la largeur (2 par ligne) */
-    width: calc(50% - 10px); /* 50% - la moitié du gap (20px) de chaque côté */
-    flex: 0 0 calc(50% - 10px); /* Désactive la croissance, utilise la largeur fixe */
-  }
-
- /* Correction des charts (retrait des valeurs fixes non standard) */
-  canvas {
-    width: 100% !important; /* Force la largeur à 100% */
-    height: auto !important; /* Laisse la hauteur s'ajuster */
-    overflow: visible !important; /* Assurez-vous que le canvas n'est pas coupé */
-  }
-}
 
 
 /* @media (min-width: 1400px) {
@@ -907,4 +896,19 @@ main {
 }
 
 
+/* gestion pagination */
+.page-link {
+  cursor: pointer;
+  color: var(--color-primary);
+}
 
+.page-item.active .page-link {
+  background-color: var(--color-white);
+  border-color:var(--color-white);
+  color: var(--color-primary);
+}
+
+.page-item.disabled .page-link {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

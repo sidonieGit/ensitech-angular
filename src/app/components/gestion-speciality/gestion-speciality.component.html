@@ -4,39 +4,22 @@
     <app-topbar></app-topbar>
 
     <!-- Barre de recherche et bouton Ajouter -->
-    <div
-      class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4"
-    >
+    <div class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4">
       <div class="col-6 col-md-9" style="height: 44px">
         <div class="input-group">
           <span class="input-group-text" id="basic-addon1">
             <i class="hgi-stroke hgi-search-01"></i>
           </span>
-          <input
-            type="search"
-            placeholder="Rechercher une specialité ..."
-            class="form-control"
-            [(ngModel)]="filtername"
-            (ngModelChange)="updateFilteredSpecialities()"
-          />
+          <input type="search" placeholder="Rechercher une specialité ..." class="form-control" [(ngModel)]="filtername"
+            (ngModelChange)="updateFilteredSpecialities()" />
         </div>
       </div>
-      <button
-        *ngIf="!loading"
-        class="primary-btn border-0"
-        data-bs-toggle="modal"
-        data-bs-target="#addSpecialityModal"
-      >
+      <button *ngIf="!loading" class="primary-btn border-0" data-bs-toggle="modal" data-bs-target="#addSpecialityModal">
         Ajouter une Specialité<i class="hgi-stroke hgi-add-circle"></i>
       </button>
     </div>
     <div class="text-center">
-      <span
-        *ngIf="loading"
-        class="spinner-border spinner-border-sm me-2"
-        role="status"
-        aria-hidden="true"
-      ></span>
+      <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
     </div>
     <!-- Liste des specialities -->
     <div class="students-list mt-5 px-4" *ngIf="!loading">
@@ -52,7 +35,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let speciality of filteredSpecialities">
+          <tr *ngFor="let speciality of paginatedSpecialities">
             <td data-label="">
               <input type="checkbox" class="form-check-input" />
             </td>
@@ -62,43 +45,22 @@
             <td data-label="Cycle">{{ speciality.cycle }}</td>
             <td data-label="Actions">
               <div class="dropdown">
-                <a
-                  href="#"
-                  class="text-decoration-none text-black"
-                  id="dropdownMenuButton"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
+                <a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                  aria-expanded="false">
                   <i class="hgi-stroke hgi-more-vertical"></i>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li>
-                    <a
-                      class="dropdown-item"
-                      href="javascript:void(0);"
-                      (click)="editSpeciality(speciality)"
-                      data-bs-toggle="modal"
-                      data-bs-target="#editSpecialityModal"
-                      >Modifier</a
-                    >
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="editSpeciality(speciality)"
+                      data-bs-toggle="modal" data-bs-target="#editSpecialityModal">Modifier</a>
                   </li>
                   <li>
-                    <a
-                      class="dropdown-item"
-                      href="javascript:void(0);"
-                      (click)="viewSpeciality(speciality)"
-                      data-bs-toggle="modal"
-                      data-bs-target="#viewSpecialityModal"
-                      >Voir les informations</a
-                    >
+                    <a class="dropdown-item" href="javascript:void(0);" (click)="viewSpeciality(speciality)"
+                      data-bs-toggle="modal" data-bs-target="#viewSpecialityModal">Voir les informations</a>
                   </li>
                   <li>
-                    <a
-                      class="dropdown-item"
-                      href="javascript:void(0);"
-                      (click)="deleteSpeciality(speciality.id)"
-                      >Supprimer</a
-                    >
+                    <a class="dropdown-item" href="javascript:void(0);"
+                      (click)="deleteSpeciality(speciality.id)">Supprimer</a>
                   </li>
                 </ul>
               </div>
@@ -107,60 +69,38 @@
         </tbody>
       </table>
     </div>
+
+    <app-pagination [totalItems]="filteredSpecialities.length" [itemsPerPage]="itemsPerPage" [currentPage]="currentPage"
+      (pageChange)="onPageChange($event)" (itemsPerPageChange)="onItemsPerPageChange($event)">
+    </app-pagination>
   </main>
 
   <!-- Modal pour ajouter un cours -->
-  <div
-    class="modal fade"
-    id="addSpecialityModal"
-    tabindex="-1"
-    aria-labelledby="addSpecialityModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="addSpecialityModal" tabindex="-1" aria-labelledby="addSpecialityModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Ajouter une specialité</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <form (ngSubmit)="addSpeciality(newSpeciality)">
             <div class="mb-3">
               <label for="label" class="form-label">Titre</label>
-              <input
-                ype="text"
-                [(ngModel)]="newSpeciality.label"
-                name="label "
-                placeholder="Title"
-                required
-                class="form-control"
-              />
+              <input ype="text" [(ngModel)]="newSpeciality.label" name="label " placeholder="Title" required
+                class="form-control" />
             </div>
             <div class="mb-3">
               <label for="description" class="form-label">Description </label>
-              <textarea
-                [(ngModel)]="newSpeciality.description"
-                name="description"
-                placeholder="description"
-                required
-                class="form-control"
-              >
+              <textarea [(ngModel)]="newSpeciality.description" name="description" placeholder="description" required
+                class="form-control">
               </textarea>
             </div>
 
             <div class="mb-3">
               <label for="cycle" class="form-cycle">Cycles</label>
-              <select
-                name="cycle"
-                id="cycle"
-                class="form-select"
-                [(ngModel)]="newSpeciality.cycle"
-                required
-              >
+              <select name="cycle" id="cycle" class="form-select" [(ngModel)]="newSpeciality.cycle" required>
                 <option value="" disabled selected>Choisir le niveau</option>
 
                 <option value="LICENCE">Licence</option>
@@ -172,13 +112,7 @@
 
             <div class="mb-3">
               <label class="form-label">Cours</label>
-              <select
-                class="form-select"
-                [(ngModel)]="newSpeciality.courses"
-                name="courseId"
-                required
-                multiple
-              >
+              <select class="form-select" [(ngModel)]="newSpeciality.courses" name="courseId" required multiple>
                 <option *ngFor="let course of allCourses" [ngValue]="course">
                   {{ course.title }}
                 </option>
@@ -186,11 +120,7 @@
             </div>
 
             <div class="modal-footer">
-              <button
-                type="submit"
-                class="primary-btn border-0"
-                data-bs-dismiss="modal"
-              >
+              <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
                 Ajouter
               </button>
             </div>
@@ -201,22 +131,13 @@
   </div>
 
   <!-- Modal pour visualiser les informations d'un cours -->
-  <div
-    class="modal fade"
-    id="viewSpecialityModal"
-    tabindex="-1"
-    aria-labelledby="viewSpecialityModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="viewSpecialityModal" tabindex="-1" aria-labelledby="viewSpecialityModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Détails de la spécialité</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <!-- <p><strong>Id :</strong> {{ selectedSpeciality?.id }}</p> -->
@@ -235,11 +156,7 @@
           </p>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Fermer
           </button>
         </div>
@@ -248,48 +165,27 @@
   </div>
 
   <!-- Modal pour modifier une spécialité -->
-  <div
-    class="modal fade"
-    id="editSpecialityModal"
-    tabindex="-1"
-    aria-labelledby="editSpecialityModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="editSpecialityModal" tabindex="-1" aria-labelledby="editSpecialityModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">
             Modifier les informations de la spécialité
           </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body" *ngIf="editingSpeciality">
           <form (ngSubmit)="saveEditSpeciality()">
             <div class="mb-3">
               <label for="label" class="form-label">Titre</label>
-              <input
-                type="text"
-                [(ngModel)]="editingSpeciality.label"
-                name="label"
-                placeholder="Titre"
-                required
-                class="form-control"
-              />
+              <input type="text" [(ngModel)]="editingSpeciality.label" name="label" placeholder="Titre" required
+                class="form-control" />
             </div>
             <div class="mb-3">
               <label for="description" class="form-label">Description</label>
-              <input
-                type="text"
-                [(ngModel)]="editingSpeciality.description"
-                name="description"
-                placeholder="Description"
-                required
-                class="form-control"
-              />
+              <input type="text" [(ngModel)]="editingSpeciality.description" name="description"
+                placeholder="Description" required class="form-control" />
             </div>
             <!-- <div class="mb-3">
               <label for="cycle" class="form-label">Cycles</label>
@@ -305,13 +201,7 @@
 
             <div class="mb-3">
               <label for="cycle" class="form-cycle">Cycles</label>
-              <select
-                name="cycle"
-                id="cycle"
-                class="form-select"
-                [(ngModel)]="editingSpeciality.cycle"
-                required
-              >
+              <select name="cycle" id="cycle" class="form-select" [(ngModel)]="editingSpeciality.cycle" required>
                 <option value="" disabled selected>Choisir le niveau</option>
 
                 <option value="LICENCE">Licence</option>
@@ -323,24 +213,15 @@
 
             <div class="mb-3">
               <label class="form-label">Cours</label>
-              <select
-                class="form-select"
-                [(ngModel)]="editingSpeciality.selectedCourses"
-                name="courseId"
-                required
-                multiple
-              >
+              <select class="form-select" [(ngModel)]="editingSpeciality.selectedCourses" name="courseId" required
+                multiple>
                 <option *ngFor="let course of allCourses" [value]="course.id">
                   {{ course.title }}
                 </option>
               </select>
             </div>
 
-            <button
-              type="submit"
-              class="primary-btn border-0"
-              data-bs-dismiss="modal"
-            >
+            <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
               Enregistrer
             </button>
           </form>

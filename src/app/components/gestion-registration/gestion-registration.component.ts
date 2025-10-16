@@ -18,6 +18,9 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
   selectedRegistration: Registration | null = null;
   editingRegistration: Registration | null = null;
   filteredRegistrations: Registration[] = [];
+
+  displayedRegistrations: Registration[] = []; // ✅ données visibles (pagination + filtre)
+
   choosenRegistration: Registration | null = null;
   filtername: string = '';
   newRegistration = {
@@ -38,6 +41,9 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
   selectedValue = '';
 
   lastSelectedLevel: string | null = null;
+
+  currentPage = 1;
+  itemsPerPage = 5;
 
   registrationService: RegistrationService = inject(RegistrationService);
   toastr: ToastrService = inject(ToastrService);
@@ -135,6 +141,13 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
           .toLowerCase()
           .includes(this.filtername.toLowerCase())
     );
+    this.currentPage = 1; // reset sur page 1
+    this.updateDisplayedRegistrations();
+  }
+  updateDisplayedRegistrations(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.displayedRegistrations = this.filteredRegistrations.slice(start, end);
   }
 
   addRegistration() {
@@ -282,5 +295,20 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
     a.click();
     window.URL.revokeObjectURL(url);
     // document.body.removeChild(a);
+  }
+
+  // for pagination
+  get paginatedRegistrations() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredRegistrations.slice(start, start + this.itemsPerPage);
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+  }
+
+  onItemsPerPageChange(value: number): void {
+    this.itemsPerPage = value;
+    this.currentPage = 1;
   }
 }

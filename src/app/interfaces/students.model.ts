@@ -20,4 +20,6 @@ export interface Student {
   isEnrolled?: boolean;
   //initialisation de la specialité à non inscrit pour l'affichage et eviter erreur 500
   speciality?: Speciality;
+
+  countryCode?: string;
 }

@@ -685,7 +685,9 @@ main {
   opacity: 0.7;
 }
 
-
+button, input, optgroup, select, textarea {
+border: #e9ecef;
+}
 /*
  * DARK MODE STYLES
  * ----------------------------------------------------
@@ -912,3 +914,4 @@ main {
   cursor: not-allowed;
   opacity: 0.5;
 }
+

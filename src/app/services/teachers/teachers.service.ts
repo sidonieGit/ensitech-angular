@@ -37,7 +37,7 @@ export class TeachersService {
   }
 
   // PUT: Modifier un enseignant
-  updateTeacher(teacher: Teacher): Observable<Teacher> {
+  updateTeacher(id: number, teacher: Teacher): Observable<Teacher> {
     const url = `${this.apiUrl}/${teacher.id}`;
     return this.http.put<Teacher>(url, teacher);
   }

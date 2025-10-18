@@ -117,11 +117,19 @@
               <input class="form-control" type="email" [(ngModel)]="newTeacher.email" name="email"
                 placeholder="Email" />
             </div>
+
+            <!-- ✅ Sélection du pays + téléphone -->
             <div class="mb-3">
-              <label for="email" class="form-label">Téléphone</label>
-              <input class="form-control" type="text" [(ngModel)]="newTeacher.telephone" name="telephone"
-                placeholder="Téléphone" />
+              <label for="telephone" class="form-label">Téléphone</label>
+              <div class="input-group">
+                <select class="form-select" [(ngModel)]="selectedCountryCode" name="countryCode" required>
+                  <option *ngFor="let c of countryCodes" [value]="c.code">{{ c.name }} ({{ c.code }})</option>
+                </select>
+                <input type="tel" class="form-control" [(ngModel)]="newTeacher.telephone" name="telephone"
+                  placeholder="Ex : 671234567" required pattern="\\d{5,15}" />
+              </div>
             </div>
+
             <div class="modal-footer">
               <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
                 Ajouter
@@ -142,11 +150,12 @@
           <h5 class="modal-title">Détails de l'enseignant</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body">
-          <p><strong>Nom :</strong> {{ selectedTeacher?.firstName }}</p>
-          <p><strong>Prénom :</strong> {{ selectedTeacher?.lastName }}</p>
-          <p><strong>Email :</strong> {{ selectedTeacher?.email }}</p>
-          <p><strong>Téléphone :</strong> {{ selectedTeacher?.telephone }}</p>
+        <div class="modal-body" *ngIf="selectedTeacher">
+          <p><strong>Nom :</strong> {{ selectedTeacher.firstName }}</p>
+          <p><strong>Prénom :</strong> {{ selectedTeacher.lastName }}</p>
+          <p><strong>Email :</strong> {{ selectedTeacher.email }}</p>
+          <p><strong>Téléphone :</strong> {{ selectedTeacher.telephone? (selectedTeacher.telephone | phoneFormat) : ''
+            }}</p>
           <p>
             <strong>Date d'ajout :</strong>
             {{ selectedTeacher?.createdAt | date : "dd/MM/yyyy" }}
@@ -195,11 +204,25 @@
               <input type="email" [(ngModel)]="editingTeacher.email" name="email" placeholder="Email"
                 class="form-control" />
             </div>
+
+            <!-- Sélection du pays + téléphone -->
+            <!-- ✅ Sélection du pays + téléphone -->
             <div class="mb-3">
               <label for="telephone" class="form-label">Téléphone</label>
-              <input type="text" [(ngModel)]="editingTeacher.telephone" name="telephone" placeholder="Téléphone"
-                class="form-control" />
+              <div class="input-group">
+                <select class="form-select" style="max-width: 150px" [(ngModel)]="selectedCountryCode"
+                  name="editCountryCode" required>
+                  <option *ngFor="let c of countryCodes" [value]="c.code">
+                    {{ c.name }} ({{ c.code }})
+                  </option>
+                </select>
+
+                <input type="tel" class="form-control" [(ngModel)]="editingTeacher.telephone" name="editTelephone"
+                  placeholder="Ex : 671234567" required pattern="\\d{5,15}" />
+              </div>
             </div>
+
+
             <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
               Enregistrer
             </button>

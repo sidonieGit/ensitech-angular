@@ -128,7 +128,7 @@
                   <option *ngFor="let c of countryCodes" [value]="c.code">{{ c.name }} ({{ c.code }})</option>
                 </select>
                 <input type="tel" class="form-control" [(ngModel)]="newStudent.telephone" name="telephone"
-                  placeholder="Ex : 671234567" required pattern="\\d{5,15}" />
+                  placeholder="Ex : 671234567" required pattern="\\d{5,15}" (keydown)="preventNonNumeric($event)" />
               </div>
             </div>
             <!-- Vous pouvez ajouter les autres champs ici : address, speciality, gender -->
@@ -236,7 +236,7 @@
                 </select>
 
                 <input type="tel" class="form-control" [(ngModel)]="editingStudent.telephone" name="editTelephone"
-                  placeholder="Ex : 671234567" required pattern="\\d{5,15}" />
+                  placeholder="Ex : 671234567" required pattern="\\d{5,15}" (keydown)="preventNonNumeric($event)" />
               </div>
             </div>
 

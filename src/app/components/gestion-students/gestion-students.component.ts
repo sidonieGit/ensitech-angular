@@ -63,6 +63,29 @@ export class GestionStudentsComponent implements OnInit {
     this.loadStudentsWithSpeciality();
     this.countryCodes = this.phoneService.getAllCountries(); //
   }
+
+  /**
+   * Empêche la saisie de caractères non numériques dans le champ de téléphone
+   * (sauf les touches de contrôle).
+   * @param event L'événement clavier.
+   */
+  preventNonNumeric(event: KeyboardEvent) {
+    // Autorise les touches de contrôle (Retour arrière, flèches, tabulation, etc.)
+    if (
+      event.key === 'Backspace' ||
+      event.key === 'Delete' ||
+      event.key === 'Tab' ||
+      event.key === 'ArrowLeft' ||
+      event.key === 'ArrowRight'
+    ) {
+      return;
+    }
+    // Bloque si la touche pressée n'est pas un chiffre
+    if (event.key < '0' || event.key > '9') {
+      event.preventDefault();
+    }
+  }
+
   /**
    * Charge la liste des étudiants et, pour chacun, tente de récupérer sa spécialité
    * via sa dernière inscription.

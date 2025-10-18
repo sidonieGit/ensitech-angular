@@ -47,12 +47,48 @@ export class PhoneService {
 
     return selectedCountryCode + s;
   }*/
+  /**
+   * Nettoie le numéro en retirant les espaces et les caractères non numériques.
+   * Conserve le '+' uniquement s'il est le premier caractère.
+   * @param raw La chaîne de téléphone brute.
+   * @returns La chaîne nettoyée.
+   */
+  private sanitize(raw: string): string {
+    if (!raw) return '';
+    // Retire les espaces
+    let s = raw.trim().replace(/\s+/g, '');
+
+    // S'il y a un '+' au début, on le garde pour l'indicatif.
+    if (s.startsWith('+')) {
+      // On garde le '+' puis on retire tous les non-chiffres du reste de la chaîne
+      return '+' + s.slice(1).replace(/\D/g, '');
+    }
+    // Sinon, on retire tous les non-chiffres de toute la chaîne
+    return s.replace(/\D/g, '');
+  }
+  // normalize(raw: string, countryCode: string): string {
+  //   if (!raw) return '';
+
+  //   let s = raw.trim().replace(/\s+/g, '');
+  //   s = s.replace(/^0+/, ''); // retire les 0 au début si présents
+
+  //   // Si l'utilisateur a déjà mis un indicatif (+33, +229, etc.), on garde tel quel
+  //   if (s.startsWith('+')) return s;
+
+  //   // Si l'utilisateur a saisi le code sans +, on l'ajoute
+  //   const numericCountry = countryCode.replace('+', '');
+  //   if (s.startsWith(numericCountry)) return `+${s}`;
+
+  //   // Sinon on préfixe avec le code sélectionné
+  //   return `${countryCode}${s}`;
+  // }
 
   normalize(raw: string, countryCode: string): string {
     if (!raw) return '';
 
-    let s = raw.trim().replace(/\s+/g, '');
-    s = s.replace(/^0+/, ''); // retire les 0 au début si présents
+    // Utilisation de la nouvelle fonction de nettoyage
+    let s = this.sanitize(raw);
+    s = s.replace(/^0+/, ''); // retire les 0 au début (convention africaine/européenne)
 
     // Si l'utilisateur a déjà mis un indicatif (+33, +229, etc.), on garde tel quel
     if (s.startsWith('+')) return s;

@@ -118,7 +118,7 @@
                 placeholder="Email" />
             </div>
 
-            <!-- ✅ Sélection du pays + téléphone -->
+            <!--  Sélection du pays + téléphone -->
             <div class="mb-3">
               <label for="telephone" class="form-label">Téléphone</label>
               <div class="input-group">
@@ -126,7 +126,7 @@
                   <option *ngFor="let c of countryCodes" [value]="c.code">{{ c.name }} ({{ c.code }})</option>
                 </select>
                 <input type="tel" class="form-control" [(ngModel)]="newTeacher.telephone" name="telephone"
-                  placeholder="Ex : 671234567" required pattern="\\d{5,15}" />
+                  placeholder="Ex : 671234567" required pattern="\\d{5,15}" (keydown)="preventNonNumeric($event)" />
               </div>
             </div>
 
@@ -218,7 +218,7 @@
                 </select>
 
                 <input type="tel" class="form-control" [(ngModel)]="editingTeacher.telephone" name="editTelephone"
-                  placeholder="Ex : 671234567" required pattern="\\d{5,15}" />
+                  placeholder="Ex : 671234567" required pattern="\\d{5,15}" (keydown)="preventNonNumeric($event)" />
               </div>
             </div>
 

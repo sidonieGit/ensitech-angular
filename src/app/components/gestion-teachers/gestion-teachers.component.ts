@@ -59,6 +59,27 @@ export class GestionTeachersComponent implements OnInit {
     this.countryCodes = this.phoneService.getAllCountries();
   }
 
+  /**
+   * Empêche la saisie de caractères non numériques dans le champ de téléphone
+   * (sauf les touches de contrôle).
+   * @param event L'événement clavier.
+   */
+  preventNonNumeric(event: KeyboardEvent) {
+    // Autorise les touches de contrôle (Retour arrière, flèches, tabulation, etc.)
+    if (
+      event.key === 'Backspace' ||
+      event.key === 'Delete' ||
+      event.key === 'Tab' ||
+      event.key === 'ArrowLeft' ||
+      event.key === 'ArrowRight'
+    ) {
+      return;
+    }
+    // Bloque si la touche pressée n'est pas un chiffre
+    if (event.key < '0' || event.key > '9') {
+      event.preventDefault();
+    }
+  }
   // --- LOGIQUE DE CHARGEMENT ENRICHIE ---
   loadTeachersWithCourses(): void {
     this.teachersService

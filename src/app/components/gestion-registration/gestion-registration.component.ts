@@ -19,7 +19,7 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
   editingRegistration: Registration | null = null;
   filteredRegistrations: Registration[] = [];
 
-  displayedRegistrations: Registration[] = []; // ✅ données visibles (pagination + filtre)
+  displayedRegistrations: Registration[] = [];
 
   choosenRegistration: Registration | null = null;
   filtername: string = '';
@@ -37,8 +37,10 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
   students: Student[] = [];
   // editingRegistration = { ...this.newRegistration };
 
+
   // test for datalist
   selectedValue = '';
+
 
   lastSelectedLevel: string | null = null;
 
@@ -52,10 +54,10 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
   studentService = inject(StudentsService);
 
   ngOnInit(): void {
-    this.loadRegistrations();
+    this.loadStudents();
+    // this.loadRegistrations();
     this.loadSpecialities();
     this.loadAcademicYears();
-    this.loadStudents();
   }
   ngDoCheck() {
     if (
@@ -83,6 +85,7 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
     this.studentService.getStudents().subscribe({
       next: (students) => {
         this.students = students;
+        this.loadRegistrations();
       },
       error: (err) => {
         this.toastr.error(`Erreur de chargement de la liste des étudiants`);
@@ -117,11 +120,24 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
     // Logic to load registrations from a service
     this.registrationService.getRegistrations().subscribe({
       next: (data) => {
-        // this.registration
         this.registrations = data;
-        this.filteredRegistrations = data;
-        // this.updateFilteredRegistrations;
+        this.registrations = this.registrations.map(
+          (registration) => {
+          const student = this.students.find(
+            (s) => s.matricule === registration.matricule
+          );
+          return {
+            ...registration,
+            studentFullName: student
+              ? `${student.firstName} ${student.lastName}`
+              : 'Étudiant inconnu',
+          } as Registration;
+        });
+
+        this.filteredRegistrations = this.registrations ;
+        this.updateDisplayedRegistrations();
       },
+
       error: (err) => {
         this.toastr.error(`Erreur de chargement des inscriptions `);
       },

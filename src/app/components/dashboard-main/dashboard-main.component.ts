@@ -30,6 +30,9 @@ export class DashboardMainComponent implements OnInit {
   yearInProgressLabel: AcademicYear[] = [];
   latestPreviousYearLabel: AcademicYear[] = [];
 
+  selectedYearLabel: string = 'TOUTES';
+  allAcademicYears: AcademicYear[] = [];
+
   // Données pour le graphique, initialisées avec des zéros.
   // Elles seront mises à jour lorsque les données de l'API arriveront.
   public barChartData = {
@@ -144,8 +147,20 @@ export class DashboardMainComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadDashboardData();
-    this.loadRegistrationsOverYears();
+    // 1. Charger TOUTES les années en premier
+    this.academicYearService.getAcademicYears().subscribe((years) => {
+      this.allAcademicYears = years;
+      // 2. Définir l'année en cours comme filtre par défaut (ou 'TOUTES')
+      const currentYear = years.find((y) => y.status === 'EN_COURS');
+      this.selectedYearLabel = currentYear ? currentYear.label : 'TOUTES';
+
+      // 3. Charger le tableau de bord avec le filtre par défaut
+      this.loadDashboardData();
+      this.loadRegistrationsOverYears();
+    });
+
+    // this.loadDashboardData();
+    // this.loadRegistrationsOverYears();
   }
 
   /**
@@ -233,7 +248,19 @@ export class DashboardMainComponent implements OnInit {
     // --- Chargement des données des inscriptions ---
     this.registrationService.getRegistrations().subscribe({
       next: (registrations) => {
-        this.totalRegistrations = registrations.length;
+        let filteredRegistrations = registrations;
+
+        // Appliquer le filtre si une année spécifique est sélectionnée
+        if (this.selectedYearLabel !== 'TOUTES') {
+          filteredRegistrations = registrations.filter(
+            (r) => r.academicYearLabel === this.selectedYearLabel
+          );
+        }
+
+        this.totalRegistrations = filteredRegistrations.length;
+
+        
+        // this.totalRegistrations = registrations.length;
 
         // mise à jour du graphique global
         const newData = [...this.barChartData.datasets[0].data];
@@ -354,5 +381,11 @@ export class DashboardMainComponent implements OnInit {
           };
         }
       });
+  }
+
+  onYearFilterChange(): void {
+    // Recharger toutes les données du tableau de bord avec le nouveau filtre
+    this.loadDashboardData();
+    // Note: loadRegistrationsOverYears() n'a pas besoin d'être rechargé car il n'utilise pas selectedYearLabel
   }
 }

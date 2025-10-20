@@ -6,29 +6,47 @@
     <app-topbar></app-topbar>
 
     <!-- Barre de recherche et bouton Ajouter -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4">
+    <div
+      class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4"
+    >
       <div class="col-6 col-md-9" style="height: 44px">
         <div class="input-group">
           <span class="input-group-text" id="basic-addon1">
             <i class="hgi-stroke hgi-search-01"></i>
           </span>
-          <input type="search" placeholder="Rechercher un enseignant..." class="form-control" [(ngModel)]="filtername"
-            (ngModelChange)="updateFilteredTeachers()" />
+          <input
+            type="search"
+            placeholder="Rechercher un enseignant..."
+            class="form-control"
+            [(ngModel)]="filtername"
+            (ngModelChange)="updateFilteredTeachers()"
+          />
         </div>
       </div>
-      <button class="primary-btn border-0" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
+      <button
+        class="primary-btn border-0"
+        data-bs-toggle="modal"
+        data-bs-target="#addTeacherModal"
+      >
         Ajouter un enseignant <i class="hgi-stroke hgi-add-circle"></i>
       </button>
     </div>
-
+    <div class="text-center">
+      <span
+        *ngIf="loading"
+        class="spinner-border spinner-border-sm me-2"
+        role="status"
+        aria-hidden="true"
+      ></span>
+    </div>
     <!-- Liste des enseignants -->
     <div class="students-list mt-5 px-4">
       <table class="table border table-hover">
         <thead class="table-primary">
           <tr>
             <th><input type="checkbox" class="form-check-input" /></th>
-            <th>Nom</th>
             <th>Prénom</th>
+            <th>Nom</th>
             <th>Date d'ajout</th>
             <th>Cours Assignés</th>
             <th>Actions</th>
@@ -39,8 +57,9 @@
             <td data-label="">
               <input type="checkbox" class="form-check-input" />
             </td>
-            <td data-label="Nom">{{ teacher.lastName | titlecase }}</td>
+
             <td data-label="Prénom">{{ teacher.firstName | titlecase }}</td>
+            <td data-label="Nom">{{ teacher.lastName | titlecase }}</td>
             <td data-label="Date d'ajout">
               {{ teacher.createdAt | date : "dd/MM/yyyy" }}
             </td>
@@ -51,32 +70,56 @@
 
             <td data-label="Actions">
               <div class="dropdown">
-                <a href="#" class="text-decoration-none text-black" id="dropdownMenuButton" data-bs-toggle="dropdown"
-                  aria-expanded="false">
+                <a
+                  href="#"
+                  class="text-decoration-none text-black"
+                  id="dropdownMenuButton"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
                   <i class="hgi-stroke hgi-more-vertical"></i>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li>
-                    <button type="button" class="dropdown-item" (click)="editTeacher(teacher)" data-bs-toggle="modal"
-                      data-bs-target="#editTeacherModal">
+                    <button
+                      type="button"
+                      class="dropdown-item"
+                      (click)="editTeacher(teacher)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#editTeacherModal"
+                    >
                       Modifier
                     </button>
                   </li>
                   <li>
-                    <button type="button" class="dropdown-item" (click)="viewTeacher(teacher)" data-bs-toggle="modal"
-                      data-bs-target="#viewTeacherModal">
+                    <button
+                      type="button"
+                      class="dropdown-item"
+                      (click)="viewTeacher(teacher)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#viewTeacherModal"
+                    >
                       Voir les informations
                     </button>
                   </li>
                   <li>
                     <!-- NOUVELLE ACTION -->
-                    <button type="button" class="dropdown-item" (click)="openAssignCourseModal(teacher)"
-                      data-bs-toggle="modal" data-bs-target="#assignCourseModal">
+                    <button
+                      type="button"
+                      class="dropdown-item"
+                      (click)="openAssignCourseModal(teacher)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#assignCourseModal"
+                    >
                       Assigner un cours
                     </button>
                   </li>
                   <li>
-                    <button type="button" class="dropdown-item" (click)="deleteTeacher(teacher.id)">
+                    <button
+                      type="button"
+                      class="dropdown-item"
+                      (click)="deleteTeacher(teacher.id)"
+                    >
                       Supprimer
                     </button>
                   </li>
@@ -86,52 +129,103 @@
           </tr>
         </tbody>
       </table>
-      <app-pagination [totalItems]="filteredTeachers.length" [itemsPerPage]="itemsPerPage" [currentPage]="currentPage"
-        (pageChange)="onPageChange($event)" (itemsPerPageChange)="onItemsPerPageChange($event)">
+      <app-pagination
+        [totalItems]="filteredTeachers.length"
+        [itemsPerPage]="itemsPerPage"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+        (itemsPerPageChange)="onItemsPerPageChange($event)"
+      >
       </app-pagination>
     </div>
   </main>
 
   <!-- Modal pour ajouter un enseignant -->
-  <div class="modal fade" id="addTeacherModal" tabindex="-1" aria-labelledby="addTeacherModalLabel" aria-hidden="true">
+  <div
+    class="modal fade"
+    id="addTeacherModal"
+    tabindex="-1"
+    aria-labelledby="addTeacherModalLabel"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Ajouter un enseignant</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
         <div class="modal-body">
           <form (ngSubmit)="addTeacher()">
             <div class="mb-3">
               <label for="nom" class="form-label">Nom</label>
-              <input type="text" [(ngModel)]="newTeacher.lastName" name="nom" placeholder="Nom" required
-                class="form-control" />
+              <input
+                type="text"
+                [(ngModel)]="newTeacher.lastName"
+                name="nom"
+                placeholder="Nom"
+                required
+                class="form-control"
+              />
             </div>
             <div class="mb-3">
               <label for="prenom" class="form-label">Prénom</label>
-              <input type="text" [(ngModel)]="newTeacher.firstName" name="prenom" placeholder="Prénom" required
-                class="form-control" />
+              <input
+                type="text"
+                [(ngModel)]="newTeacher.firstName"
+                name="prenom"
+                placeholder="Prénom"
+                required
+                class="form-control"
+              />
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input class="form-control" type="email" [(ngModel)]="newTeacher.email" name="email"
-                placeholder="Email" />
+              <input
+                class="form-control"
+                type="email"
+                [(ngModel)]="newTeacher.email"
+                name="email"
+                placeholder="Email"
+              />
             </div>
 
             <!--  Sélection du pays + téléphone -->
             <div class="mb-3">
               <label for="telephone" class="form-label">Téléphone</label>
               <div class="input-group">
-                <select class="form-select" [(ngModel)]="selectedCountryCode" name="countryCode" required>
-                  <option *ngFor="let c of countryCodes" [value]="c.code">{{ c.name }} ({{ c.code }})</option>
+                <select
+                  class="form-select"
+                  [(ngModel)]="selectedCountryCode"
+                  name="countryCode"
+                  required
+                >
+                  <option *ngFor="let c of countryCodes" [value]="c.code">
+                    {{ c.name }} ({{ c.code }})
+                  </option>
                 </select>
-                <input type="tel" class="form-control" [(ngModel)]="newTeacher.telephone" name="telephone"
-                  placeholder="Ex : 671234567" required pattern="\\d{5,15}" (keydown)="preventNonNumeric($event)" />
+                <input
+                  type="tel"
+                  class="form-control"
+                  [(ngModel)]="newTeacher.telephone"
+                  name="telephone"
+                  placeholder="Ex : 671234567"
+                  required
+                  pattern="\\d{5,15}"
+                  (keydown)="preventNonNumeric($event)"
+                />
               </div>
             </div>
 
             <div class="modal-footer">
-              <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
+              <button
+                type="submit"
+                class="primary-btn border-0"
+                data-bs-dismiss="modal"
+              >
                 Ajouter
               </button>
             </div>
@@ -142,20 +236,30 @@
   </div>
 
   <!-- Modal pour visualiser les informations d'un enseignant -->
-  <div class="modal fade" id="viewTeacherModal" tabindex="-1" aria-labelledby="viewTeacherModalLabel"
-    aria-hidden="true">
+  <div
+    class="modal fade"
+    id="viewTeacherModal"
+    tabindex="-1"
+    aria-labelledby="viewTeacherModalLabel"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Détails de l'enseignant</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
+
         <div class="modal-body" *ngIf="selectedTeacher">
-          <p><strong>Nom :</strong> {{ selectedTeacher.firstName }}</p>
-          <p><strong>Prénom :</strong> {{ selectedTeacher.lastName }}</p>
+          <p><strong>Nom :</strong> {{ selectedTeacher.lastName }}</p>
+          <p><strong>Prénom :</strong> {{ selectedTeacher.firstName }}</p>
           <p><strong>Email :</strong> {{ selectedTeacher.email }}</p>
-          <p><strong>Téléphone :</strong> {{ selectedTeacher.telephone? (selectedTeacher.telephone | phoneFormat) : ''
-            }}</p>
+          <p><strong>Téléphone :</strong> {{ selectedTeacher.telephone }}</p>
+
           <p>
             <strong>Date d'ajout :</strong>
             {{ selectedTeacher.createdAt | date : "dd/MM/yyyy" }}
@@ -163,14 +267,18 @@
           <p>
             <strong>Cours assignés :</strong>
             {{
-            selectedTeacher
-            ? (getCoursesByTeacher(selectedTeacher) | titlecase)
-            : ""
+              selectedTeacher
+                ? (getCoursesByTeacher(selectedTeacher) | titlecase)
+                : ""
             }}
           </p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
             Fermer
           </button>
         </div>
@@ -179,30 +287,56 @@
   </div>
 
   <!-- Modal pour modifier un enseignant -->
-  <div class="modal fade" id="editTeacherModal" tabindex="-1" aria-labelledby="editTeacherModalLabel"
-    aria-hidden="true">
+  <div
+    class="modal fade"
+    id="editTeacherModal"
+    tabindex="-1"
+    aria-labelledby="editTeacherModalLabel"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Modifier les informations de l'enseignant</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
         <div class="modal-body" *ngIf="editingTeacher">
           <form (ngSubmit)="saveEditTeacher()">
             <div class="mb-3">
               <label for="nom" class="form-label">Nom</label>
-              <input type="text" [(ngModel)]="editingTeacher.firstName" name="nom" placeholder="Nom" required
-                class="form-control" />
+              <input
+                type="text"
+                [(ngModel)]="editingTeacher.lastName"
+                name="nom"
+                placeholder="Nom"
+                required
+                class="form-control"
+              />
             </div>
             <div class="mb-3">
               <label for="prenom" class="form-label">Prénom</label>
-              <input type="text" [(ngModel)]="editingTeacher.lastName" name="prenom" placeholder="Prénom" required
-                class="form-control" />
+              <input
+                type="text"
+                [(ngModel)]="editingTeacher.firstName"
+                name="prenom"
+                placeholder="Prénom"
+                required
+                class="form-control"
+              />
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" [(ngModel)]="editingTeacher.email" name="email" placeholder="Email"
-                class="form-control" />
+              <input
+                type="email"
+                [(ngModel)]="editingTeacher.email"
+                name="email"
+                placeholder="Email"
+                class="form-control"
+              />
             </div>
 
             <!-- Sélection du pays + téléphone -->
@@ -210,20 +344,36 @@
             <div class="mb-3">
               <label for="telephone" class="form-label">Téléphone</label>
               <div class="input-group">
-                <select class="form-select" style="max-width: 150px" [(ngModel)]="selectedCountryCode"
-                  name="editCountryCode" required>
+                <select
+                  class="form-select"
+                  style="max-width: 150px"
+                  [(ngModel)]="selectedCountryCode"
+                  name="editCountryCode"
+                  required
+                >
                   <option *ngFor="let c of countryCodes" [value]="c.code">
                     {{ c.name }} ({{ c.code }})
                   </option>
                 </select>
 
-                <input type="tel" class="form-control" [(ngModel)]="editingTeacher.telephone" name="editTelephone"
-                  placeholder="Ex : 671234567" required pattern="\\d{5,15}" (keydown)="preventNonNumeric($event)" />
+                <input
+                  type="tel"
+                  class="form-control"
+                  [(ngModel)]="editingTeacher.telephone"
+                  name="editTelephone"
+                  placeholder="Ex : 671234567"
+                  required
+                  pattern="\\d{5,15}"
+                  (keydown)="preventNonNumeric($event)"
+                />
               </div>
             </div>
 
-
-            <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
+            <button
+              type="submit"
+              class="primary-btn border-0"
+              data-bs-dismiss="modal"
+            >
               Enregistrer
             </button>
           </form>
@@ -234,17 +384,32 @@
   <!-- ======================================================= -->
   <!-- MODAL POUR ASSIGNER UN COURS À UN ENSEIGNANT -->
   <!-- ======================================================= -->
-  <div class="modal fade" id="assignCourseModal" tabindex="-1" aria-labelledby="assignCourseModalLabel"
-    aria-hidden="true">
+  <div
+    class="modal fade"
+    id="assignCourseModal"
+    tabindex="-1"
+    aria-labelledby="assignCourseModalLabel"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="assignCourseModalLabel" *ngIf="selectedTeacher">
+          <h5
+            class="modal-title"
+            id="assignCourseModalLabel"
+            *ngIf="selectedTeacher"
+          >
             Assigner un cours à
-            <span class="text-primary">{{ selectedTeacher.firstName }}
-              {{ selectedTeacher.lastName }}</span>
+            <span class="text-primary"
+              >{{ selectedTeacher.firstName }}
+              {{ selectedTeacher.lastName }}</span
+            >
           </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
         <div class="modal-body">
           <p>
@@ -253,9 +418,16 @@
           </p>
 
           <div *ngIf="availableCourses.length > 0; else noCourses">
-            <select class="form-select" [(ngModel)]="courseToAssignId" name="courseToAssign">
+            <select
+              class="form-select"
+              [(ngModel)]="courseToAssignId"
+              name="courseToAssign"
+            >
               <option [ngValue]="null" disabled>-- Choisir un cours --</option>
-              <option *ngFor="let course of availableCourses" [value]="course.id">
+              <option
+                *ngFor="let course of availableCourses"
+                [value]="course.id"
+              >
                 {{ course.title }}
               </option>
             </select>
@@ -267,11 +439,20 @@
           </ng-template>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
             Annuler
           </button>
-          <button type="button" class="primary-btn border-0" (click)="assignCourseToSelectedTeacher()"
-            [disabled]="!courseToAssignId" data-bs-dismiss="modal">
+          <button
+            type="button"
+            class="primary-btn border-0"
+            (click)="assignCourseToSelectedTeacher()"
+            [disabled]="!courseToAssignId"
+            data-bs-dismiss="modal"
+          >
             Assigner
           </button>
         </div>

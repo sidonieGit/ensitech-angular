@@ -65,10 +65,10 @@ export class CoursesService {
         return true;
       }),
       // Si la requête échoue, catchError intercepte l'erreur et retourne un Observable de 'false'
-      catchError((error) => {
+      /*catchError((error) => {
         console.error('Error deleting course', error);
         return of(false); // of() crée un Observable qui émet la valeur 'false'
-      })
+      })*/
     );
   }
 

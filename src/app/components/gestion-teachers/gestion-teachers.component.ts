@@ -45,13 +45,14 @@ export class GestionTeachersComponent implements OnInit {
 
   currentPage = 1;
   itemsPerPage = 5;
+  loading: boolean = false;
 
   constructor(
     private teachersService: TeachersService,
     private toastr: ToastrService,
     private coursesService: CoursesService,
     private phoneService: PhoneService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadTeachersWithCourses();
@@ -82,6 +83,7 @@ export class GestionTeachersComponent implements OnInit {
   }
   // --- LOGIQUE DE CHARGEMENT ENRICHIE ---
   loadTeachersWithCourses(): void {
+    this.loading = true;
     this.teachersService
       .getTeachers()
       .pipe(
@@ -127,12 +129,14 @@ export class GestionTeachersComponent implements OnInit {
           // On reçoit ici le tableau final des enseignants enrichis
           this.allTeachers = enrichedTeachers;
           this.updateFilteredTeachers();
+          this.loading = false;
         },
         error: (err) => {
           console.error('Une erreur globale est survenue', err);
           this.toastr.error(
             'Une erreur est survenue lors de la récupération des enseignants'
           );
+          this.loading = false;
         },
       });
   }
@@ -159,7 +163,7 @@ export class GestionTeachersComponent implements OnInit {
       );
       return;
     }
-
+    this.loading = true;
     this.coursesService
       .assignTeacherToCourse(this.courseToAssignId, this.selectedTeacher.id)
       .subscribe({
@@ -168,6 +172,7 @@ export class GestionTeachersComponent implements OnInit {
             `Le cours a été assigné à ${this.selectedTeacher?.firstName}`,
             'Succès !'
           );
+          this.loading = false;
           this.loadTeachersWithCourses(); // Recharger toutes les données pour être à jour
           this.loadAllAvailableCourses(); // Rafraîchir la liste des cours non assignés
         },
@@ -177,6 +182,7 @@ export class GestionTeachersComponent implements OnInit {
             'Erreur !'
           );
           console.error(err);
+          this.loading = false;
         },
       });
   }
@@ -260,13 +266,14 @@ export class GestionTeachersComponent implements OnInit {
       ...this.newTeacher,
       telephone: normalizedPhone,
     };
-
+    this.loading = true;
     this.teachersService.addTeacher(teacherToAdd).subscribe({
       next: () => {
         this.toastr.success(
           `L'enseignant ${this.newTeacher.firstName} ${this.newTeacher.lastName} a été ajouté.`,
           'Succès !'
         );
+        this.loading = false;
         //this.loadTeachers(); // Recharger la liste pour voir le nouvel ajout
         this.loadTeachersWithCourses();
         // Réinitialiser le formulaire
@@ -288,6 +295,7 @@ export class GestionTeachersComponent implements OnInit {
           "Erreur lors de l'ajout de l'enseignant",
           'addresse mail déja utilisée'
         );
+        this.loading = false;
       },
     });
   }
@@ -305,7 +313,7 @@ export class GestionTeachersComponent implements OnInit {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet enseignant ?')) {
       this.teachersService.deleteTeacher(id).subscribe({
         next: () => {
-          this.toastr.info("L'enseignant a été supprimé.", 'Information');
+          this.toastr.success("L'enseignant a été supprimé.", 'Information');
           //this.loadTeachers(); // Recharger la liste
           this.loadTeachersWithCourses();
         },
@@ -346,7 +354,7 @@ export class GestionTeachersComponent implements OnInit {
     );
 
     this.editingTeacher.telephone = normalizedPhone;
-
+    this.loading = true;
     this.teachersService
       .updateTeacher(this.editingTeacher.id, this.editingTeacher)
       .subscribe({
@@ -356,6 +364,7 @@ export class GestionTeachersComponent implements OnInit {
             'Succès !'
           );
           // this.loadTeachers();
+          this.loading = false;
           this.loadTeachersWithCourses();
           this.editingTeacher = null; // Cacher le formulaire de la modal
         },

@@ -37,7 +37,7 @@ export class GestionCoursComponent implements OnInit {
     private coursesService: CoursesService,
     private teachersService: TeachersService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCourses();
@@ -88,6 +88,8 @@ export class GestionCoursComponent implements OnInit {
       this.errorMsg = '';
       if (this.newCourse.teacher) {
         this.newCourse.teacherId = this.newCourse.teacher?.id;
+      } else if (this.newCourse.teacherId === 0) {
+        this.newCourse.teacherId = null;
       }
       this.coursesService.createCourse(this.newCourse).subscribe({
         next: (resp) => {
@@ -161,11 +163,14 @@ export class GestionCoursComponent implements OnInit {
               'Le cours a été supprimé avec succès.',
               'Succès !'
             );
+            this.loading = false;
             // this.loading = false;
             this.loadCourses(); // Recharger la liste pour refléter la suppression
           } else {
+
             this.toastr.error('La suppression du cours a échoué.', 'Erreur');
-            console.error(`La suppression du cours avec l'ID ${id} a échoué.`);
+            // console.error(`La suppression du cours avec l'ID ${id} a échoué.`);
+            this.loading = false;
           }
         },
         error: (err) => {
@@ -175,9 +180,13 @@ export class GestionCoursComponent implements OnInit {
             err
           );*/
           this.loading = false;
-          const errorMsg =
+          let errorMsg =
             err?.error?.message ?? 'Une erreur inattendue est survenue';
+          if (err?.error?.message?.includes("constraint")) {
+            errorMsg = "Impossible de supprimer ce cours car il est lié à au moin un autre enregistrement.";
+          }
           this.toastr.error(errorMsg, 'Erreur !');
+          // console.log("ddd", err.error.message)
         },
       });
     } else {

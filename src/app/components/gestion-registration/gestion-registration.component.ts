@@ -44,6 +44,7 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
 
   currentPage = 1;
   itemsPerPage = 5;
+  loading: boolean = false;
 
   registrationService: RegistrationService = inject(RegistrationService);
   toastr: ToastrService = inject(ToastrService);
@@ -58,6 +59,7 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
     this.loadStudents();
   }
   ngDoCheck() {
+
     if (
       this.newRegistration &&
       this.newRegistration.level &&
@@ -69,14 +71,15 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
       const level = this.newRegistration.level.toLowerCase().includes('l')
         ? 'LICENCE'
         : this.newRegistration.level.toLowerCase().includes('m')
-        ? 'MASTER'
-        : '';
+          ? 'MASTER'
+          : '';
       // console.log('level', level);
       //console.log('this.specialities', this.specialities);
       this.specialities = this.allSpecialities.filter(
         (s) => s.cycle?.toLowerCase() === level.toLowerCase()
       );
     }
+
   }
 
   loadStudents(): void {
@@ -93,7 +96,8 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
   loadAcademicYears(): void {
     this.academicYearService.getAcademicYears().subscribe({
       next: (academicYear) => {
-        this.academicYears = academicYear;
+        this.academicYears = academicYear.filter(ay => ay.status === "EN_COURS");
+        // console.log("académique yera", academicYear)
       },
       error: (err) => {
         this.toastr.error(`Erreur de chargement des années académiques`);
@@ -114,6 +118,7 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
   }
 
   loadRegistrations(): void {
+    this.loading = true;
     // Logic to load registrations from a service
     this.registrationService.getRegistrations().subscribe({
       next: (data) => {
@@ -121,9 +126,11 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
         this.registrations = data;
         this.filteredRegistrations = data;
         // this.updateFilteredRegistrations;
+        this.loading = false;
       },
       error: (err) => {
         this.toastr.error(`Erreur de chargement des inscriptions `);
+        this.loading = false;
       },
     });
   }
@@ -158,12 +165,14 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
       this.newRegistration.matricule &&
       this.newRegistration.academicYearLabel
     ) {
+      this.loading = true;
       this.registrationService.addRegistration(this.newRegistration).subscribe({
         next: (data) => {
           this.toastr.success(
             `L'enregistrement ${data.registrationNumber} a été ajouté.`,
             'Succès !'
           );
+          this.loading = false;
           // console.log('Enregistrement ajouté avec succès', data);
           this.loadRegistrations(); // Recharger la liste après l'ajout
         },
@@ -173,6 +182,7 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
             'Erreur !'
           );
           // console.error("Erreur lors de l'ajout d'un enregistrement", err);
+          this.loading = false;
         },
       });
       this.resetForm();
@@ -191,6 +201,7 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
 
   updateRegistration() {
     if (this.editingRegistration) {
+      this.loading = true;
       this.registrationService
         .updateRegistration(this.editingRegistration)
         .subscribe({
@@ -201,12 +212,14 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
             );
             this.loadRegistrations(); // Recharger la liste après la mise à jour
             this.editingRegistration = null; // Réinitialiser l'édition
+            this.loading = false;
           },
           error: (err) => {
             this.toastr.error(
               `Erreur lors de la mise à jour de l'enregistrement : ${err}`,
               'Erreur !'
             );
+            this.loading = false;
           },
         });
     }
@@ -217,9 +230,11 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
       'Êtes-vous sûr de vouloir supprimer cette inscription ?'
     );
     if (id !== undefined && query) {
+      this.loading = true;
       this.registrationService.deleteRegistration(id).subscribe({
         next: () => {
           this.toastr.success(`L'enregistrement a été supprimé.`, 'Succès !');
+          this.loading = false;
           this.loadRegistrations(); // Recharger la liste après la suppression
         },
         error: (err) => {
@@ -227,12 +242,13 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
             `Erreur lors de la suppression de l'enregistrement : ${err}`,
             'Erreur !'
           );
+          this.loading = false;
         },
       });
     }
   }
 
-  saveEditRegistration() {}
+  saveEditRegistration() { }
 
   resetForm() {
     this.newRegistration = {

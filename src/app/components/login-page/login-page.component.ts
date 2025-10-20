@@ -65,13 +65,25 @@ export class LoginPageComponent {
     this.authService.login(loginData).subscribe({
       next: (res) => {
         let role = res.role;
+        let username = "";
+        let photo = "";
+        let fonction = "";
         if (res.role === 'DIRECTEUR' || res.role === 'SUPER_ADMIN') {
           role = 'directeur';
+          username = "Douglas M."
+          photo = "assets/images/directeur.jpg"
+          fonction = "Directeur"
         } else if (res.role === 'RESPONSABLE_ETUDES' || res.role === 'RESPONSABLE_ETUDE') {
           role = 'responsable';
+          username = "Daniel F."
+          photo = "assets/images/resp-etude.jpg"
+          fonction = "Resp. études"
         }
         res.role = role;
         res.email = res.email; //utilisation de email comme username pour l'affichage
+        res.username = username;
+        res.photo = photo;
+        res.fonction = fonction;
 
         this.authService.saveConnectedUser(res);
         // console.log('Login success:', res);

@@ -8,20 +8,39 @@
     <app-topbar></app-topbar>
 
     <!-- Barre de recherche et bouton Ajouter -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4">
+    <div
+      class="d-flex justify-content-between align-items-center flex-wrap mt-4 p-4"
+    >
       <div class="col-6 col-md-9" style="height: 44px">
         <div class="input-group">
-          <span class="input-group-text"><i class="hgi-stroke hgi-search-01"></i></span>
-          <input type="search" placeholder="Rechercher une évaluation..." class="form-control"
-            [(ngModel)]="filterEvaluation" (ngModelChange)="updateFilteredEvaluations()" />
+          <span class="input-group-text"
+            ><i class="hgi-stroke hgi-search-01"></i
+          ></span>
+          <input
+            type="search"
+            placeholder="Rechercher une évaluation..."
+            class="form-control"
+            [(ngModel)]="filterEvaluation"
+            (ngModelChange)="updateFilteredEvaluations()"
+          />
         </div>
       </div>
-      <button *ngIf="!loading" class="primary-btn border-0" data-bs-toggle="modal" data-bs-target="#addEvaluationModal">
+      <button
+        *ngIf="!loading"
+        class="primary-btn border-0"
+        data-bs-toggle="modal"
+        data-bs-target="#addEvaluationModal"
+      >
         Ajouter une évaluation <i class="hgi-stroke hgi-add-circle"></i>
       </button>
     </div>
     <div class="text-center">
-      <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      <span
+        *ngIf="loading"
+        class="spinner-border spinner-border-sm me-2"
+        role="status"
+        aria-hidden="true"
+      ></span>
     </div>
     <!-- Liste des évaluations -->
     <div class="evaluations-list mt-5 px-4" *ngIf="!loading">
@@ -30,7 +49,7 @@
           <tr>
             <th>Code</th>
             <th>Date</th>
-            <th>Note</th>
+            <th>Note (/20)</th>
             <th>Etudiant</th>
             <th>Cours</th>
             <th>Spécialité</th>
@@ -48,31 +67,49 @@
               {{ eval?.student?.firstName }} {{ eval?.student?.lastName }}
             </td>
             <td data-label="Cours">
-              {{ eval?.course?.title }}
+              {{ eval?.course?.title | slice : 0 : 15 }}
             </td>
             <td data-label="Spécialité">
-              {{ eval?.student?.speciality?.label ?? "N/A" }}
+              {{ eval?.student?.speciality?.label | slice : 0 : 15 }}
             </td>
             <td data-label="Actions">
               <div class="dropdown">
-                <a href="#" class="text-decoration-none text-black" data-bs-toggle="dropdown">
+                <a
+                  href="#"
+                  class="text-decoration-none text-black"
+                  data-bs-toggle="dropdown"
+                >
                   <i class="hgi-stroke hgi-more-vertical"></i>
                 </a>
                 <ul class="dropdown-menu">
                   <li>
-                    <button type="button" class="dropdown-item" (click)="editEvaluation(eval)" data-bs-toggle="modal"
-                      data-bs-target="#editEvaluationModal">
+                    <button
+                      type="button"
+                      class="dropdown-item"
+                      (click)="editEvaluation(eval)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#editEvaluationModal"
+                    >
                       Modifier
                     </button>
                   </li>
                   <li>
-                    <button type="button" class="dropdown-item" (click)="viewEvaluation(eval)" data-bs-toggle="modal"
-                      data-bs-target="#viewEvaluationModal">
+                    <button
+                      type="button"
+                      class="dropdown-item"
+                      (click)="viewEvaluation(eval)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#viewEvaluationModal"
+                    >
                       Voir les informations
                     </button>
                   </li>
                   <li>
-                    <button type="button" class="dropdown-item text-dangers" (click)="deleteEvaluation(eval.id)">
+                    <button
+                      type="button"
+                      class="dropdown-item text-dangers"
+                      (click)="deleteEvaluation(eval.id)"
+                    >
                       Supprimer
                     </button>
                   </li>
@@ -84,21 +121,34 @@
       </table>
 
       <!-- pagination réutilisable -->
-      <app-pagination [totalItems]="filteredEvaluations.length" [itemsPerPage]="itemsPerPage"
-        [currentPage]="currentPage" (pageChange)="onPageChange($event)"
-        (itemsPerPageChange)="onItemsPerPageChange($event)">
+      <app-pagination
+        [totalItems]="filteredEvaluations.length"
+        [itemsPerPage]="itemsPerPage"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+        (itemsPerPageChange)="onItemsPerPageChange($event)"
+      >
       </app-pagination>
     </div>
   </main>
 
   <!-- MODAL : Ajouter une évaluation -->
-  <div class="modal fade" id="addEvaluationModal" tabindex="-1" aria-labelledby="addEvaluationModalLabel"
-    aria-hidden="true">
+  <div
+    class="modal fade"
+    id="addEvaluationModal"
+    tabindex="-1"
+    aria-labelledby="addEvaluationModalLabel"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
       <form class="modal-content" (ngSubmit)="addEvaluation()">
         <div class="modal-header">
           <h5 class="modal-title">Ajouter une évaluation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
         <div class="modal-body">
           <!-- <div class="mb-3">
@@ -112,28 +162,41 @@
               disabled
             />
           </div> -->
-          <div class="mb-3">
-            <label class="form-label">Commentaire</label>
-            <input type="text" class="form-control" [(ngModel)]="newEvaluation.description" name="description"
-              required />
-          </div>
+
           <div class="mb-3">
             <label class="form-label">Date</label>
-            <input type="date" class="form-control" [(ngModel)]="newEvaluation.dateEvaluation" name="date" required />
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="newEvaluation.dateEvaluation"
+              name="date"
+              required
+            />
           </div>
           <div class="mb-3">
-            <label class="form-label">Note</label>
-            <input type="number" class="form-control" [(ngModel)]="newEvaluation.grade" name="grade" required />
+            <label class="form-label">Note(/20)</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="newEvaluation.grade"
+              name="grade"
+              required
+            />
           </div>
 
           <!-- NOUVEAU : Champ pour sélectionner l'étudiant -->
           <div class="mb-3">
             <label class="form-label">Étudiant concerné</label>
-            <select class="form-select" [(ngModel)]="newEvaluation.studentId" name="studentId" required>
+            <select
+              class="form-select"
+              [(ngModel)]="newEvaluation.studentId"
+              name="studentId"
+              required
+            >
               <option [ngValue]="0" disabled>Sélectionner un étudiant</option>
               <option *ngFor="let student of allStudents" [value]="student.id">
                 {{ student.firstName }} {{ student.lastName }},{{
-                student.speciality?.label
+                  student.speciality?.label
                 }}
               </option>
             </select>
@@ -142,7 +205,12 @@
           <!-- NOUVEAU : Champ pour sélectionner le cours -->
           <div class="mb-3">
             <label class="form-label">Cours concerné</label>
-            <select class="form-select" [(ngModel)]="newEvaluation.courseId" name="courseId" required>
+            <select
+              class="form-select"
+              [(ngModel)]="newEvaluation.courseId"
+              name="courseId"
+              required
+            >
               <option [ngValue]="0" disabled>Sélectionner un cours</option>
               <option *ngFor="let course of allCourses" [value]="course.id">
                 {{ course.title }}
@@ -152,7 +220,11 @@
 
           <div class="mb-3">
             <label class="form-label">Type</label>
-            <select class="form-select" [(ngModel)]="newEvaluation.type" name="type">
+            <select
+              class="form-select"
+              [(ngModel)]="newEvaluation.type"
+              name="type"
+            >
               <option value="CONTROLE_CONTINUE">Contrôle Continu</option>
               <option value="EXAMEN">Examen</option>
               <option value="TP">TP</option>
@@ -160,14 +232,33 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Status</label>
-            <select class="form-select" [(ngModel)]="newEvaluation.status" name="status">
+            <select
+              class="form-select"
+              [(ngModel)]="newEvaluation.status"
+              name="status"
+            >
               <option value="VALIDEE">Validée</option>
               <option value="NON_VALIDEE">Non Validée</option>
             </select>
           </div>
+
+          <div class="mb-3">
+            <label class="form-label">Commentaire</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="newEvaluation.description"
+              name="description"
+              required
+            />
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
+          <button
+            type="submit"
+            class="primary-btn border-0"
+            data-bs-dismiss="modal"
+          >
             Ajouter
           </button>
         </div>
@@ -176,12 +267,21 @@
   </div>
 
   <!-- MODAL : Voir les détails -->
-  <div class="modal fade" id="viewEvaluationModal" tabindex="-1" aria-hidden="true">
+  <div
+    class="modal fade"
+    id="viewEvaluationModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
       <div class="modal-content" *ngIf="selectedEvaluation">
         <div class="modal-header">
           <h5 class="modal-title">Détails de l’évaluation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
         <div class="modal-body">
           <p><strong>Code :</strong> {{ selectedEvaluation.code }}</p>
@@ -192,7 +292,7 @@
             <strong>Date :</strong>
             {{ selectedEvaluation.dateEvaluation | date : "dd/MM/yyyy" }}
           </p>
-          <p><strong>Note :</strong> {{ selectedEvaluation.grade }}</p>
+          <p><strong>Note (/20):</strong> {{ selectedEvaluation.grade }}</p>
           <p>
             <strong>Cours concerné :</strong>
             <!-- Affiche le titre du cours s'il existe, sinon l'ID, sinon 'N/A' -->
@@ -228,42 +328,74 @@
   </div>
 
   <!-- MODAL : Modifier -->
-  <div class="modal fade" id="editEvaluationModal" tabindex="-1" aria-hidden="true">
+  <div
+    class="modal fade"
+    id="editEvaluationModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
-      <form class="modal-content" *ngIf="editingEvaluation" (ngSubmit)="saveEditEvaluation()">
+      <form
+        class="modal-content"
+        *ngIf="editingEvaluation"
+        (ngSubmit)="saveEditEvaluation()"
+      >
         <div class="modal-header">
           <h5 class="modal-title">Modifier l’évaluation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
             <label class="form-label">Code</label>
-            <input type="text" class="form-control" [(ngModel)]="editingEvaluation.code" name="editCode" required
-              disabled />
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="editingEvaluation.code"
+              name="editCode"
+              required
+              disabled
+            />
           </div>
-          <div class="mb-3">
-            <label class="form-label">Commentaire</label>
-            <input type="text" class="form-control" [(ngModel)]="editingEvaluation.description" name="editDescription"
-              required />
-          </div>
+
           <div class="mb-3">
             <label class="form-label">Date</label>
-            <input type="date" class="form-control" [(ngModel)]="editingEvaluation.dateEvaluation" name="editDate"
-              required />
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="editingEvaluation.dateEvaluation"
+              name="editDate"
+              required
+            />
           </div>
           <div class="mb-3">
-            <label class="form-label">Note</label>
-            <input type="number" class="form-control" [(ngModel)]="editingEvaluation.grade" name="editNote" required />
+            <label class="form-label">Note(/20)</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="editingEvaluation.grade"
+              name="editNote"
+              required
+            />
           </div>
 
           <!-- NOUVEAU : Champ pour sélectionner l'étudiant -->
           <div class="mb-3">
             <label class="form-label">Étudiant concerné</label>
-            <select class="form-select" [(ngModel)]="editingEvaluation.studentId" name="studentId" required disabled>
+            <select
+              class="form-select"
+              [(ngModel)]="editingEvaluation.studentId"
+              name="studentId"
+              required
+              disabled
+            >
               <option [ngValue]="0" disabled>Sélectionner un étudiant</option>
               <option *ngFor="let student of allStudents" [value]="student.id">
                 {{ student.firstName }} {{ student.lastName }},{{
-                student.speciality?.label
+                  student.speciality?.label
                 }}
               </option>
             </select>
@@ -272,7 +404,12 @@
           <!-- NOUVEAU : Champ pour sélectionner le cours -->
           <div class="mb-3">
             <label class="form-label">Cours concerné</label>
-            <select class="form-select" [(ngModel)]="editingEvaluation.course.id" name="courseId" required>
+            <select
+              class="form-select"
+              [(ngModel)]="editingEvaluation.course.id"
+              name="courseId"
+              required
+            >
               <option [ngValue]="0" disabled>Sélectionner un cours</option>
               <option *ngFor="let course of allCourses" [value]="course.id">
                 {{ course.title }}
@@ -281,7 +418,11 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Type</label>
-            <select class="form-select" [(ngModel)]="editingEvaluation.type" name="editType">
+            <select
+              class="form-select"
+              [(ngModel)]="editingEvaluation.type"
+              name="editType"
+            >
               <option value="CONTROLE_CONTINUE">Contrôle Continu</option>
               <option value="EXAMEN">Examen</option>
               <option value="TP">TP</option>
@@ -289,14 +430,33 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Status</label>
-            <select class="form-select" [(ngModel)]="editingEvaluation.status" name="editStatus">
+            <select
+              class="form-select"
+              [(ngModel)]="editingEvaluation.status"
+              name="editStatus"
+            >
               <option value="VALIDEE">Validée</option>
               <option value="NON_VALIDEE">Non Validée</option>
             </select>
           </div>
+
+          <div class="mb-3">
+            <label class="form-label">Commentaire</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="editingEvaluation.description"
+              name="editDescription"
+              required
+            />
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="primary-btn border-0" data-bs-dismiss="modal">
+          <button
+            type="submit"
+            class="primary-btn border-0"
+            data-bs-dismiss="modal"
+          >
             Enregistrer
           </button>
         </div>

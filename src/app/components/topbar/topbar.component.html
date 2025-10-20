@@ -14,11 +14,16 @@
 
 <!-- TOP NAV -->
 <div class="top-nav d-flex justify-content-between align-items-center">
-	<!-- Bouton hamburger visible uniquement sur mobile -->
-	<button class="btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas"
-		aria-controls="sidebarOffcanvas">
-		<i class="bi bi-list" style="font-size: 1.5rem;"></i>
-	</button>
+  <!-- Bouton hamburger visible uniquement sur mobile -->
+  <button
+    class="btn d-lg-none"
+    type="button"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#sidebarOffcanvas"
+    aria-controls="sidebarOffcanvas"
+  >
+    <i class="bi bi-list" style="font-size: 1.5rem"></i>
+  </button>
 
   <!--div ngfor="let year of academicYear">
     <span class="text-sm" *ngIf="year.status === 'EN_COURS'">Année scolaire {{year.label}}</span>
@@ -26,20 +31,47 @@
   <!--span class="text-sm" *ngIf="academicYear.length > 0">Année scolaire {{academicYear[0].label}}</span-->
   <div class="text-sm" *ngIf="academicYear.length > 0">
     <div *ngFor="let year of academicYear">
-      <span *ngIf="year.status === 'EN_COURS'">Année scolaire {{year.label}}</span>
+      <span *ngIf="year.status === 'EN_COURS'"
+        >Année scolaire {{ year.label }}</span
+      >
     </div>
   </div>
 
-	<div class="d-flex gap-2 align-items-center">
-		<span class="user-icon d-flex justify-content-center align-items-center" (click)="onToggleTheme()" style="cursor: pointer;">
-			<i [ngClass]="(isDarkMode$ | async) ? 'hgi hgi-stroke hgi-sun-01': 'hgi hgi-stroke hgi-moon-02'"></i>
-		</span>
-    <span class="user-icon d-flex justify-content-center align-items-center">
+  <div class="d-flex gap-2 align-items-center">
+    <span
+      class="user-icon d-flex justify-content-center align-items-center"
+      (click)="onToggleTheme()"
+      style="cursor: pointer"
+    >
+      <i
+        [ngClass]="
+          (isDarkMode$ | async)
+            ? 'hgi hgi-stroke hgi-sun-01'
+            : 'hgi hgi-stroke hgi-moon-02'
+        "
+      ></i>
+    </span>
+    <!-- <span class="user-icon d-flex justify-content-center align-items-center">
 			<i class="hgi-stroke hgi-user"></i>
-		</span>
-		<div class="d-flex flex-column align-items-end user-information">
-			<span class="user-role">{{ currentRole }}</span>
-			<span class="user-name">{{ currentUser }}</span>
-		</div>
-	</div>
+		</span> -->
+    <span class="user-icon d-flex justify-content-center align-items-center">
+      <!-- Show photo if exists -->
+      <img
+        *ngIf="user.photo; else defaultIcon"
+        [src]="user.photo"
+        alt="User Photo"
+        class="img-fluid rounded-circle"
+        style="width: 40px; height: 40px; object-fit: cover"
+      />
+
+      <!-- Default avatar icon -->
+      <ng-template #defaultIcon>
+        <i class="hgi-stroke hgi-user fs-4"></i>
+      </ng-template>
+    </span>
+    <div class="d-flex flex-column align-items-end user-information">
+      <span class="user-role">{{ currentRole }}</span>
+      <span class="user-name">{{ currentUser }}</span>
+    </div>
+  </div>
 </div>

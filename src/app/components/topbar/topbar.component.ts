@@ -44,7 +44,8 @@ export class TopbarComponent {
   }
 
   get currentRole() {
-    return this.user ? this.user.role : 'Aucun rôle';
+    //return this.user ? this.user.role : 'Aucun rôle';
+    return this.user ? this.user.fonction : '';
   }
   onToggleTheme(): void {
     this.darkmodeService.toggleDarkMode();

@@ -8,4 +8,5 @@ export interface Registration {
   specialityLabel: string;
   academicYearLabel: string;
   student?: Student;
+  studentFullName?: string;
 }

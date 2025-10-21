@@ -8,6 +8,22 @@
 			Exporter <i class="hgi-stroke hgi-file-export"></i>
 		</button>
 	</div> -->
+  <div class="filter-container d-flex justify-content-center m-4">
+    <label for="academicYearFilter" class="form-label me-2">Filtrer par Année :</label>
+    <select
+        id="academicYearFilter"
+        class="form-select w-auto"
+        [(ngModel)]="selectedYearLabel"
+        (change)="onYearFilterChange()">
+
+        <option value="TOUTES">Toutes les années</option>
+
+        <option *ngFor="let year of allAcademicYears" [value]="year.label">
+            {{ year.label }}
+            <span *ngIf="year.status === 'EN_COURS'">(En cours)</span>
+        </option>
+    </select>
+</div>
 
   <div class="kpi-container d-flex justify-content-between col-11 mx-auto py-3">
     <div class="d-flex justify-content-between align-items-center kpi-card">

@@ -12,7 +12,7 @@
           <span class="input-group-text" id="basic-addon1">
             <i class="hgi-stroke hgi-search-01"></i>
           </span>
-          <input type="search" placeholder="Rechercher un cours..." class="form-control" [(ngModel)]="filtername"
+          <input type="search" placeholder="Rechercher une année academique par son intitulé..." class="form-control" [(ngModel)]="filtername"
             (ngModelChange)="updateFilteredAcademicYear()" />
         </div>
       </div>
@@ -251,7 +251,7 @@
             </button>
           </ng-container>
           <ng-container *ngIf="selectedAcademicYear?.status === 'EN_COURS'">
-            <button [disabled]="!compareDate(selectedAcademicYear?.startDate!)" class="btn btn-danger btn-sm ms-2"
+            <button [disabled]="!compareDate(selectedAcademicYear?.endDate!)" class="btn btn-danger btn-sm ms-2"
               (click)="finishAcademicYear(selectedAcademicYear?.id)">
               Terminer l'année
             </button>

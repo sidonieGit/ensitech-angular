@@ -13,4 +13,5 @@ export interface Teacher {
   gender: Gender;
   createdAt?: Date | string; // ou string
   courses?: Course[];
+  countryCode?: string;
 }

@@ -285,13 +285,46 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
     }
   }
 
-  updateFilteredEvaluations(): void {
+  /*updateFilteredEvaluations(): void {
     const filter = this.filterEvaluation.toLowerCase();
     this.filteredEvaluations = this.evaluations.filter(
       (e) =>
         e.description.toLowerCase().includes(filter) ||
         e.code.toLowerCase().includes(filter)
     );
+    this.currentPage = 1; // reset sur page 1
+    this.updateDisplayedEvaluations();
+  }*/
+  updateFilteredEvaluations(): void {
+    const filter = this.filterEvaluation.toLowerCase().trim();
+
+    if (!filter) {
+      this.filteredEvaluations = [...this.evaluations]; // Afficher tout si le filtre est vide
+    } else {
+      this.filteredEvaluations = this.evaluations.filter((e) => {
+        // 1. Recherche par Description ou Code (existante)
+        const matchesCodeOrDescription =
+          (e.description?.toLowerCase() || '').includes(filter) ||
+          (e.code?.toLowerCase() || '').includes(filter);
+
+        // 2. Recherche par Nom de l'étudiant (vérifie si 'student' existe et a un nom/prénom)
+        const student = (e as any).student; // Supposons que l'API renvoie le champ 'student'
+        const studentName = student
+          ? `${student.firstName || ''} ${student.lastName || ''}`.toLowerCase()
+          : '';
+        const matchesStudent = studentName.includes(filter);
+
+        // 3. Recherche par Cours (vérifie si 'course' existe et a un code/label)
+        const course = (e as any).course; // Supposons que l'API renvoie le champ 'course'
+        const courseIdentifier = course
+          ? `${course.code || ''} ${course.label || ''}`.toLowerCase()
+          : '';
+        const matchesCourse = courseIdentifier.includes(filter);
+
+        return matchesCodeOrDescription || matchesStudent || matchesCourse;
+      });
+    }
+
     this.currentPage = 1; // reset sur page 1
     this.updateDisplayedEvaluations();
   }

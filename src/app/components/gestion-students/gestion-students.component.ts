@@ -5,6 +5,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Speciality } from 'src/app/interfaces/speciality.interface';
 import { Student } from 'src/app/interfaces/students.model'; // Assurez-vous que le chemin est correct
+import { PhoneService } from 'src/app/services/phone/phone.service';
 import { RegistrationService } from 'src/app/services/registration/registration.service';
 import { StudentsService } from 'src/app/services/students/students.service';
 
@@ -20,6 +21,9 @@ export class GestionStudentsComponent implements OnInit {
 
   selectedStudent: Student | null = null;
   editingStudent: Student | null = null;
+
+  countryCodes: any[] = [];
+  selectedCountryCode: string = '+237';
 
   displayedStudents: Student[] = []; // ✅ données visibles (pagination + filtre)
 
@@ -51,12 +55,37 @@ export class GestionStudentsComponent implements OnInit {
     private studentsService: StudentsService,
     //  Ajout de 'private' pour que coursesService soit une propriété de la classe
     private registrationService: RegistrationService,
-    private toastr: ToastrService // Injecter ToastrService
+    private toastr: ToastrService, // Injecter ToastrService
+    private phoneService: PhoneService
   ) {}
 
   ngOnInit(): void {
     this.loadStudentsWithSpeciality();
+    this.countryCodes = this.phoneService.getAllCountries(); //
   }
+
+  /**
+   * Empêche la saisie de caractères non numériques dans le champ de téléphone
+   * (sauf les touches de contrôle).
+   * @param event L'événement clavier.
+   */
+  preventNonNumeric(event: KeyboardEvent) {
+    // Autorise les touches de contrôle (Retour arrière, flèches, tabulation, etc.)
+    if (
+      event.key === 'Backspace' ||
+      event.key === 'Delete' ||
+      event.key === 'Tab' ||
+      event.key === 'ArrowLeft' ||
+      event.key === 'ArrowRight'
+    ) {
+      return;
+    }
+    // Bloque si la touche pressée n'est pas un chiffre
+    if (event.key < '0' || event.key > '9') {
+      event.preventDefault();
+    }
+  }
+
   /**
    * Charge la liste des étudiants et, pour chacun, tente de récupérer sa spécialité
    * via sa dernière inscription.
@@ -185,8 +214,32 @@ export class GestionStudentsComponent implements OnInit {
     this.displayedStudents = this.filteredStudents.slice(start, end);
   }
 
+  // ✅ Validation téléphone
+  isPhoneValid(): boolean {
+    return this.phoneService.validateLength(
+      this.newStudent.telephone || '',
+      this.selectedCountryCode
+    );
+  }
+
   addStudent(): void {
-    this.studentsService.addStudent(this.newStudent).subscribe({
+    if (!this.isPhoneValid()) {
+      this.toastr.error('Numéro invalide pour le pays sélectionné.');
+      return;
+    }
+
+    // Formater le numéro avant envoi
+    const normalizedPhone = this.phoneService.normalize(
+      this.newStudent.telephone || '',
+      this.selectedCountryCode
+    );
+
+    const studentToAdd = {
+      ...this.newStudent,
+      telephone: normalizedPhone,
+    };
+
+    this.studentsService.addStudent(studentToAdd).subscribe({
       next: (createdStudent) => {
         this.toastr.success(
           `L'étudiant ${createdStudent.firstName} ${createdStudent.lastName} a été ajouté.`,
@@ -198,7 +251,7 @@ export class GestionStudentsComponent implements OnInit {
       error: (error) => {
         this.toastr.error(
           "Erreur lors de l'ajout de l'étudiant",
-          'addresse mail déja utilisée'
+          'Vérifiez si addresse mail pas encore utilisée'
         );
       },
     });
@@ -214,6 +267,17 @@ export class GestionStudentsComponent implements OnInit {
       birthday: null,
       gender: 'MALE',
     };
+
+    this.selectedCountryCode = this.phoneService.defaultCountryCode;
+  }
+
+  getCountryFlag(code: string): string {
+    const found = this.countryCodes.find((c) => c.code === code);
+    return found ? found.name : 'Pays inconnu';
+  }
+
+  getStudentPhoneParts(phone: string) {
+    return this.phoneService.splitPhone(phone);
   }
 
   deleteStudent(id: number | undefined): void {
@@ -231,10 +295,34 @@ export class GestionStudentsComponent implements OnInit {
 
   editStudent(student: Student): void {
     this.editingStudent = { ...student };
+    if (this.editingStudent.telephone) {
+      const parts = this.phoneService.splitPhone(this.editingStudent.telephone);
+      // Assigner l'indicateur (ex: '+237') au modèle de sélection
+      this.selectedCountryCode = parts.code;
+      // Assigner le numéro local (ex: '671234567') au champ d'édition du téléphone
+      this.editingStudent.telephone = parts.number;
+    }
   }
 
   saveEditStudent(): void {
     if (!this.editingStudent || !this.editingStudent.id) return;
+
+    if (
+      !this.phoneService.validateLength(
+        this.editingStudent.telephone || '',
+        this.selectedCountryCode
+      )
+    ) {
+      this.toastr.error('Numéro invalide pour le pays sélectionné.');
+      return;
+    }
+
+    const normalizedPhone = this.phoneService.normalize(
+      this.editingStudent.telephone || '',
+      this.selectedCountryCode
+    );
+
+    this.editingStudent.telephone = normalizedPhone;
     this.studentsService
       .updateStudent(this.editingStudent.id, this.editingStudent)
       .subscribe({

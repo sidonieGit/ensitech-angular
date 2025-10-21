@@ -5,6 +5,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { Course } from 'src/app/interfaces/course.model';
 import { Teacher } from 'src/app/interfaces/teachers.model';
 import { CoursesService } from 'src/app/services/courses/courses.service';
+import { PhoneService } from 'src/app/services/phone/phone.service';
 import { TeachersService } from 'src/app/services/teachers/teachers.service';
 
 @Component({
@@ -21,6 +22,9 @@ export class GestionTeachersComponent implements OnInit {
   selectedTeacher: Teacher | null = null;
   editingTeacher: Teacher | null = null;
   displayedTeachers: Teacher[] = []; // ✅ données visibles (pagination + filtre)
+
+  countryCodes: any[] = [];
+  selectedCountryCode: string = '+237';
 
   // Pour le formulaire d'ajout
   newTeacher: Omit<Teacher, 'id' | 'createdAt' | 'courses'> = {
@@ -45,14 +49,37 @@ export class GestionTeachersComponent implements OnInit {
   constructor(
     private teachersService: TeachersService,
     private toastr: ToastrService,
-    private coursesService: CoursesService // Injecter CourseService
+    private coursesService: CoursesService,
+    private phoneService: PhoneService
   ) {}
 
   ngOnInit(): void {
     this.loadTeachersWithCourses();
     this.loadAllAvailableCourses();
+    this.countryCodes = this.phoneService.getAllCountries();
   }
 
+  /**
+   * Empêche la saisie de caractères non numériques dans le champ de téléphone
+   * (sauf les touches de contrôle).
+   * @param event L'événement clavier.
+   */
+  preventNonNumeric(event: KeyboardEvent) {
+    // Autorise les touches de contrôle (Retour arrière, flèches, tabulation, etc.)
+    if (
+      event.key === 'Backspace' ||
+      event.key === 'Delete' ||
+      event.key === 'Tab' ||
+      event.key === 'ArrowLeft' ||
+      event.key === 'ArrowRight'
+    ) {
+      return;
+    }
+    // Bloque si la touche pressée n'est pas un chiffre
+    if (event.key < '0' || event.key > '9') {
+      event.preventDefault();
+    }
+  }
   // --- LOGIQUE DE CHARGEMENT ENRICHIE ---
   loadTeachersWithCourses(): void {
     this.teachersService
@@ -204,6 +231,13 @@ export class GestionTeachersComponent implements OnInit {
     this.displayedTeachers = this.filteredTeachers.slice(start, end);
   }
 
+  isPhoneValid(): boolean {
+    return this.phoneService.validateLength(
+      this.newTeacher.telephone || '',
+      this.selectedCountryCode
+    );
+  }
+
   addTeacher(): void {
     // Validation simple
     if (!this.newTeacher.firstName || !this.newTeacher.lastName) {
@@ -211,7 +245,23 @@ export class GestionTeachersComponent implements OnInit {
       return;
     }
 
-    this.teachersService.addTeacher(this.newTeacher).subscribe({
+    // Formater le numéro avant envoi
+    if (!this.isPhoneValid()) {
+      this.toastr.error('Numéro invalide pour le pays sélectionné.');
+      return;
+    }
+
+    const normalizedPhone = this.phoneService.normalize(
+      this.newTeacher.telephone || '',
+      this.selectedCountryCode
+    );
+
+    const teacherToAdd = {
+      ...this.newTeacher,
+      telephone: normalizedPhone,
+    };
+
+    this.teachersService.addTeacher(teacherToAdd).subscribe({
       next: () => {
         this.toastr.success(
           `L'enseignant ${this.newTeacher.firstName} ${this.newTeacher.lastName} a été ajouté.`,
@@ -229,6 +279,7 @@ export class GestionTeachersComponent implements OnInit {
           birthday: new Date(),
           gender: 'MALE',
         };
+        this.selectedCountryCode = this.phoneService.defaultCountryCode;
         // Fermer la modal (manuellement si besoin, Bootstrap devrait le faire avec data-bs-dismiss)
       },
       error: (error) => {
@@ -239,6 +290,14 @@ export class GestionTeachersComponent implements OnInit {
         );
       },
     });
+  }
+
+  getCountryFlag(code: string): string {
+    const found = this.countryCodes.find((c) => c.code === code);
+    return found ? found.name : 'Pays inconnu';
+  }
+  getStudentPhoneParts(phone: string) {
+    return this.phoneService.splitPhone(phone);
   }
 
   deleteTeacher(id: number | undefined): void {
@@ -259,23 +318,49 @@ export class GestionTeachersComponent implements OnInit {
   editTeacher(teacher: Teacher): void {
     // On crée une copie pour ne pas modifier la liste directement
     this.editingTeacher = { ...teacher };
+    if (this.editingTeacher.telephone) {
+      const parts = this.phoneService.splitPhone(this.editingTeacher.telephone);
+      // Assigner l'indicateur (ex: '+237') au modèle de sélection
+      this.selectedCountryCode = parts.code;
+      // Assigner le numéro local (ex: '671234567') au champ d'édition du téléphone
+      this.editingTeacher.telephone = parts.number;
+    }
   }
 
   saveEditTeacher(): void {
-    if (!this.editingTeacher) return;
+    if (!this.editingTeacher || !this.editingTeacher.id) return;
 
-    this.teachersService.updateTeacher(this.editingTeacher).subscribe(
-      () => {
-        this.toastr.success(
-          "Les informations de l'enseignant ont été mises à jour.",
-          'Succès !'
-        );
-        // this.loadTeachers();
-        this.loadTeachersWithCourses();
-        this.editingTeacher = null; // Cacher le formulaire de la modal
-      },
-      (error) => console.error('Erreur lors de la mise à jour', error)
+    if (
+      !this.phoneService.validateLength(
+        this.editingTeacher.telephone || '',
+        this.selectedCountryCode
+      )
+    ) {
+      this.toastr.error('Numéro invalide pour le pays sélectionné.');
+      return;
+    }
+
+    const normalizedPhone = this.phoneService.normalize(
+      this.editingTeacher.telephone || '',
+      this.selectedCountryCode
     );
+
+    this.editingTeacher.telephone = normalizedPhone;
+
+    this.teachersService
+      .updateTeacher(this.editingTeacher.id, this.editingTeacher)
+      .subscribe({
+        next: () => {
+          this.toastr.success(
+            "Les informations de l'enseignant ont été mises à jour.",
+            'Succès !'
+          );
+          // this.loadTeachers();
+          this.loadTeachersWithCourses();
+          this.editingTeacher = null; // Cacher le formulaire de la modal
+        },
+        error: (error) => console.error('Erreur lors de la mise à jour', error),
+      });
   }
 
   // Pour le bouton "Voir les informations"

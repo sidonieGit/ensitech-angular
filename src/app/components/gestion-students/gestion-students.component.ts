@@ -31,6 +31,7 @@ export class GestionStudentsComponent implements OnInit {
   allSpecialities: Speciality[] = [];
   currentPage = 1;
   itemsPerPage = 5;
+  loading: boolean = false;
 
   // Modèle pour le formulaire d'ajout
   newStudent: Omit<Student, 'id' | 'matricule' | 'speciality' | 'isEnrolled'> =
@@ -57,7 +58,7 @@ export class GestionStudentsComponent implements OnInit {
     private registrationService: RegistrationService,
     private toastr: ToastrService, // Injecter ToastrService
     private phoneService: PhoneService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadStudentsWithSpeciality();
@@ -91,6 +92,7 @@ export class GestionStudentsComponent implements OnInit {
    * via sa dernière inscription.
    */
   loadStudentsWithSpeciality(): void {
+    this.loading = true;
     this.studentsService.getStudents().subscribe({
       next: (students) => {
         if (students.length === 0) {
@@ -165,6 +167,7 @@ export class GestionStudentsComponent implements OnInit {
             };
           });
           this.updateFilteredStudents();
+          this.loading = false;
         });
       },
       error: (error) => {
@@ -174,6 +177,7 @@ export class GestionStudentsComponent implements OnInit {
           'Erreur de chargement'
         );
         console.error('Erreur lors du chargement des étudiants', error);
+        this.loading = false;
       },
     });
   }
@@ -202,7 +206,8 @@ export class GestionStudentsComponent implements OnInit {
     this.filteredStudents = this.allStudents.filter(
       (student) =>
         student.firstName.toLowerCase().includes(filter) ||
-        student.lastName.toLowerCase().includes(filter)
+        student.lastName.toLowerCase().includes(filter) ||
+        student?.matricule?.toLowerCase().includes(filter)
     );
     this.currentPage = 1; // reset sur page 1
     this.updateDisplayedStudents();
@@ -283,12 +288,17 @@ export class GestionStudentsComponent implements OnInit {
   deleteStudent(id: number | undefined): void {
     if (id === undefined) return;
     if (confirm('Êtes-vous sûr de vouloir supprimer cet étudiant ?')) {
+      this.loading = true;
       this.studentsService.deleteStudent(id).subscribe({
         next: () => {
-          this.toastr.info("L'étudiant a été supprimé.", 'Information');
+          this.toastr.info("L'étudiant a été supprimé.", 'Succès !');
+          this.loading = true;
           this.loadStudentsWithSpeciality();
         },
-        error: (error) => console.error('Erreur lors de la suppression', error),
+        error: (error) => {
+          console.error('Erreur lors de la suppression', error)
+          this.loading = false;
+        },
       });
     }
   }
@@ -323,6 +333,7 @@ export class GestionStudentsComponent implements OnInit {
     );
 
     this.editingStudent.telephone = normalizedPhone;
+    this.loading = true;
     this.studentsService
       .updateStudent(this.editingStudent.id, this.editingStudent)
       .subscribe({
@@ -331,11 +342,14 @@ export class GestionStudentsComponent implements OnInit {
             "Les informations de l'étudiant ont été mises à jour.",
             'Succès !'
           );
-
+          this.loading = false;
           this.loadStudentsWithSpeciality;
           this.editingStudent = null; // Important pour fermer la modale
         },
-        error: (error) => console.error('Erreur lors de la mise à jour', error),
+        error: (error) => {
+          console.error('Erreur lors de la mise à jour', error)
+          this.loading = false;
+        }
       });
   }
 

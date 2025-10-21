@@ -14,6 +14,8 @@ export interface LoginResponse {
   email: string;
   token: string;
   username?: string;
+  photo?: string;
+  fonction?: string;
 }
 @Injectable({
   providedIn: 'root',
@@ -28,7 +30,7 @@ export class AuthService {
   private authenticated = false;
   private baseUrl = api_URL + 'auth';
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private http: HttpClient) { }
 
   login(data: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.baseUrl}/login`, data);

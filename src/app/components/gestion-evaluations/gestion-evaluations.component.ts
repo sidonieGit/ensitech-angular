@@ -59,7 +59,7 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
   filterEvaluation: string = '';
   lastStudentId: number | null = null; // Pour suivre le dernier studentId sélectionné
   currentPage = 1;
-  itemsPerPage = 10;
+  itemsPerPage = 5;
 
   constructor(
     private evaluationsService: EvaluationsService,
@@ -67,7 +67,7 @@ export class GestionEvaluationsComponent implements DoCheck, OnInit {
     private specialityService: SpecialityService,
 
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadEvaluations();

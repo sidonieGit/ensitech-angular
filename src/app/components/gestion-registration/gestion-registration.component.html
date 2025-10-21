@@ -48,7 +48,8 @@
             <th>N°</th>
             <th>Niveau</th>
             <th>Specialité</th>
-            <th>Etudiant Matricule</th>
+            <th>Etudiant</th>
+            <!-- I replace the matricule by the student name -->
             <th>Année Academique</th>
             <th>Actions</th>
           </tr>
@@ -61,7 +62,9 @@
             <td data-label="N°">{{ registration.registrationNumber }}</td>
             <td data-label="Niveau">{{ registration.level }}</td>
             <td data-label="Specialité">{{ registration.specialityLabel }}</td>
-            <td data-label="Matricule">{{ registration.matricule }}</td>
+            <td data-label="Etudiant Matricule">
+              {{ registration.studentFullName }}
+            </td>
             <td data-label="Année Academique">
               {{ registration.academicYearLabel }}
             </td>
@@ -150,11 +153,6 @@
         </div>
         <div class="modal-body">
           <form (ngSubmit)="addRegistration()">
-            <!--div class="mb-3">
-              <label for="registrationNumber" class="form-label">Numero d'inscription</label>
-              <input ype="text" [(ngModel)]="newRegistration.registrationNumber" name="registrationNumber" placeholder="Registration Number" required
-                class="form-control" />
-            </div-->
             <div class="mb-3">
               <label for="level" class="form-label">Niveau</label>
               <select
@@ -171,8 +169,6 @@
                 <option value="M1">Master 1</option>
                 <option value="M2">Master 2</option>
               </select>
-              <!--input [(ngModel)]="newRegistration.level" name="level" placeholder="niveau" required
-                class="form-control"/-->
             </div>
             <div class="mb-3">
               <label for="specialityLabel" class="form-label">Specialité</label>
@@ -184,6 +180,7 @@
                 required
               >
                 <option value="">Choisir une specialité</option>
+
                 <!--option *ngFor="let speciality of specialities" [value]="speciality">{{speciality.label}}</option-->
                 <option
                   *ngFor="let speciality of specialities"

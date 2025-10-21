@@ -502,7 +502,7 @@ main {
   }
     .btn-close {
     display: none;
-    
+
 }
 
 .offcanvas-header {
@@ -913,5 +913,40 @@ main {
 .page-item.disabled .page-link {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.dark-mode .page-link {
+      color: var(--color-gray);
+      background-color: var(--color-body-dark);
+}
+
+.dark-mode .page-item.active .page-link {
+
+  background-color: var(--color-light-gray);
+  border-color: var(--color-light-gray);
+  color: var(--color-dark);
+}
+
+.dark-mode .page-item.disabled .page-link {
+  /* Les liens désactivés restent souvent les mêmes */
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* fin gestion pagination */
+
+/* vertical hgi*/
+.dark-mode a>i.hgi-more-vertical {
+  color: var(--color-black) !important;
+}
+
+.dark-mode i.hgi-sun-01, .dark-mode i.hgi-user{
+  color: #024d97 !important;
+  font-weight: bold !important  ;
+}
+
+.dark-mode i.hgi-moon-01{
+  color: #024d97 !important;
+  font-weight: bold !important  ;
 }
 

@@ -329,7 +329,7 @@ export class GestionAcademicYearComponent {
       .changeAcademicYearStatus(id, 'COMPLETE')
       .subscribe({
         next: (data) => {
-          console.log('Année académique terminée avec succès :', data);
+          
           this.loadAcademicYears();
         },
         error: (error) =>

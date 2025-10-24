@@ -163,12 +163,18 @@ export class GestionRegistrationComponent implements OnInit, DoCheck {
 
   updateFilteredRegistrations() {
     // Logic to filter registrations based on filtername
-    this.filteredRegistrations = this.filteredRegistrations.filter(
-      (registration) =>
-        registration.matricule
-          .toLowerCase()
-          .includes(this.filtername.toLowerCase())
-    );
+    if (!this.filtername) {
+      this.filteredRegistrations = [...this.registrations]; // Afficher tout si le filtre est vide
+    } else {
+      this.filteredRegistrations = this.filteredRegistrations.filter(
+        (registration) =>
+          registration.matricule
+            .toLowerCase()
+            .includes(this.filtername.toLowerCase()) ||
+          registration?.studentFullName?.toLowerCase()
+            .includes(this.filtername.toLowerCase())
+      );
+    }
     this.currentPage = 1; // reset sur page 1
     this.updateDisplayedRegistrations();
   }
